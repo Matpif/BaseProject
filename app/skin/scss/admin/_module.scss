@@ -1,0 +1,12 @@
+.Admin {
+    .show-module {
+        width: 65%;
+        margin: auto;
+    }
+
+    @include bp(max-width, $screen-md-min) {
+        .show-module {
+            width: 100%;
+        }
+    }
+}

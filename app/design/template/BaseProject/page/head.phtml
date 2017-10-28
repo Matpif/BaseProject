@@ -1,0 +1,35 @@
+<?php
+/** @var Page $this */
+
+use App\App;
+use App\Page;
+
+$_controller = $this->getController();
+?>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Language" content="<?= App::getInstance()->getLanguageCode() ?>"/>
+    <link rel="icon" type="image/png" href="<?= $_controller->getUrlImage('/logo.png') ?>"/>
+    <title><?php echo $_controller->getTitle(); ?></title>
+    <link rel="stylesheet" href="<?php echo $_controller->getUrlFile('/skin/libs/bootstrap/css/bootstrap.min.css'); ?>">
+    <link rel="stylesheet"
+          href="<?php echo $_controller->getUrlFile('/skin/libs/bootstrap/css/bootstrap-theme.min.css'); ?>">
+    <link rel="stylesheet" href="<?php echo $_controller->getUrlFile('/skin/css/style.css'); ?>">
+    <?php foreach ($_controller->getCssFile() as $cssFile): ?>
+        <link rel="stylesheet" href="<?php echo $_controller->getUrlFile($cssFile); ?>">
+    <?php endforeach; ?>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="<?php echo $_controller->getUrlFile('/skin/libs/bootstrap/js/bootstrap.min.js'); ?>"></script>
+    <?php foreach ($_controller->getJsFile() as $jsFile): ?>
+        <script src="<?php echo $_controller->getUrlFile($jsFile); ?>"></script>
+    <?php endforeach; ?>
+    <?php foreach ($_controller->getBeforeEndHead() as $html): ?>
+        <?= $html; ?>
+    <?php endforeach; ?>
+    <?php /** @var Block $block */ ?>
+    <?php foreach ($this->getBeforeEndHead() as $block): ?>
+        <?= $block->getHtml(); ?>
+    <?php endforeach; ?>
+</head>

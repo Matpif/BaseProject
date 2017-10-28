@@ -1,0 +1,140 @@
+<?php
+/** @var \BaseProject\Login\Controller\User $this */
+
+use App\App;
+use App\libs\App\Block;
+use App\libs\App\CollectionDb;
+use App\libs\App\Helper;
+use App\libs\App\Router;
+use BaseProject\Login\Block\PopIn;
+use BaseProject\Login\Helper\Login;
+use BaseProject\Login\Model\Group;
+
+$_currentUser = $this->getCurrentUser();
+$_groups = CollectionDb::getInstanceOf('Login_Group')->loadAll();
+
+/** @var PopIn $_popin */
+$_popin = Block::getBlock('Login_PopIn');
+$_popin->setTitle($this->__('Delete'));
+$_popin->setBody($this->__('Are you sur ?'));
+$_popin->addButton($this->__('Yes'), PopIn::TYPE_DANGER, 'popinUser.yes()');
+$_popin->addButton($this->__('No'), PopIn::TYPE_DEFAULT, 'popinUser.no()');
+$_popin->setId('modalDelete');
+?>
+<form class="user" action="<?= Router::getUrlAction('Login', 'User', 'saveUser') ?>" method="post">
+    <fieldset>
+        <legend><?= $this->__('User') ?></legend>
+        <input type="hidden" name="id" value="<?= $_currentUser->getId() ?>"/>
+        <div class="form-group">
+            <label for="username"><?= $this->__('Username') ?></label>
+            <input type="text" id="username" class="form-control" name="username"
+                   value="<?= $_currentUser->getUsername() ?>"/>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="use_flocon" <?= ($_currentUser->getUseFlocon()) ? 'checked' : ''; ?> >
+                    <?= $this->__('Use Flocon') ?>
+                </label>
+            </div>
+        </div>
+        <div class="form-group <?= ($_currentUser->getUseFlocon()) ? 'hide' : '' ?>" id="div-password">
+            <label for="password"><?= $this->__('Password') ?></label>
+            <input type="password" id="password" class="form-control" name="password"/>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="use_otp" <?= ($_currentUser->getTotpKey()) ? 'checked' : ''; ?> >
+                    <?= $this->__('Use OTP') ?>
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="group"><?= $this->__('Group') ?> (<a
+                        id="addGroupButton"><?= $this->__('Add group') ?></a>)</label>
+            <select name="group" id="group" class="form-control">
+                <option value=""></option>
+                <?php
+                /** @var Group $group */
+                foreach ($_groups as $group):
+                    ?>
+                    <option <?= ($group->getId() == $_currentUser->getGroupId()) ? 'selected' : '' ?>
+                            value="<?= $group->getId() ?>"><?= $group->getName() ?></option>
+                    <?php
+                endforeach;
+                ?>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary"><?= $this->__('Save') ?></button>
+        <?php if ($_currentUser->getId()): ?>
+            <a class="btn btn-danger" <?= ($_currentUser->getUsername() == App::getInstance()->getSession()->getUser()->getUsername()) ? 'disabled' : 'data-toggle="modal" data-target="#modalDelete"' ?>><?= $this->__('Delete') ?></a>
+        <?php endif; ?>
+    </fieldset>
+</form>
+
+<script type="application/javascript">
+    jQuery(function ($) {
+        $('input[name="use_flocon"').click(function () {
+            if ($(this).prop('checked')) {
+                $('#div-password').addClass('hide');
+            } else {
+                $('#div-password').removeClass('hide');
+            }
+        });
+
+        $('#addGroupButton').on('click', function () {
+            $('#newGroup').modal('show');
+        });
+
+        $('form.group').submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: $(this).attr('method'),
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function (data) {
+                    if (data.error === undefined) {
+                        $('select[name="group"]').append('<option value="' + data.id + '">' + data.name + '</option>');
+                        $('#newGroup').modal('hide');
+                    }
+                }
+            });
+        });
+    });
+
+    var popinUser = {
+        yes: function () {
+            window.location.href = '<?= Router::getUrlAction('Login', 'User',
+                'deleteUser') ?>/id/<?= $_currentUser->getId() ?>';
+        },
+
+        no: function () {
+            $('#modalDelete').modal('hide');
+        }
+    };
+</script>
+<?= $_popin->getHtml() ?>
+<?php
+/** @var Login $loginHelper */
+$loginHelper = Helper::getInstance('Login_Login');
+$block = Block::getBlock('Login_FormGroup');
+$block->setCurrentGroup(new Group());
+$block->setAllRoles($loginHelper->getAllRoles());
+
+?>
+<div class="modal fade" tabindex="-1" role="dialog" id="newGroup">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="gridSystemModalLabel"><?= $this->__('New group') ?></h4>
+            </div>
+            <div class="modal-body">
+                <?= $block->getHtml() ?>
+            </div>
+        </div>
+    </div>
+</div>

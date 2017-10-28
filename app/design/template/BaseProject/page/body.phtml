@@ -1,0 +1,34 @@
+<?php
+/** @var Page $this */
+
+use App\App;
+use App\libs\App\Block;
+use App\Page;
+
+$_controller = $this->getController();
+$router = App::getInstance()->getRouter();
+?>
+<body class="<?= $router->getModule() ?>">
+<?php /** @var Block $block */ ?>
+<?php foreach ($this->getAfterStartBody() as $block): ?>
+    <?= $block->getHtml(); ?>
+<?php endforeach; ?>
+<?php foreach ($_controller->getAfterStartBody() as $html): ?>
+    <?= $html; ?>
+<?php endforeach; ?>
+<?php /** Header du controller */ ?>
+<?php echo $_controller->getHeader(); ?>
+<div class="container-fluid">
+    <?php /** Affiche le template */ ?>
+    <?php echo $_controller->getHtml(); ?>
+</div>
+<?php /** Footer du controller */ ?>
+<?php echo $_controller->getFooter(); ?>
+<?php foreach ($_controller->getBeforeEndBody() as $html): ?>
+    <?= $html; ?>
+<?php endforeach; ?>
+<?php /** @var Block $block */ ?>
+<?php foreach ($this->getBeforeEndBody() as $block): ?>
+    <?= $block->getHtml(); ?>
+<?php endforeach; ?>
+</body>

@@ -1,0 +1,17 @@
+<?php
+/** @var \BaseProject\Login\Block\FormGroup $this */
+
+use App\App;
+use App\libs\App\Router;
+
+?>
+<div class="content">
+    <div class="form">
+        <header><?= App::getInstance()->getAppName() ?></header>
+        <form class="login-form" action="<?= Router::getUrlAction('Login', 'Index', 'signIn') ?>" method="POST">
+            <input name="username" placeholder="<?= $this->__('Username') ?>" autofocus/>
+            <input type="password" name="password" placeholder="<?= $this->__('Password') ?>"/>
+            <button><?= $this->__('Connect') ?></button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,34 @@
+<?php
+/** @var \BaseProject\Cms\Controller\Media $this */
+
+use App\libs\App\Block;
+use App\libs\App\Router;
+use BaseProject\Cms\Block\Media\ListBlock;
+
+?>
+<div class="media row">
+    <div class="col-sm-3">
+        <?php
+        /** @var ListBlock $listBlock */
+        $listBlock = Block::getBlock('Cms_Media_ListBlock');
+        echo $listBlock->getHtml();
+        ?>
+    </div>
+    <div class="col-sm-9">
+        <form action="<?= Router::getUrlAction('Cms', 'Media', 'upload') ?>" method="post" enctype="multipart/form-data"
+              id="form-dropZone">
+            <div class="form-group">
+                <label for="path"><?= $this->__('Path') ?></label>
+                <input type="text" name="path" id="path" value="/"/>
+            </div>
+            <div class="fallback">
+                <input name="file" type="file" multiple/>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="application/javascript">
+    jQuery(function ($) {
+//        $("#form-dropZone").dropzone();
+    });
+</script>

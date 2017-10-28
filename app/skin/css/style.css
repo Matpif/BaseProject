@@ -1,0 +1,206 @@
+/* Vars */
+/* Functions */
+/* Module Admin */
+nav.admin .level3 {
+    position: absolute;
+    top: 0;
+    left: 65%;
+}
+
+.Admin .show_config button {
+    width: 100%;
+    margin-bottom: 50px;
+}
+
+.Admin .show-module {
+    width: 65%;
+    margin: auto;
+}
+
+@media only screen and (max-width: 992px) {
+    .Admin .show-module {
+        width: 100%;
+    }
+}
+
+.message {
+    position: absolute;
+    left: 50%;
+    top: 35px;
+    z-index: 1000;
+}
+
+.message .message-content {
+    position: relative;
+    left: -50%;
+}
+
+.Admin h1.welcome {
+    font-size: 48px;
+    font-weight: 200;
+    text-align: center;
+    color: #525252;
+    font-family: "Source Sans Pro", sans-serif;
+    margin: 2.67em 0;
+}
+
+/* Module Install */
+.Install .startScript {
+    width: 65%;
+    margin: auto;
+}
+
+.Install .startScript table {
+    width: 100%;
+}
+
+.Install .startScript table tr.details.close {
+    display: none;
+}
+
+.Install .startScript table tr.details.open {
+    display: table-row;
+}
+
+.Install .startScript table tr.details .circle {
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-top: 4px;
+    margin-left: 10%;
+}
+
+.Install .startScript table tr.details .circle.orange {
+    background-color: orange;
+}
+
+.Install .startScript table tr.details .circle.green {
+    background-color: green;
+}
+
+.Install .startScript table tr td.center {
+    text-align: center;
+}
+
+.Install .startScript table tr td span.show-details {
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 992px) {
+    .Install .startScript {
+        width: 100%;
+    }
+}
+
+/* Module Login */
+.Login .group fieldset {
+    width: 50%;
+    margin: auto;
+}
+
+.Login .show-group {
+    width: 65%;
+    margin: auto;
+}
+
+@media only screen and (max-width: 992px) {
+    .Login .show-group {
+        width: 100%;
+    }
+
+    .Login .group fieldset {
+        width: 100%;
+        margin: auto;
+    }
+}
+
+.Login .user fieldset {
+    width: 50%;
+    margin: auto;
+}
+
+.Login .show-user {
+    width: 65%;
+    margin: auto;
+}
+
+.Login .otp fieldset {
+    width: 50%;
+    margin: auto;
+}
+
+@media only screen and (max-width: 992px) {
+    .Login .show-user {
+        width: 100%;
+    }
+
+    .Login .user fieldset {
+        width: 100%;
+        margin: auto;
+    }
+
+    .Login .otp fieldset {
+        width: 100%;
+        margin: auto;
+    }
+}
+
+/* Module Task */
+.Task .show-task {
+    width: 65%;
+    margin: auto;
+}
+
+@media only screen and (max-width: 992px) {
+    .Task .show-task {
+        width: 100%;
+    }
+}
+
+/* Module Cms */
+.Cms .block fieldset {
+    width: 50%;
+    margin: auto;
+}
+
+.Cms .show-block {
+    width: 65%;
+    margin: auto;
+}
+
+@media only screen and (max-width: 992px) {
+    .Cms .show-block {
+        width: 100%;
+    }
+
+    .Cms .block fieldset {
+        width: 100%;
+        margin: auto;
+    }
+}
+
+/* Module Error */
+.Error h1 {
+    font-size: 48px;
+    font-weight: 200;
+    text-align: center;
+    color: #525252;
+    font-family: "Source Sans Pro", sans-serif;
+    margin: 2.67em 0;
+}
+
+.Error .code-error {
+    font-size: 140px;
+    text-align: center;
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+.Error a {
+    display: block;
+    text-align: center;
+}
+
+body {
+    background-color: #f8f8f8;
+}

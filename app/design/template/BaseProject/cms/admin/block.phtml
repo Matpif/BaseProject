@@ -1,0 +1,87 @@
+<?php
+/** @var \BaseProject\Cms\Controller\Admin $this */
+
+use App\libs\App\Block;
+use App\libs\App\Router;
+use BaseProject\Cms\Block\PopIn;
+
+$_currentBlock = $this->getCurrentBlock();
+
+/** @var \BaseProject\Cms\Block\PopIn $_popin */
+$_popin = Block::getBlock('Cms_PopIn');
+$_popin->setTitle($this->__('Delete'));
+$_popin->setBody($this->__('Are you sur ?'));
+$_popin->addButton($this->__('Yes'), PopIn::TYPE_DANGER, 'popin.yes()');
+$_popin->addButton($this->__('No'), PopIn::TYPE_DEFAULT, 'popin.no()');
+$_popin->setId('modalDelete');
+?>
+    <form class="block" action="<?= Router::getUrlAction('Cms', 'Admin', 'saveBlock') ?>" method="post">
+        <fieldset>
+            <legend><?= $this->__('Block') ?></legend>
+            <input type="hidden" name="id" value="<?= $_currentBlock->getId() ?>"/>
+            <div class="form-group">
+                <label for="name"><?= $this->__('Name') ?></label>
+                <input type="text" id="name" class="form-control" name="name" value="<?= $_currentBlock->getName() ?>"/>
+            </div>
+
+
+            <div class="form-group">
+                <label for="language_code"><?= $this->__('Language') ?></label>
+                <select name="language_code" id="language_code" class="form-control">
+                    <option value="fr_FR" <?= ($_currentBlock->getLanguageCode() == 'fr_FR') ? 'selected' : '' ?>><?= $this->__('fr_FR') ?></option>
+                    <option value="en_EN" <?= ($_currentBlock->getLanguageCode() == 'en_EN') ? 'selected' : '' ?>><?= $this->__('en_EN') ?></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="title"><?= $this->__('Title') ?></label>
+                <input type="text" id="title" class="form-control" name="title"
+                       value="<?= $_currentBlock->getTitle() ?>"/>
+            </div>
+
+            <div class="form-group">
+                <label for="active_page_format"><?= $this->__('Active page format') ?></label>
+                <select name="active_page_format" id="active_page_format" class="form-control">
+                    <option value="1" <?= ($_currentBlock->getActivePageFormat()) ? 'selected' : '' ?>><?= $this->__('Yes') ?></option>
+                    <option value="0" <?= ($_currentBlock->getActivePageFormat()) ? '' : 'selected' ?>><?= $this->__('No') ?></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="is_enabled"><?= $this->__('Is Enabled') ?></label>
+                <select name="is_enabled" id="is_enabled" class="form-control">
+                    <option value="1" <?= ($_currentBlock->getIsEnabled()) ? 'selected' : '' ?>><?= $this->__('Yes') ?></option>
+                    <option value="0" <?= ($_currentBlock->getIsEnabled()) ? '' : 'selected' ?>><?= $this->__('No') ?></option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="content"><?= $this->__('Content') ?></label>
+                <textarea id="content" class="form-control"
+                          name="content"><?= $_currentBlock->getContent() ?></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary"><?= $this->__('Save') ?></button>
+            <?php if ($_currentBlock->getId()): ?>
+                <a class="btn btn-danger" data-toggle="modal" data-target="#modalDelete"><?= $this->__('Delete') ?></a>
+            <?php endif; ?>
+        </fieldset>
+    </form>
+
+    <script type="application/javascript">
+        var popin = {
+            yes: function () {
+                window.location.href = '<?= Router::getUrlAction('Cms', 'Admin',
+                    'deleteBlock') ?>/id/<?= $_currentBlock->getId() ?>';
+            },
+
+            no: function () {
+                $('#modalDelete').modal('hide');
+            }
+        };
+        tinymce.init({
+            selector: '#content',
+            plugins: 'advlist autolink link image lists charmap print preview table',
+        });
+    </script>
+<?= $_popin->getHtml() ?>

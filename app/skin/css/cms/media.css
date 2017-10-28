@@ -1,0 +1,17 @@
+.Cms .media #form-dropZone {
+    width: 100%;
+    height: 100%;
+}
+
+.Cms .list ul {
+    list-style-type: none;
+    padding-left: 10px;
+}
+
+.Cms .list li span {
+    margin-right: 10px;
+}
+
+.Cms .list li.close-dir ul {
+    display: none;
+}

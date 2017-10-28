@@ -1,0 +1,25 @@
+.Cms {
+    .block {
+        fieldset {
+            width: 50%;
+            margin: auto;
+        }
+    }
+
+    .show-block {
+        width: 65%;
+        margin: auto;
+    }
+
+    @include bp(max-width, $screen-md-min) {
+        .show-block {
+            width: 100%;
+        }
+        .block {
+            fieldset {
+                width: 100%;
+                margin: auto;
+            }
+        }
+    }
+}

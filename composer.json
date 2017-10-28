@@ -1,0 +1,21 @@
+{
+    "name": "matpif/baseproject",
+    "authors": [
+        {
+            "name": "matpif",
+            "email": "matthieu.piffeteau@gmail.com"
+        }
+    ],
+    "require": {
+        "doctrine/cache": "1.6.2",
+        "christian-riesen/otp": "1.*",
+        "guzzlehttp/psr7": "^1.4",
+        "http-interop/response-sender": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "BaseProject\\": "app/code/BaseProject",
+            "App\\": "app/tools"
+        }
+    }
+}

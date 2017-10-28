@@ -1,0 +1,68 @@
+{
+  "router": {
+    "rewrite_uri": [
+      {
+        "controller": "Index",
+        "action": "index",
+        "url": "/login"
+      },
+      {
+        "controller": "Index",
+        "action": "otp",
+        "url": "/otp"
+      },
+      {
+        "controller": "Index",
+        "action": "",
+        "url": "/login"
+      }
+    ]
+  },
+  "roles": {
+    "Login_guest": "Guest",
+    "Login_show_users": "Show users",
+    "Login_add_user": "Add user",
+    "Login_delete_user": "Delete user",
+    "Login_show_groups": "Show groups",
+    "Login_add_group": "Add group",
+    "Login_delete_group": "Delete group"
+  },
+  "admin_menu": {
+    "tree": {
+      "Login_Index_index": [
+        "Login_User_index",
+        "Login_Group_index"
+      ]
+    },
+    "labels": {
+      "Login_Index_index": "Users",
+      "Login_User_index": "Show users",
+      "Login_Group_index": "Show groups"
+    },
+    "sort": {
+      "Login_Index_index": 900,
+      "Login_User_index": 900,
+      "Login_Group_index": 1000
+    }
+  },
+  "tables": [
+    {
+      "model": "BaseProject\\Login\\Model\\User",
+      "collection": "BaseProject\\Login\\Collection\\User",
+      "table_name": "login_user",
+      "key": "id"
+    },
+    {
+      "model": "BaseProject\\Login\\Model\\Group",
+      "collection": "BaseProject\\Login\\Collection\\Group",
+      "table_name": "login_group",
+      "key": "id"
+    }
+  ],
+  "Observer": {
+    "after_save_model": "BaseProject\\Login\\Observer\\User"
+  },
+  "Install": {
+    "path": "sql"
+  }
+}

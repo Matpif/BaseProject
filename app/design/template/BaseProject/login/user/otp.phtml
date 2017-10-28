@@ -1,0 +1,49 @@
+<?php
+/** @var \BaseProject\Login\Controller\User $this */
+
+use App\libs\App\Block;
+use App\libs\App\Router;
+
+$_currentUser = $this->getCurrentUser();
+$url = \Otp\GoogleAuthenticator::getQrCodeUrl('totp',
+    App::getInstance()->getAppName() . ' - ' . $_currentUser->getUsername(), $_currentUser->getTotpKey());
+
+/** @var \BaseProject\Login\Block\PopIn $_popin */
+$_popin = Block::getBlock('Login_PopIn');
+$_popin->setTitle($this->__('Cancel'));
+$_popin->setBody($this->__('Are you sur ?'));
+$_popin->addButton($this->__('Yes'), \BaseProject\Login\Block\PopIn::TYPE_DANGER, 'popinUser.yes()');
+$_popin->addButton($this->__('No'), \BaseProject\Login\Block\PopIn::TYPE_DEFAULT, 'popinUser.no()');
+$_popin->setId('modalCancel');
+?>
+    <form class="otp" action="<?= Router::getUrlAction('Login', 'User', 'otp') ?>" method="post">
+        <fieldset>
+            <legend>Otp</legend>
+            <input type="hidden" name="id" value="<?= $_currentUser->getId() ?>"/>
+            <div class="form-group">
+                <label><?= $this->__('Scan this code with your Smartphone') ?></label><br/>
+                <img src="<?= $url ?>" class="img-rounded"/><br/>
+            </div>
+
+            <div class="form-group">
+                <label for="code"><?= $this->__('Enter your code') ?></label>
+                <input type="text" id="code" class="form-control" name="code"/>
+            </div>
+
+            <button type="submit" class="btn btn-primary"><?= $this->__('Valid') ?></button>
+            <a class="btn btn-danger" data-toggle="modal" data-target="#modalCancel"><?= $this->__('Cancel') ?></a>
+        </fieldset>
+    </form>
+    <script type="application/javascript">
+        var popinUser = {
+            yes: function () {
+                window.location.href = '<?= Router::getUrlAction('Login', 'User',
+                    'otpCancel') ?>/id/<?= $_currentUser->getId() ?>';
+            },
+
+            no: function () {
+                $('#modalDelete').modal('hide');
+            }
+        };
+    </script>
+<?= $_popin->getHtml() ?>

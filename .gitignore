@@ -1,0 +1,5 @@
+/app/var
+/.idea
+/app/skin/scss/.sass-cache
+/vendor
+/composer.lock

@@ -1,0 +1,11 @@
+.message {
+    position: absolute;
+    left: 50%;
+    top: 35px;
+    z-index: 1000;
+
+    .message-content {
+        position: relative;
+        left: -50%;
+    }
+}

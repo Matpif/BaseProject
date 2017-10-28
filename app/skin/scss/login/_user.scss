@@ -1,0 +1,38 @@
+.Login {
+    .user {
+        fieldset {
+            width: 50%;
+            margin: auto;
+        }
+    }
+
+    .show-user {
+        width: 65%;
+        margin: auto;
+    }
+
+    .otp {
+        fieldset {
+            width: 50%;
+            margin: auto;
+        }
+    }
+
+    @include bp(max-width, $screen-md-min) {
+        .show-user {
+            width: 100%;
+        }
+        .user {
+            fieldset {
+                width: 100%;
+                margin: auto;
+            }
+        }
+        .otp {
+            fieldset {
+                width: 100%;
+                margin: auto;
+            }
+        }
+    }
+}

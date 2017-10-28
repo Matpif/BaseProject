@@ -1,0 +1,24 @@
+<?php
+/** @var \BaseProject\Cms\Controller\Media $this */
+$elements = $this->getElementsDir('/');
+?>
+<div class="list">
+    <?= $this->getUl($elements); ?>
+</div>
+<script type="application/javascript">
+    jQuery(function ($) {
+        $('li.dir>span').on('click', function () {
+            var li = $(this).parent('li');
+            var span = $(this);
+            if (li.hasClass('close-dir')) {
+                li.removeClass('close-dir');
+                span.addClass('glyphicon-folder-open');
+                span.removeClass('glyphicon-folder-close');
+            } else {
+                li.addClass('close-dir');
+                span.addClass('glyphicon-folder-close');
+                span.removeClass('glyphicon-folder-open');
+            }
+        });
+    });
+</script>

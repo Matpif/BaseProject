@@ -1,0 +1,37 @@
+<?php
+/** @var \BaseProject\Login\Controller\Group $this */
+
+use App\libs\App\CollectionDb;
+use App\libs\App\Router;
+
+?>
+<div class="show-group">
+    <a href="<?= Router::getUrlAction('Login', 'Group', 'group') ?>"
+       class="btn btn-default"><?= $this->__('New group') ?></a>
+    <table class="table table-hover">
+        <colgroup>
+            <col/>
+        </colgroup>
+        <thead>
+        <tr>
+            <th><?= $this->__('Name') ?></th>
+            <th><?= $this->__('Roles') ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        $groups = CollectionDb::getInstanceOf('Login_Group')->loadAll();
+
+        foreach ($groups as $group):
+            ?>
+            <tr>
+                <td><a href="<?= Router::getUrlAction('Login', 'Group',
+                        'group') ?>/id/<?= $group->getId() ?>"><?= $group->getName() ?></a></td>
+                <td><?= $group->getRoles() ?></td>
+            </tr>
+            <?php
+        endforeach;
+        ?>
+        </tbody>
+    </table>
+</div>

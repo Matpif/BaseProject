@@ -1,0 +1,61 @@
+<?php
+/** @var \BaseProject\Login\Block\FormGroup $this */
+
+use App\libs\App\Block;
+use App\libs\App\Router;
+
+$_currentGroup = $this->getCurrentGroup();
+$_roles = $this->getAllRoles();
+
+/** @var \BaseProject\Login\Block\PopIn $_popin */
+$_popin = Block::getBlock('Login_PopIn');
+$_popin->setTitle($this->__('Delete'));
+$_popin->setBody($this->__('Are you sur ?'));
+$_popin->addButton($this->__('Yes'), \BaseProject\Login\Block\PopIn::TYPE_DANGER, 'popinGroup.yes()');
+$_popin->addButton($this->__('No'), \BaseProject\Login\Block\PopIn::TYPE_DEFAULT, 'popinGroup.no()');
+$_popin->setId('modalDelete');
+?>
+    <form class="group" action="<?= Router::getUrlAction('Login', 'Group', 'saveGroup') ?>" method="post">
+        <fieldset>
+            <legend><?= $this->__('Group') ?></legend>
+            <input type="hidden" name="id" value="<?= $_currentGroup->getId() ?>"/>
+            <div class="form-group">
+                <label for="name"><?= $this->__('Name') ?></label>
+                <input type="text" id="name" class="form-control" name="name" value="<?= $_currentGroup->getName() ?>"/>
+            </div>
+            <div class="form-group">
+                <label><?= $this->__('Roles') ?></label>
+                <?php
+                foreach ($_roles as $key => $role):
+                    ?>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="roles[<?= $key ?>]" <?= ($this->hasRole($_currentGroup,
+                                $key)) ? 'checked' : ''; ?> >
+                            <?= $role ?>
+                        </label>
+                    </div>
+                    <?php
+                endforeach;
+                ?>
+            </div>
+            <button type="submit" class="btn btn-primary"><?= $this->__('Save') ?></button>
+            <?php if ($_currentGroup->getId()): ?>
+                <a class="btn btn-danger" data-toggle="modal" data-target="#modalDelete"><?= $this->__('Delete') ?></a>
+            <?php endif; ?>
+        </fieldset>
+    </form>
+
+    <script type="application/javascript">
+        var popinGroup = {
+            yes: function () {
+                window.location.href = '<?= Router::getUrlAction('Login', 'Group',
+                    'deleteGroup') ?>/id/<?= $_currentGroup->getId() ?>';
+            },
+
+            no: function () {
+                $('#modalDelete').modal('hide');
+            }
+        };
+    </script>
+<?= $_popin->getHtml() ?>

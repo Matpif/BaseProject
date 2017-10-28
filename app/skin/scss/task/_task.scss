@@ -1,0 +1,12 @@
+.Task {
+    .show-task {
+        width: 65%;
+        margin: auto;
+    }
+
+    @include bp(max-width, $screen-md-min) {
+        .show-task {
+            width: 100%;
+        }
+    }
+}

@@ -1,0 +1,26 @@
+/* Vars */
+@import "_var.scss";
+/* Functions */
+@import "function/main";
+@import "app/app";
+/* Module Admin */
+@import "admin/menu";
+@import "admin/config";
+@import "admin/module";
+@import "admin/message";
+@import "admin/index";
+/* Module Install */
+@import "install/startScript";
+/* Module Login */
+@import "login/group";
+@import "login/user";
+/* Module Task */
+@import "task/task";
+/* Module Cms */
+@import "cms/block";
+/* Module Error */
+@import "error/error";
+
+body {
+    background-color: #f8f8f8;
+}

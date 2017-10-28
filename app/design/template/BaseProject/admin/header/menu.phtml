@@ -1,0 +1,9 @@
+<?php
+/** @var $this \BaseProject\Admin\Controller\Index */
+
+use App\libs\App\Block;
+use BaseProject\Admin\Block\Menu;
+
+/** @var Menu $menuBlock */
+$menuBlock = Block::getBlock('Admin_Menu');
+echo $menuBlock->getHtml();

@@ -1,0 +1,22 @@
+{
+  "router": {
+    "rewrite_uri": [
+      {
+        "controller": "Index",
+        "action": "index",
+        "url": "/ajaxifier"
+      }
+    ]
+  },
+  "roles": {
+    "Admin_admin": "Admin"
+  },
+  "page": {
+    "before_end_head": [
+      "BaseProject\\Ajaxifier\\Block\\Script"
+    ]
+  },
+  "Observer": {
+    "block_before_get_html": "BaseProject\\Ajaxifier\\Observer\\Block"
+  }
+}

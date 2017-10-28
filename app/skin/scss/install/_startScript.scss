@@ -1,0 +1,52 @@
+.Install {
+    .startScript {
+        width: 65%;
+        margin: auto;
+
+        table {
+            width: 100%;
+
+            tr {
+                &.details {
+                    &.close {
+                        display: none;
+                    }
+                    &.open {
+                        display: table-row;
+                    }
+                    .circle {
+                        border-radius: 50%;
+                        width: 16px;
+                        height: 16px;
+                        float: left;
+                        margin-top: 4px;
+                        margin-left: 10%;
+
+                        &.orange {
+                            background-color: orange;
+                        }
+                        &.green {
+                            background-color: green;
+                        }
+                    }
+                }
+                td {
+                    &.center {
+                        text-align: center;
+                    }
+                    span {
+                        &.show-details {
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @include bp(max-width, $screen-md-min) {
+        .startScript {
+            width: 100%;
+        }
+    }
+}

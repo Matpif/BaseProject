@@ -1,0 +1,16 @@
+<?php
+/** @var \BaseProject\Login\Controller\Index $this */
+
+use App\App;
+use App\libs\App\Router;
+
+?>
+<div class="content">
+    <div class="form">
+        <header><?= App::getInstance()->getAppName() ?></header>
+        <form class="login-form" action="<?= Router::getUrlAction('Login', 'Index', 'otpCheck') ?>" method="POST">
+            <input name="code" placeholder="<?= $this->__('Code') ?>" autofocus/>
+            <button><?= $this->__('Connect') ?></button>
+        </form>
+    </div>
+</div>

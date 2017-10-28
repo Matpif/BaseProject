@@ -1,0 +1,45 @@
+{
+  "dependencies": [
+    "Login"
+  ],
+  "router": {
+  },
+  "roles": {
+    "Task_show_tasks": "Show tasks",
+    "Task_exec_task": "Execute task"
+  },
+  "admin_menu": {
+    "tree": {
+      "Task_Index_index": [
+        "Task_Index_list"
+      ]
+    },
+    "labels": {
+      "Task_Index_index": "Task",
+      "Task_Index_list": "Show tasks"
+    },
+    "sort": {
+      "Task_Index_index": 800,
+      "Task_Index_list": 1
+    }
+  },
+  "tables": [
+    {
+      "model": "BaseProject\\Task\\Model\\Task",
+      "collection": "BaseProject\\Task\\Collection\\Task",
+      "table_name": "task_task",
+      "key": "code"
+    }
+  ],
+  "Install": {
+    "path": "sql"
+  },
+  "Task": [
+    {
+      "task_import_customer": {
+        "className": "BaseProject\\Task\\Task\\Example\\Task_Example",
+        "label": "Example task"
+      }
+    }
+  ]
+}

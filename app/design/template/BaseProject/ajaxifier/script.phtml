@@ -1,0 +1,43 @@
+<?php
+/** @var Script $this */
+
+use App\libs\App\Router;
+use BaseProject\Ajaxifier\Block\Script;
+
+?>
+<script type="application/javascript">
+    jQuery(function ($) {
+        var ajaxifier = {
+            blocks: [],
+            init: function () {
+                var ajaxifier = $('.ajaxifier');
+                var that = this;
+                $.each(ajaxifier, function (key, value) {
+                    that.blocks.push($(value).data('block-id'));
+                });
+            },
+            get: function () {
+                var that = this;
+                if (this.blocks.length > 0) {
+                    $.ajax({
+                        url: '<?= Router::getUrlAction('Ajaxifier', 'Index', "index") ?>',
+                        dataType: 'json',
+                        type: 'post',
+                        data: {'blocks': that.blocks},
+                        success: function (data) {
+                            that.apply(data);
+                        }
+                    });
+                }
+            },
+            apply: function (blocks) {
+                $.each(blocks, function (blockName, html) {
+                    $('.ajaxifier[data-block-id="' + blockName + '"]').html(html);
+                });
+            }
+        };
+
+        ajaxifier.init();
+        ajaxifier.get();
+    });
+</script>

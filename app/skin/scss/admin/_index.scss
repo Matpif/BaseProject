@@ -1,0 +1,12 @@
+.Admin {
+    h1 {
+        &.welcome {
+            font-size: 48px;
+            font-weight: 200;
+            text-align: center;
+            color: #525252;
+            font-family: "Source Sans Pro", sans-serif;
+            margin: 2.67em 0;
+        }
+    }
+}

@@ -1,0 +1,52 @@
+{
+  "dependencies": [
+    "Login"
+  ],
+  "router": {
+    "rewrite_uri": [
+      {
+        "controller": "Media",
+        "action": "index",
+        "url": "/media"
+      },
+      {
+        "controller": "Index",
+        "action": "index",
+        "url": "/cms"
+      }
+    ]
+  },
+  "tables": [
+    {
+      "model": "BaseProject\\Cms\\Model\\Block",
+      "collection": "BaseProject\\Cms\\Collection\\Block",
+      "table_name": "cms_block",
+      "key": "id"
+    }
+  ],
+  "admin_menu": {
+    "tree": {
+      "Cms_Admin": [
+        "Cms_Admin_index",
+        "Cms_Media_index"
+      ]
+    },
+    "labels": {
+      "Cms_Admin_index": "Block",
+      "Cms_Media_index": "Media",
+      "Cms_Admin": "Cms"
+    },
+    "sort": {
+      "Cms_Admin": 300,
+      "Cms_Media_index": 200,
+      "Cms_Admin_block": 100
+    }
+  },
+  "roles": {
+    "cms_admin": "Cms Admin",
+    "cms_media": "Cms Media"
+  },
+  "Install": {
+    "path": "sql"
+  }
+}

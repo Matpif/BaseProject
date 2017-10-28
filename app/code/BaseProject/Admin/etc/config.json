@@ -1,0 +1,82 @@
+{
+  "dependencies": [
+    "Login"
+  ],
+  "router": {
+    "rewrite_uri": [
+      {
+        "controller": "Index",
+        "action": "index",
+        "url": "/admin"
+      },
+      {
+        "controller": "Index",
+        "action": "",
+        "url": "/admin"
+      },
+      {
+        "controller": "Index",
+        "action": "phpInfo",
+        "url": "/phpinfo"
+      }
+    ]
+  },
+  "tables": [
+    {
+      "model": "BaseProject\\Admin\\Model\\Module",
+      "collection": "BaseProject\\Admin\\Collection\\Module",
+      "table_name": "admin_module",
+      "key": "id"
+    }
+  ],
+  "admin_menu": {
+    "tree": {
+      "Admin_System": [
+        "Admin_Index_showConfig",
+        "Admin_Index_clearCache",
+        "Admin_Index_clearCacheTranslate",
+        "Admin_Index_module",
+        "Admin_Index_phpInfo"
+      ]
+    },
+    "labels": {
+      "Admin_System": "System",
+      "Admin_Index_showConfig": "Configuration application",
+      "Admin_Index_clearCache": "Clear cache",
+      "Admin_Index_clearCacheTranslate": "Clear translate",
+      "Admin_Index_module": "Modules",
+      "Admin_Index_phpInfo": "Php Info"
+    },
+    "sort": {
+      "Admin_System": 1000,
+      "Admin_Index_showConfig": 1000,
+      "Admin_Index_clearCache": 900,
+      "Admin_Index_clearCacheTranslate": 950,
+      "Admin_Index_module": 800,
+      "Admin_Index_phpInfo": 10000
+    }
+  },
+  "roles": {
+    "Admin_admin": "Admin",
+    "Admin_developer": "Developer"
+  },
+  "page": {
+    "after_start_body": [
+      "BaseProject\\Admin\\Block\\Message"
+    ]
+  },
+  "ajaxifier": {
+    "message_block": {
+      "module": "Admin",
+      "controller": "Index",
+      "action": "index",
+      "block": "BaseProject\\Admin\\Block\\Message"
+    },
+    "message_block_show_config": {
+      "module": "Admin",
+      "controller": "Index",
+      "action": "showConfig",
+      "block": "BaseProject\\Admin\\Block\\Message"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "dependencies": [
+    "Login"
+  ],
+  "router": {
+  },
+  "tables": [
+    {
+      "model": "BaseProject\\Install\\Model\\Module",
+      "collection": "BaseProject\\Install\\Collection\\Module",
+      "table_name": "install_module",
+      "key": "id"
+    },
+    {
+      "model": "BaseProject\\Install\\Model\\File",
+      "collection": "BaseProject\\Install\\Collection\\File",
+      "table_name": "install_file",
+      "key": "id"
+    }
+  ],
+  "admin_menu": {
+    "tree": {
+      "Admin_System": {
+        "Install_Install": [
+          "Install_Index_startScript"
+        ]
+      }
+    },
+    "labels": {
+      "Install_Install": "Install",
+      "Install_Index_startScript": "Start script"
+    },
+    "sort": {
+      "Install_Install": 1500,
+      "Install_Index_startScript": 1
+    }
+  },
+  "roles": {
+    "Install": "Install"
+  }
+}

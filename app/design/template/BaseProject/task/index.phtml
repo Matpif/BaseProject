@@ -1,0 +1,40 @@
+<?php
+/** @var \BaseProject\Task\Controller\Index $this */
+
+use App\libs\App\CollectionDb;
+use App\libs\App\Router;
+
+$_tasks = $this->getTasks();
+?>
+<div class="show-task">
+    <table class="table table-hover">
+        <colgroup>
+            <col width="70%"/>
+            <col/>
+            <col width="10%"/>
+        </colgroup>
+        <thead>
+        <tr>
+            <th><?= $this->__('Label') ?></th>
+            <th><?= $this->__('Date last execute') ?></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        foreach ($_tasks as $key => $task):
+            /** @var BaseProject\Task\Model\Task $t */
+            $t = CollectionDb::getInstanceOf('Task_Task')->loadById($key);
+            ?>
+            <tr>
+                <td><?= $task['label'] ?></td>
+                <td><?= ($t) ? $t->getLastExec() : ''; ?></td>
+                <td><a href="<?= Router::getUrlAction('Task', 'Index', 'start') . "/code/{$key}" ?>"
+                       target="_blank"><?= $this->__('Exec') ?></a></td>
+            </tr>
+            <?php
+        endforeach;
+        ?>
+        </tbody>
+    </table>
+</div>

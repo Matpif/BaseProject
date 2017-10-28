@@ -1,0 +1,73 @@
+<?php
+/** @var \BaseProject\Admin\Controller\Index $this */
+
+use App\App;
+use App\libs\App\CollectionDb;
+use App\libs\App\Router;
+use BaseProject\Admin\Model\Module;
+
+$modules = CollectionDb::getInstanceOf('Admin_Module')->loadAll();
+?>
+<div class="show-module">
+    <table class="table table-hover">
+        <colgroup>
+            <col/>
+            <col width="100px"/>
+        </colgroup>
+        <thead>
+        <tr>
+            <th><?= $this->__('Module name') ?></th>
+            <th><?= $this->__('Enabled') ?></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        /** @var Module $module */
+        foreach ($modules as $module):
+            ?>
+            <tr>
+                <td><?= $module->getAttribute('module_name') ?></td>
+                <td><input type="checkbox"
+                           data-module-name="<?= $module->getAttribute('module_name') ?>" <?= ($module->getAttribute('module_name') == App::getInstance()->getRouter()->getModule()) ? 'disabled' : '' ?>
+                           name="enable[<?= $module->getAttribute('module_name') ?>]" <?= ($module->getEnable()) ? 'checked' : ''; ?> >
+                </td>
+            </tr>
+            <?php
+        endforeach;
+        ?>
+        </tbody>
+    </table>
+</div>
+<script type="application/javascript">
+    jQuery(function ($) {
+        $('input[type="checkbox"]').click(function () {
+            var isChecked = $(this).is(':checked');
+            var moduleName = $(this).data('module-name');
+            $.ajax({
+                url: '<?= Router::getUrlAction('Admin', 'Index', 'enableModule') ?>',
+                dataType: 'json',
+                type: 'post',
+                data: {
+                    'module-name': moduleName,
+                    'isChecked': isChecked
+                },
+                success: function (data) {
+                    var $message = $(data.returned);
+                    var $modules = data.modules;
+                    $.each($modules, function (key, module) {
+                        $m = $('input[type="checkbox"][data-module-name="' + module.module_name + '"]');
+                        if (module.enable === '1') {
+                            $m.prop('checked', true);
+                        } else {
+                            $m.prop('checked', false);
+                        }
+                    });
+                    $('body').prepend($message);
+                    setTimeout(function () {
+                        $message.remove();
+                    }, 2000);
+                }
+            })
+        });
+    });
+</script>

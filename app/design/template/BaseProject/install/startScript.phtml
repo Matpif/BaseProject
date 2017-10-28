@@ -1,0 +1,66 @@
+<?php
+/** @var \BaseProject\Install\Controller\Index $this */
+
+use App\libs\App\CollectionDb;
+use App\libs\App\Router;
+use BaseProject\Install\Model\File;
+use BaseProject\Install\Model\Module;
+
+$collectionModule = CollectionDb::getInstanceOf('Install_Module');
+$collectionModule->loadAll(['module_name' => 'ASC']);
+?>
+<div class="startScript">
+    <?php if ($this->getMessage()): ?>
+        <div class="message">
+            <?= $this->getMessage() ?>
+        </div>
+    <?php endif; ?>
+    <div>
+        <a href="<?= Router::getUrlAction('Install', 'Index', 'clearCache') ?>"
+           class="btn btn-default"><?= $this->__('Clear cache') ?></a>
+    </div>
+    <table class="table table-hover">
+        <colgroup>
+            <col width="70%">
+            <col width="10%">
+        </colgroup>
+        <thead>
+        <tr>
+            <th><?= $this->__('Module name') ?></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <?php
+        /** @var Module $module */
+        foreach ($collectionModule as $module):
+            ?>
+            <tr>
+                <td><?= $module->getAttribute('module_name') ?></td>
+                <td class="center">
+                    <span data-id="<?= $module->getId() ?>"
+                          class="glyphicon glyphicon-chevron-down show-details"></span>
+                </td>
+            </tr>
+            <?php
+            $collectionFile = CollectionDb::getInstanceOf('Install_File');
+            $collectionFile->load(['module_id' => $module->getId()]);
+            /** @var File $file */
+            foreach ($collectionFile as $file):
+                ?>
+                <tr class="details close detail-<?= $module->getId() ?>">
+                    <td>
+                        <div class="circle <?= ($file->getLastExec()) ? 'green' : 'orange' ?>"></div>&nbsp;<?= $file->getAttribute('file_name') ?>
+                    </td>
+                    <td class="center">
+                        <a href="<?= Router::getUrlAction('Install', 'Index',
+                            'exec') ?>/id/<?= $file->getId() ?>"><?= $this->__('Exec') ?></a>
+                    </td>
+                </tr>
+                <?php
+            endforeach;
+        endforeach;
+        ?>
+        </tbody>
+    </table>
+</div>

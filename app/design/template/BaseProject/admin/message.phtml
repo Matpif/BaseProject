@@ -1,0 +1,18 @@
+<?php
+/** @var \BaseProject\Admin\Block\Message $this */
+$messages = $this->getMessages();
+
+foreach ($messages as $message):?>
+    <?php
+    if (isset($message['level'], $message['message'])):
+        ?>
+        <div class="message">
+            <div class="message-content <?= $this->getClass($message['level']) ?>" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <?= $this->__($message['message']) ?>
+            </div>
+        </div>
+        <?php
+    endif;
+endforeach;

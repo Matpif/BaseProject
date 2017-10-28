@@ -1,0 +1,35 @@
+<?php
+/** @var \BaseProject\Admin\Controller\Index $this */
+
+use App\Config;
+
+$config = Config::getInstance()->getConfig();
+?>
+<div class="row">
+    <div class="col-md-6 col-sm-12 col-md-offset-3">
+        <form class="show_config" action="<?= \App\libs\App\Router::getUrlAction('Admin', 'Index', 'saveConfig') ?>"
+              method="post">
+            <?php
+            foreach ($config as $section => $values) {
+                ?>
+                <fieldset>
+                    <legend><?= $section ?></legend>
+                    <?php
+                    foreach ($values as $key => $value) {
+                        ?>
+                        <div class="form-group">
+                            <label for="<?= $section . '_' . $key ?>"><?= $key ?></label>
+                            <input type="text" class="form-control" name="<?= $section ?>[<?= $key ?>]"
+                                   id="<?= $section . '_' . $key ?>" value="<?= $value ?>">
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </fieldset>
+                <?php
+            }
+            ?>
+            <button type="submit" class="btn btn-primary"><?= $this->__('Save') ?></button>
+        </form>
+    </div>
+</div>

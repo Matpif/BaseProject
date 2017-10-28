@@ -1,0 +1,29 @@
+{
+  "dependencies": [
+    "Login"
+  ],
+  "router": {
+    "rewrite_uri": [
+      {
+        "controller": "Index",
+        "action": "reader",
+        "url": "/api/reader"
+      },
+      {
+        "controller": "Index",
+        "action": "writer",
+        "url": "/api/writer"
+      },
+      {
+        "controller": "Index",
+        "action": "remover",
+        "url": "/api/remover"
+      }
+    ]
+  },
+  "roles": {
+    "Api_reader": "Api reader",
+    "Api_writer": "Api writer",
+    "Api_remover": "Api remover"
+  }
+}

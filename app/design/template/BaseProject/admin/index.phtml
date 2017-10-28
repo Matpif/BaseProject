@@ -1,0 +1,14 @@
+<?php
+/** @var \BaseProject\Admin\Controller\Index $this */
+
+use App\libs\App\Block;
+
+$this->getKey();
+?>
+    <h1 class="welcome">Welcome to admin panel!!</h1>
+<?php
+/** @var \BaseProject\Cms\Block\Block $blockTest */
+$blockTest = Block::getBlock('Cms_Block');
+$blockTest->setName('welcome_page');
+echo $blockTest->getHtml();
+?>
