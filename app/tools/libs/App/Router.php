@@ -2,6 +2,7 @@
 
 namespace App\libs\App;
 
+use App\App;
 use App\Config;
 use App\ConfigModule;
 
@@ -246,6 +247,43 @@ class Router
         }
 
         return false;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function rulesAccepted() {
+        $rules = ConfigModule::getInstance()->getConfigAllModules('router/rules');
+        $returned = true;
+
+        if (isset($rules[$this->_module])) {
+            $request = App::getInstance()->getRequest();
+            $uri = '/'.$this->_module.'/'.$this->_controller.'/'.$this->_action;
+            $rules = $rules[$this->_module];
+
+            foreach ($rules as $key => $rule) {
+                if(!$returned) break;
+
+                $compare = (isset($request->getServerParams()[$key]))?$request->getServerParams()[$key]:'';;
+
+                if ($compare) {
+                    foreach ($rule as $u => $accepted) {
+                        if ($uri == $u) {
+                            $returned = false;
+                            foreach ($accepted as $a) {
+                                if (strpos($compare, $a) !== false) {
+                                    $returned = true;
+                                    break;
+                                }
+                            }
+                            if (!$returned) break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $returned;
     }
 
     /**

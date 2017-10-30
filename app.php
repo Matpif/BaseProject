@@ -12,6 +12,10 @@ if (!$mode_cli) {
             $config = array_replace_recursive($_currentConfig->getConfig(), ['app' => $_POST['app']], ['mysql' => $_POST['mysql']], ['redis' => $_POST['redis']]);
             $config['app']['installed'] = 1;
             $_currentConfig->setConfig($config);
+            $myPdo = \App\MyPdo::getInstance(\App\MyPdo::TYPE_MYSQL);
+            $query = file_get_contents(__DIR__.'/install/install.sql');
+            $myStatement = $myPdo->query($query);
+            $myPdo->exec($myStatement);
             header('Location: /');
         } else {
             ?>

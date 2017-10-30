@@ -50,8 +50,11 @@ if (!$router->routeExist()) {
     /** @var \BaseProject\Error\Controller\Error $_controller */
     $_controller = Controller::getController('Error_Error');
     $_controller->error404Action();
+} else if (!$router->rulesAccepted()) {
+    /** @var \BaseProject\Error\Controller\Error $_controller */
+    $_controller = Controller::getController('Error_Error');
+    $_controller->error415Action();
 } else {
-    // TODO: Middleware ---
     if (App::getInstance()->isAllowed()) {
         $controllerName = $router->getControllerClassName();
         /**

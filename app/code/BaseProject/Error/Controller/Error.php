@@ -29,4 +29,11 @@ class Error extends Controller
         $this->setTemplate('/error/404.phtml');
         $this->setHtmlStatusCode(StatusCodes::HTTP_NOT_FOUND);
     }
+
+    public function error415Action()
+    {
+        $this->setTitle('415 - Unsupported Media Type');
+        $this->setTemplate('/error/415.phtml');
+        $this->setHtmlStatusCode(StatusCodes::HTTP_UNSUPPORTED_MEDIA_TYPE);
+    }
 }

@@ -6,7 +6,19 @@
         "action": "index",
         "url": "/ajaxifier"
       }
-    ]
+    ],
+    "rules": {
+      "REQUEST_METHOD": {
+        "/Ajaxifier/Index/index": [
+          "POST"
+        ]
+      },
+      "HTTP_ACCEPT": {
+        "/Ajaxifier/Index/index": [
+          "application/json"
+        ]
+      }
+    }
   },
   "roles": {
     "Admin_admin": "Admin"
