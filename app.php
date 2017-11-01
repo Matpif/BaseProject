@@ -1,6 +1,8 @@
 <?php
 
 use App\Config;
+use App\libs\App\Helper;
+use BaseProject\Admin\Helper\Cache;
 
 $mode_cli = (php_sapi_name() == 'cli');
 
@@ -13,9 +15,14 @@ if (!$mode_cli) {
             $config['app']['installed'] = 1;
             $_currentConfig->setConfig($config);
             $myPdo = \App\MyPdo::getInstance(\App\MyPdo::TYPE_MYSQL);
-            $query = file_get_contents(__DIR__.'/install/install.sql');
+            $query = file_get_contents(__DIR__.'/install/install-0.0.1.sql');
             $myStatement = $myPdo->query($query);
             $myPdo->exec($myStatement);
+
+            /** @var Cache $cacheHelper */
+            $cacheHelper = Helper::getInstance('Admin_Cache');
+            $cacheHelper->clearCache();
+
             header('Location: /');
         } else {
             ?>

@@ -38,8 +38,8 @@ class Router
      */
     public function __construct()
     {
-        $this->_currentUri = $_SERVER['REQUEST_URI'];
-        $this->_rootUrl = $_SERVER['SERVER_NAME'];
+        $this->_currentUri = App::getInstance()->getRequest()->getServerParams()['REQUEST_URI'];
+        $this->_rootUrl = App::getInstance()->getRequest()->getServerParams()['SERVER_NAME'];
         $this->_secure = Config::getInstance()->getAttribute('app', 'secure');
         $this->getRoute();
     }

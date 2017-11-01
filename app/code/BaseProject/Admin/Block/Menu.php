@@ -13,7 +13,7 @@ class Menu extends Block
     private $_sort;
 
     /**
-     * Default_Admin_MenuBlock constructor.
+     * Menu constructor.
      */
     public function __construct()
     {

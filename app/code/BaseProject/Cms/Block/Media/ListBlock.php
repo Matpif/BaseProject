@@ -41,8 +41,8 @@ class ListBlock extends \App\libs\App\Block
                 unset($elements[$key]);
                 /** @var Dir $dir */
                 $dir = Model::getModel('Cms_Dir');
-                $dir->setPath($path . '/' . $element);
-                $dir->addChild($this->getElementsDir($path . '/' . $element, ($level + 1)));
+                $dir->setPath($path . $element);
+                $dir->addChild($this->getElementsDir($path . $element, ($level + 1)));
                 $elements[$element] = $dir;
             } else {
                 /** @var File $file */
@@ -69,12 +69,12 @@ class ListBlock extends \App\libs\App\Block
         $ul = '<ul>';
 
         if ($elements instanceof Dir) {
-            $ul .= '<li class="dir"><span class="glyphicon glyphicon-folder-open" data-path="' . $elements->getPath(false) . '"></span>';
+            $ul .= '<li class="dir" data-path="' . $elements->getPath(false) . '"><span class="fa fa-folder-open"></span>';
             $ul .= (($elements->getFolderName()) ? $elements->getFolderName() : 'root') . $this->getUl($elements->getChild());
             $ul .= '</li>';
         } else {
             if ($elements instanceof File) {
-                $ul .= '<li class="file"><span class="glyphicon glyphicon-file"></span>';
+                $ul .= '<li class="file"><span class="fa fa-file"></span>';
                 $ul .= '<a href="' . Router::getUrlAction('Cms',
                         'Media') . '?id=' . $elements->getFileName() . '">' . $elements->getFileName() . '</a>';
                 $ul .= '</li>';
@@ -82,11 +82,11 @@ class ListBlock extends \App\libs\App\Block
                 if (is_array($elements)) {
                     foreach ($elements as $element) {
                         if ($element instanceof Dir) {
-                            $ul .= '<li class="dir"><span class="glyphicon glyphicon-folder-open"></span>';
+                            $ul .= '<li class="dir" data-path="' . $element->getPath(false) . '"><span class="fa fa-folder-open"></span>';
                             $ul .= $element->getFolderName() . $this->getUl($element->getChild());
                         } else {
                             if ($element instanceof File) {
-                                $ul .= '<li class="file"><span class="glyphicon glyphicon-file"></span>';
+                                $ul .= '<li class="file"><span class="fa fa-file"></span>';
                                 $ul .= '<a href="' . Router::getUrlAction('Cms',
                                         'Media') . '?id=' . $element->getFileName() . '">' . $element->getFileName() . '</a>';
                             }

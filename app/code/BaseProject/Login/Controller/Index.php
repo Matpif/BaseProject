@@ -7,6 +7,7 @@ use App\libs\App\Block;
 use App\libs\App\CollectionDb;
 use App\libs\App\Controller;
 use App\libs\App\Helper;
+use App\libs\App\Model;
 use BaseProject\Admin\Block\Message;
 use BaseProject\Login\Helper\Login;
 use FloconApi;
@@ -23,7 +24,6 @@ class Index extends Controller
         $this->setTemplateHeader(null);
         $this->setTemplateFooter(null);
         $this->setTitle('Login');
-        $this->addCSS('/skin/css/login.css');
     }
 
     public function indexAction()
@@ -108,6 +108,41 @@ class Index extends Controller
             }
         }
         $this->redirect($this);
+    }
+
+    public function registerAction() {
+        $params = App::getInstance()->getRequest()->getParsedBody();
+
+        if (isset($params['username'], $params['password'], $params['password-confirm'])
+            && !empty($params['username']) && !empty($params['password']) && !empty($params['password-confirm'])) {
+
+            if ($params['password'] == $params['password-confirm']) {
+                /** @var \BaseProject\Login\Model\User $user */
+                $user = Model::getModel('Login_User');
+                $user->setUsername($params['username']);
+                $user->setPassword($params['password']);
+                $user->setGroupId(2);
+                $user->save();
+                App::getInstance()->getSession()->addMessage([
+                    'level' => Message::LEVEL_MESSAGE_SUCCESS,
+                    'message' => "You are registered"
+                ]);
+                $this->redirect($this);
+            } else {
+                App::getInstance()->getSession()->addMessage([
+                    'level' => Message::LEVEL_MESSAGE_ERROR,
+                    'message' => "Is not a same password"
+                ]);
+                $this->redirect($this);
+            }
+
+        } else {
+            App::getInstance()->getSession()->addMessage([
+                'level' => Message::LEVEL_MESSAGE_ERROR,
+                'message' => "All params is mandatory"
+            ]);
+            $this->redirect($this);
+        }
     }
 
     public function disconnectAction()

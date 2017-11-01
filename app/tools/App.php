@@ -148,7 +148,7 @@ class App
 
     public function httpAccepted($contentType)
     {
-        return (strpos($_SERVER['HTTP_ACCEPT'], $contentType) !== false);
+        return (strpos($this->getRequest()->getServerParams()['HTTP_ACCEPT'], $contentType) !== false);
     }
 
     /**

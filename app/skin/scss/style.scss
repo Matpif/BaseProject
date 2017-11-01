@@ -1,8 +1,14 @@
+/* Font-awesome */
+@import "../libs/font-awesome-4.7.0/scss/font-awesome";
+
 /* Vars */
-@import "_var.scss";
+@import "var";
+
 /* Functions */
 @import "function/main";
 @import "app/app";
+
+/***** MODULES *****/
 /* Module Admin */
 @import "admin/menu";
 @import "admin/config";
@@ -14,6 +20,7 @@
 /* Module Login */
 @import "login/group";
 @import "login/user";
+@import "login/login";
 /* Module Task */
 @import "task/task";
 /* Module Cms */

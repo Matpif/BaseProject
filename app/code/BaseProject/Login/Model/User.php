@@ -13,10 +13,10 @@ use App\libs\App\ModelDb;
  * @method Boolean getUseFlocon()
  * @method String getTotpKey()
  * @method int setId()
- * @method String setUsername()
- * @method int setGroupId()
- * @method Boolean setUseFlocon()
- * @method String setTotpKey()
+ * @method setUsername(String)
+ * @method setGroupId(int)
+ * @method setUseFlocon(Boolean)
+ * @method setTotpKey(String)
  *
  * class DefaultLogin_UserModel
  */

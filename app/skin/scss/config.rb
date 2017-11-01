@@ -7,5 +7,6 @@ javascripts_dir = "../js"
 fonts_dir = "../css/fonts"
 relative_assets = true
 
-output_style = :expanded
+# output_style = :expanded
+output_style = :compressed
 environment = :production

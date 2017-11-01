@@ -102,7 +102,7 @@ class Controller extends VarientObject
         } else {
             $this->_moduleName = '';
         }
-        $this->setKey([$_SERVER['REQUEST_URI'], App::getInstance()->getLanguageCode()]);
+        $this->setKey([App::getInstance()->getRequest()->getServerParams()['REQUEST_URI'], App::getInstance()->getLanguageCode()]);
         $this->_useCache = false;
     }
 

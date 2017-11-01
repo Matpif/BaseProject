@@ -5,12 +5,21 @@ use App\App;
 use App\libs\App\Router;
 
 ?>
-<div class="content">
-    <div class="form">
-        <header><?= App::getInstance()->getAppName() ?></header>
-        <form class="login-form" action="<?= Router::getUrlAction('Login', 'Index', 'otpCheck') ?>" method="POST">
-            <input name="code" placeholder="<?= $this->__('Code') ?>" autofocus/>
-            <button><?= $this->__('Connect') ?></button>
-        </form>
+<div class="login-page">
+    <div class="row">
+        <div class="col-sm-12 align-center">
+            <h1><?= App::getInstance()->getAppName() ?></h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3 padding-top-bottom">
+            <form class="login-form" action="<?= Router::getUrlAction('Login', 'Index', 'otpCheck') ?>" method="POST">
+                <div class="form-group">
+                    <label for="code"><?= $this->__('Please enter your Otp code') ?></label>
+                    <input name="code" id="code" class="form-control" placeholder="<?= $this->__('Code') ?>" autofocus/>
+                </div>
+                <button class="btn btn-primary"><?= $this->__('Connect') ?></button>
+            </form>
+        </div>
     </div>
 </div>

@@ -5,13 +5,64 @@ use App\App;
 use App\libs\App\Router;
 
 ?>
-<div class="content">
-    <div class="form">
-        <header><?= App::getInstance()->getAppName() ?></header>
-        <form class="login-form" action="<?= Router::getUrlAction('Login', 'Index', 'signIn') ?>" method="POST">
-            <input name="username" placeholder="<?= $this->__('Username') ?>" autofocus/>
-            <input type="password" name="password" placeholder="<?= $this->__('Password') ?>"/>
-            <button><?= $this->__('Connect') ?></button>
-        </form>
+<div class="login-page">
+    <div class="row">
+        <div class="col-sm-12 align-center">
+            <h1><?= App::getInstance()->getAppName() ?></h1>
+        </div>
+    </div>
+    <div class="row hide-desktop align-center">
+        <a href="#" data-id="connection" data-id-show="register"><?= $this->__('Register') ?></a>
+        <a href="#" data-id="register" data-id-show="connection" class="hide-mob"><?= $this->__('Connection') ?></a>
+    </div>
+    <div class="row">
+        <div data-id="connection"
+             class="col-lg-3 col-md-5 col-md-offset-1 col-lg-offset-3 align-right padding-top-bottom">
+            <form class="" action="<?= Router::getUrlAction('Login', 'Index', 'signIn') ?>" method="POST">
+                <div class="form-group">
+                    <label for="username"><?= $this->__('Username') ?></label>
+                    <input name="username" id="username" class="form-control" placeholder="<?= $this->__('Username') ?>"
+                           autofocus/>
+                </div>
+                <div class="form-group">
+                    <label for="password"><?= $this->__('Password') ?></label>
+                    <input type="password" name="password" class="form-control" id="password"
+                           placeholder="<?= $this->__('Password') ?>"/>
+                </div>
+                <button class="btn btn-primary"><?= $this->__('Connect') ?></button>
+            </form>
+        </div>
+        <div data-id="register" class="col-lg-3 col-md-5 border-left padding-top-bottom hide-mob">
+            <form class="" action="<?= Router::getUrlAction('Login', 'Index', 'register') ?>" method="POST">
+                <div class="form-group">
+                    <label for="username"><?= $this->__('Username') ?></label>
+                    <input name="username" id="username" class="form-control"
+                           placeholder="<?= $this->__('Username') ?>"/>
+                </div>
+                <div class="form-group">
+                    <label for="password"><?= $this->__('Password') ?></label>
+                    <input type="password" name="password" class="form-control" id="password"
+                           placeholder="<?= $this->__('Password') ?>"/>
+                </div>
+                <div class="form-group">
+                    <label for="password-confirm"><?= $this->__('Password confirm') ?></label>
+                    <input type="password" name="password-confirm" class="form-control" id="password-confirm"
+                           placeholder="<?= $this->__('Password confirm') ?>"/>
+                </div>
+                <button class="btn btn-success"><?= $this->__('Register') ?></button>
+            </form>
+        </div>
     </div>
 </div>
+<script type="application/javascript">
+    jQuery(function ($) {
+
+        $('.hide-desktop a').on('click', function (e) {
+            e.preventDefault();
+            $('[data-id="connection"]').addClass('hide-mob');
+            $('[data-id="register"]').addClass('hide-mob');
+            var id = $(this).data('id-show');
+            $('[data-id="' + id + '"]').removeClass('hide-mob');
+        });
+    });
+</script>

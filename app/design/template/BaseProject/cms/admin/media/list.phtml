@@ -1,5 +1,5 @@
 <?php
-/** @var \BaseProject\Cms\Controller\Media $this */
+/** @var \BaseProject\Cms\Block\Media\ListBlock $this */
 $elements = $this->getElementsDir('/');
 ?>
 <div class="list">
@@ -12,13 +12,19 @@ $elements = $this->getElementsDir('/');
             var span = $(this);
             if (li.hasClass('close-dir')) {
                 li.removeClass('close-dir');
-                span.addClass('glyphicon-folder-open');
-                span.removeClass('glyphicon-folder-close');
+                span.addClass('fa-folder-open');
+                span.removeClass('fa-folder');
             } else {
                 li.addClass('close-dir');
-                span.addClass('glyphicon-folder-close');
-                span.removeClass('glyphicon-folder-open');
+                span.addClass('fa-folder');
+                span.removeClass('fa-folder-open');
             }
+        });
+
+        $('li.dir').on('click', function() {
+            var li = $(this);
+            var path = li.data('path');
+            $('input[name="path"]').val(path);
         });
     });
 </script>
