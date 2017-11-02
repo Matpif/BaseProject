@@ -3,3 +3,4 @@
 /app/skin/scss/.sass-cache
 /vendor
 /composer.lock
+/composer.phar

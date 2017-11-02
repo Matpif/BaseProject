@@ -16,7 +16,23 @@
         "action": "",
         "url": "/login"
       }
-    ]
+    ],
+    "rules": {
+      "REQUEST_METHOD": {
+        "/Login/Index/register": [
+          "POST"
+        ],
+        "/Login/Index/signIn": [
+          "POST"
+        ],
+        "/Login/Index/otpCheck": [
+          "POST"
+        ],
+        "/Login/Ldap/save": [
+          "POST"
+        ]
+      }
+    }
   },
   "roles": {
     "Login_guest": "Guest",
@@ -25,24 +41,28 @@
     "Login_delete_user": "Delete user",
     "Login_show_groups": "Show groups",
     "Login_add_group": "Add group",
-    "Login_delete_group": "Delete group"
+    "Login_delete_group": "Delete group",
+    "Login_save_ldap": "Ldap config"
   },
   "admin_menu": {
     "tree": {
       "Login_Index_index": [
         "Login_User_index",
-        "Login_Group_index"
+        "Login_Group_index",
+        "Login_Ldap_index"
       ]
     },
     "labels": {
       "Login_Index_index": "Users",
       "Login_User_index": "Show users",
-      "Login_Group_index": "Show groups"
+      "Login_Group_index": "Show groups",
+      "Login_Ldap_index" : "Ldap config"
     },
     "sort": {
       "Login_Index_index": 900,
       "Login_User_index": 900,
-      "Login_Group_index": 1000
+      "Login_Group_index": 1000,
+      "Login_Ldap_index": 1100
     }
   },
   "tables": [
@@ -56,6 +76,12 @@
       "model": "BaseProject\\Login\\Model\\Group",
       "collection": "BaseProject\\Login\\Collection\\Group",
       "table_name": "login_group",
+      "key": "id"
+    },
+    {
+      "model": "BaseProject\\Login\\Model\\LdapConfig",
+      "collection": "BaseProject\\Login\\Collection\\LdapConfig",
+      "table_name": "login_ldap_config",
       "key": "id"
     }
   ],

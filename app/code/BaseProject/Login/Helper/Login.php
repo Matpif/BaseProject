@@ -3,11 +3,12 @@
 namespace BaseProject\Login\Helper;
 
 use App\ConfigModule;
+use App\libs\App\Collection;
 use App\libs\App\CollectionDb;
 use App\libs\App\Helper;
-use App\libs\App\Logs;
 use App\libs\App\Router;
 use BaseProject\Login\Model\Group;
+use BaseProject\Login\Model\LdapConfig;
 use BaseProject\Login\Model\User;
 
 class Login extends Helper
@@ -68,11 +69,12 @@ class Login extends Helper
         return Router::getUrlAction('Login');
     }
 
-    /**
-     * @param $user Default_Login_UserModel
-     */
-    public function beforeSaveUser($user)
-    {
-        Logs::log('test');
+    public function ldapIsActive() {
+        /** @var LdapConfig $ldap */
+        $ldap = Collection::getInstanceOf('Login_LdapConfig')->loadById(1);
+        if ($ldap) {
+            return $ldap->getIsActive();
+        }
+        return false;
     }
 }

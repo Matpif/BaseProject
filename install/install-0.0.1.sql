@@ -1,4 +1,6 @@
-
+/**
+* Module Admin
+ */
 CREATE TABLE admin_module
 (
   id          INT AUTO_INCREMENT
@@ -18,6 +20,9 @@ INSERT INTO admin_module (module_name, enable) VALUES ('Api', 0);
 INSERT INTO admin_module (module_name, enable) VALUES ('Cms', 0);
 INSERT INTO admin_module (module_name, enable) VALUES ('Ajaxifier', 0);
 
+/**
+* Module Cms
+ */
 CREATE TABLE cms_block (
   id                 INT PRIMARY KEY AUTO_INCREMENT,
   name               NVARCHAR(25) NOT NULL,
@@ -31,6 +36,9 @@ CREATE TABLE cms_block (
 CREATE UNIQUE INDEX cms_block_name_language_code_uindex
   ON cms_block (name, language_code);
 
+/**
+* Module Install
+ */
 CREATE TABLE install_module
 (
   id          INT AUTO_INCREMENT
@@ -53,6 +61,9 @@ CREATE TABLE install_file
   FOREIGN KEY (module_id) REFERENCES BaseProject.install_module (id)
 );
 
+/**
+* Module Login
+ */
 CREATE TABLE login_group (
   id    INT PRIMARY KEY AUTO_INCREMENT,
   name  NVARCHAR(50),
@@ -65,8 +76,11 @@ CREATE TABLE login_user
     PRIMARY KEY,
   username   VARCHAR(50)            NOT NULL,
   password   VARCHAR(50)            NULL,
+  first_name VARCHAR(50) NULL,
+  last_name VARCHAR(50) NULL,
+  email VARCHAR(150) NULL,
   group_id   INT                    NOT NULL,
-  use_flocon TINYINT(1) DEFAULT '0' NULL,
+  use_ldap TINYINT(1) DEFAULT '0' NULL,
   totp_key   VARCHAR(255)           NULL,
   CONSTRAINT login_user_username_pk
   UNIQUE (username),
@@ -79,9 +93,22 @@ INSERT INTO login_group (id, name, roles) VALUES (1, 'Admin',
 INSERT INTO login_group (id, name, roles) VALUES (2, 'Guest', 'Login_guest');
 
 /** Mot de passe Admin par défaut: Admin*/
-INSERT INTO login_user (username, password, group_id, use_flocon)
+INSERT INTO login_user (username, password, group_id, use_ldap)
 VALUES ('Admin', '4e7afebcfbae000b22c7c85e5560f89a2a0280b4', 1, 0);
 
+CREATE TABLE login_ldap_config(
+  id int AUTO_INCREMENT PRIMARY KEY,
+  is_active TINYINT DEFAULT 0,
+  domain_controllers NVARCHAR(250) NULL,
+  base_dn NVARCHAR(250) NULL,
+  admin_username NVARCHAR(250) NULL,
+  admin_password NVARCHAR(250) NULL,
+  domain NVARCHAR(50) NULL
+);
+
+/**
+* Module Task
+ */
 CREATE TABLE task_task (
   code      NVARCHAR(50) PRIMARY KEY,
   last_exec DATETIME NULL

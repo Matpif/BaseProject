@@ -17,7 +17,8 @@ use App\libs\App\Router;
     </div>
     <div class="row">
         <div data-id="connection"
-             class="col-lg-3 col-md-5 col-md-offset-1 col-lg-offset-3 align-right padding-top-bottom">
+             class="col-lg-3 col-md-5 col-md-offset-1 col-lg-offset-3 align-right padding-bottom">
+            <h3><?= $this->__('Connection'); ?></h3>
             <form class="" action="<?= Router::getUrlAction('Login', 'Index', 'signIn') ?>" method="POST">
                 <div class="form-group">
                     <label for="username"><?= $this->__('Username') ?></label>
@@ -32,7 +33,8 @@ use App\libs\App\Router;
                 <button class="btn btn-primary"><?= $this->__('Connect') ?></button>
             </form>
         </div>
-        <div data-id="register" class="col-lg-3 col-md-5 border-left padding-top-bottom hide-mob">
+        <div data-id="register" class="col-lg-3 col-md-5 border-left padding-bottom hide-mob">
+            <h3><?= $this->__('Register'); ?></h3>
             <form class="" action="<?= Router::getUrlAction('Login', 'Index', 'register') ?>" method="POST">
                 <div class="form-group">
                     <label for="username"><?= $this->__('Username') ?></label>
@@ -40,12 +42,27 @@ use App\libs\App\Router;
                            placeholder="<?= $this->__('Username') ?>"/>
                 </div>
                 <div class="form-group">
+                    <label for="first_name"><?= $this->__('First name') ?></label>
+                    <input name="first_name" id="first_name" class="form-control"
+                           placeholder="<?= $this->__('First Name') ?>"/>
+                </div>
+                <div class="form-group">
+                    <label for="last_name"><?= $this->__('Last name') ?></label>
+                    <input name="last_name" id="last_name" class="form-control"
+                           placeholder="<?= $this->__('Last Name') ?>"/>
+                </div>
+                <div class="form-group">
+                    <label for="email"><?= $this->__('Email') ?></label>
+                    <input type="email" name="email" id="email" class="form-control"
+                           placeholder="<?= $this->__('email') ?>"/>
+                </div>
+                <div class="form-group">
                     <label for="password"><?= $this->__('Password') ?></label>
                     <input type="password" name="password" class="form-control" id="password"
                            placeholder="<?= $this->__('Password') ?>"/>
                 </div>
                 <div class="form-group">
-                    <label for="password-confirm"><?= $this->__('Password confirm') ?></label>
+                    <label for="password-confirm"><?= $this->__('Confirm password') ?></label>
                     <input type="password" name="password-confirm" class="form-control" id="password-confirm"
                            placeholder="<?= $this->__('Password confirm') ?>"/>
                 </div>

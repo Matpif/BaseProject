@@ -51,9 +51,7 @@ abstract class VarientObject implements \JsonSerializable
     public function __call($method, $args)
     {
         $key = $this->_underscore(substr($method, 3));
-        if (isset($args[0]) && (strstr($args[0], '=') || strstr($args[0], '&'))) {
-            $key .= '[' . strlen($args[0]) . ']';
-        }
+
         switch (substr($method, 0, 3)) {
             case 'get' :
                 $data = $this->getAttribute($key);

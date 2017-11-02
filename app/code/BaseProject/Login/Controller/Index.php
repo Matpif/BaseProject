@@ -54,13 +54,13 @@ class Index extends Controller
             $user = CollectionDb::getInstanceOf('Login_User')->load(['username' => $request['username']])->getFirstRow();
             if ($user) {
                 $auth = false;
-                if ($user->getUseFlocon()) {
-                    $floconApi = new FloconApi(false);
-                    $userFlocon = $floconApi->signIn($request['username'], $request['password']);
-                    $auth = (isset($userFlocon['auth'])) ? $userFlocon['auth'] : false;
+                if ($user->getUseLdap()) {
+                    $ldap = new \BaseProject\Login\Ldap\Ldap();
+                    $provider = $ldap->connect(\BaseProject\Login\Ldap\Ldap::PROVIDER_NAME);
+                    $auth = $provider->auth()->attempt($ldap->getDomain().'\\'.$user->getUsername(), $request['password']);
                 }
-                if (($user->getUseFlocon() && $auth)
-                    || (!$user->getUseFlocon() && $user->checkPassword($request['password']))) {
+                if (($user->getUseLdap() && $auth)
+                    || (!$user->getUseLdap() && $user->checkPassword($request['password']))) {
 
                     $session = App::getInstance()->getSession();
                     if ($user->getTotpKey()) {
@@ -114,13 +114,16 @@ class Index extends Controller
         $params = App::getInstance()->getRequest()->getParsedBody();
 
         if (isset($params['username'], $params['password'], $params['password-confirm'])
-            && !empty($params['username']) && !empty($params['password']) && !empty($params['password-confirm'])) {
+            && !empty($params['username']) && !empty($params['password']) && !empty($params['password-confirm']) && !empty($params['first_name']) && !empty($params['last_name'])) {
 
             if ($params['password'] == $params['password-confirm']) {
                 /** @var \BaseProject\Login\Model\User $user */
                 $user = Model::getModel('Login_User');
                 $user->setUsername($params['username']);
                 $user->setPassword($params['password']);
+                $user->setFirstName($params['first_name']);
+                $user->setLastName($params['last_name']);
+                $user->setEmail($params['email']);
                 $user->setGroupId(2);
                 $user->save();
                 App::getInstance()->getSession()->addMessage([

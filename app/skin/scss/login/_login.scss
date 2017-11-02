@@ -5,9 +5,8 @@
             display: none;
         }
 
-        .padding-top-bottom {
-            padding-bottom: 30px;
-            padding-top: 30px;
+        .padding-bottom {
+            padding-bottom: 20px;
         }
 
         h1 {
@@ -43,6 +42,9 @@
             }
             .border-left {
                 border-left: none;
+            }
+            h1 {
+                margin: 1em 0;
             }
         }
     }

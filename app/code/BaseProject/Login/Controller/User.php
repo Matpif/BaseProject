@@ -55,16 +55,19 @@ class User extends Controller
             }
             $user->setAttribute('id', $request['id']);
             $user->setAttribute('username', $request['username']);
+            $user->setAttribute('first_name', $request['first_name']);
+            $user->setAttribute('last_name', $request['last_name']);
+            $user->setAttribute('email', $request['email']);
             $user->setAttribute('group_id', $request['group']);
 
-            if (isset($request['use_flocon'], $request['password'])) {
+            if (isset($request['use_ldap'], $request['password'])) {
                 $user->setAttribute('password', null);
             } else {
                 if (!empty($request['password'])) {
                     $user->setPassword($request['password']);
                 }
             }
-            $user->setAttribute('use_flocon', isset($request['use_flocon']) ? 1 : 0);
+            $user->setAttribute('use_ldap', isset($request['use_ldap']) ? 1 : 0);
 
             if (!isset($request['use_otp'])) {
                 $user->setTotpKey(null);
@@ -81,7 +84,7 @@ class User extends Controller
             } else {
                 App::getInstance()->getSession()->addMessage([
                     'level' => Message::LEVEL_MESSAGE_ERROR,
-                    'message' => 'Saved with success !'
+                    'message' => 'Saved without success !'
                 ]);
             }
         }

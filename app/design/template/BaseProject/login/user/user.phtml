@@ -31,14 +31,37 @@ $_popin->setId('modalDelete');
                    value="<?= $_currentUser->getUsername() ?>"/>
         </div>
         <div class="form-group">
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="use_flocon" <?= ($_currentUser->getUseFlocon()) ? 'checked' : ''; ?> >
-                    <?= $this->__('Use Flocon') ?>
-                </label>
-            </div>
+            <label for="first_name"><?= $this->__('First name') ?></label>
+            <input type="text" id="first_name" class="form-control" name="first_name"
+                   value="<?= $_currentUser->getFirstName() ?>"/>
         </div>
-        <div class="form-group <?= ($_currentUser->getUseFlocon()) ? 'hide' : '' ?>" id="div-password">
+        <div class="form-group">
+            <label for="last_name"><?= $this->__('Last name') ?></label>
+            <input type="text" id="last_name" class="form-control" name="last_name"
+                   value="<?= $_currentUser->getLastName() ?>"/>
+        </div>
+        <div class="form-group">
+            <label for="email"><?= $this->__('Email') ?></label>
+            <input type="email" id="email" class="form-control" name="email"
+                   value="<?= $_currentUser->getEmail() ?>"/>
+        </div>
+        <?php
+        /** @var Login $loginHelper */
+        $loginHelper = Helper::getInstance('Login_Login');
+        if ($loginHelper->ldapIsActive()):
+            ?>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="use_ldap" <?= ($_currentUser->getUseLdap() && $loginHelper->ldapIsActive()) ? 'checked' : ''; ?> >
+                        <?= $this->__('Use LDAP') ?>
+                    </label>
+                </div>
+            </div>
+            <?php
+        endif;
+        ?>
+        <div class="form-group <?= ($_currentUser->getUseLdap() && $loginHelper->ldapIsActive()) ? 'hide' : '' ?>" id="div-password">
             <label for="password"><?= $this->__('Password') ?></label>
             <input type="password" id="password" class="form-control" name="password"/>
         </div>
@@ -75,7 +98,7 @@ $_popin->setId('modalDelete');
 
 <script type="application/javascript">
     jQuery(function ($) {
-        $('input[name="use_flocon"').click(function () {
+        $('input[name="use_ldap"').click(function () {
             if ($(this).prop('checked')) {
                 $('#div-password').addClass('hide');
             } else {

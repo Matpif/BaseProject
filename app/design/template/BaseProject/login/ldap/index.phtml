@@ -1,0 +1,37 @@
+<?php
+/** @var \BaseProject\Login\Controller\Ldap $this */
+$_currentConfig = $this->getCurrentConfig();
+
+?>
+<div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
+        <form action="<?= \App\libs\App\Router::getUrlAction('Login', 'Ldap', 'save') ?>" method="POST">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="is_active" <?= ($_currentConfig->getIsActive())?'checked':'' ?> /><?= $this->__('Active') ?>
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="domain_controllers"><?= $this->__('Domain controllers') ?></label>
+                <input type="text" name="domain_controllers" id="domain_controllers" value="<?= $_currentConfig->getDomainControllers() ?>" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="base_dn"><?= $this->__('Base DN') ?></label>
+                <input type="text" name="base_dn" id="base_dn" value="<?= $_currentConfig->getBaseDn() ?>" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="admin_username"><?= $this->__('Admin username') ?></label>
+                <input type="text" name="admin_username" id="admin_username" value="<?= $_currentConfig->getAdminUsername() ?>" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="admin_password"><?= $this->__('Admin password') ?></label>
+                <input type="password" name="admin_password" id="admin_password" value="<?= $_currentConfig->getAdminPassword() ?>" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="domain"><?= $this->__('Domain') ?></label>
+                <input type="text" name="domain" id="domain" value="<?= $_currentConfig->getDomain() ?>" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary"><?= $this->__('Save') ?></button>
+        </form>
+    </div>
+</div>

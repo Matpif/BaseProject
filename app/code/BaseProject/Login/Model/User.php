@@ -7,16 +7,23 @@ use App\libs\App\ModelDb;
 /**
  *
  * @method int getId()
- * @method String getUsername()
- * @method String getPassword()
+ * @method string getUsername()
+ * @method string getPassword()
  * @method int getGroupId()
- * @method Boolean getUseFlocon()
- * @method String getTotpKey()
+ * @method Boolean getUseLdap()
+ * @method string getTotpKey()
+ * @method string getFirstName()
+ * @method string getLastName()
+ * @method string getEmail()
+ *
  * @method int setId()
- * @method setUsername(String)
- * @method setGroupId(int)
- * @method setUseFlocon(Boolean)
- * @method setTotpKey(String)
+ * @method setUsername(string $username)
+ * @method setGroupId(int $groupId)
+ * @method setUseLdap(Boolean $useLdap)
+ * @method setTotpKey(string $totpKey)
+ * @method setFirstName(string $firstName)
+ * @method setLastName(string $lastName)
+ * @method setEmail(string $email)
  *
  * class DefaultLogin_UserModel
  */
