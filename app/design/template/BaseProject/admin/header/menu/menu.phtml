@@ -72,15 +72,17 @@ $labelsMenu = $this->getLabelsMenu();
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
+                    <?php
+                    $user = App::getInstance()->getSession()->getUser()
+                    ?>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <span class="fa fa-user fa-1-5x"></span><span class="caret"></span>
                     </a>
                     <?php
-                    if ($user = App::getInstance()->getSession()->getUser()):
+                    if ($user):
                         ?>
                         <ul class="dropdown-menu">
-                            <li style="padding-left: 20px; color: grey;"><?= $this->__('Welcome') ?>
-                                &nbsp;<?= $user->getUsername() ?></li>
+                            <li style="padding-left: 20px; color: grey;"><?= $this->__('Welcome') ?>&nbsp;<?= $user->getUsername() ?></li>
                             <li><a href="<?= Router::getUrlAction('Login', 'Index',
                                     'disconnect') ?>"><?= $this->__('Disconnect') ?></a></li>
                         </ul>

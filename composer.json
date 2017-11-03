@@ -1,23 +1,31 @@
 {
-    "name": "matpif/baseproject",
-    "version": "0.0.1",
-    "authors": [
-        {
-            "name": "matpif",
-            "email": "matthieu.piffeteau@gmail.com"
-        }
-    ],
-    "require": {
-        "doctrine/cache": "1.6.2",
-        "christian-riesen/otp": "1.*",
-        "guzzlehttp/psr7": "^1.4",
-        "http-interop/response-sender": "^1.0",
-        "adldap2/adldap2": "8.0.*"
-    },
-    "autoload": {
-        "psr-4": {
-            "BaseProject\\": "app/code/BaseProject",
-            "App\\": "app/tools"
-        }
+  "name": "matpif/baseproject",
+  "version": "0.0.1-dev",
+  "type": "project",
+  "authors": [
+    {
+      "name": "matpif",
+      "email": "matthieu.piffeteau@gmail.com",
+      "role": "Developer"
     }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Matpif/BaseProject"
+    }
+  ],
+  "require": {
+    "doctrine/cache": "1.6.2",
+    "christian-riesen/otp": "1.*",
+    "guzzlehttp/psr7": "^1.4",
+    "http-interop/response-sender": "^1.0",
+    "adldap2/adldap2": "8.0.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "BaseProject\\": "app/code/BaseProject",
+      "App\\": "app/tools"
+    }
+  }
 }

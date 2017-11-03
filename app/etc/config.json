@@ -5,8 +5,9 @@
     "defaultPage": "\/Admin",
     "secure": "0",
     "debug": "1",
-    "enabledCache": 0,
-    "installed": 1
+    "enabledCache": "1",
+    "installed": "0",
+    "maintenance": "0"
   },
   "mysql": {
     "dbname": "BaseProject",

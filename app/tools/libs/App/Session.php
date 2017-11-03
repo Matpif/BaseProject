@@ -16,6 +16,16 @@ class Session extends VarientObject
     /** @var  array */
     private $_messages;
 
+    /**
+     * Session constructor.
+     */
+    public function __construct()
+    {
+        if (!is_array($this->_data)) {
+            $this->_data = [];
+        }
+    }
+
     public static function getInstance()
     {
         if (!self::$_instance) {
@@ -31,9 +41,6 @@ class Session extends VarientObject
     public function setUserTemp($user)
     {
         $this->_user = $user;
-        if (!is_array($this->_data)) {
-            $this->_data = [];
-        }
         $this->setData(array_merge($this->_data, ['user_id_temp' => $user->getId()]));
     }
 

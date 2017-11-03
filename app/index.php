@@ -14,6 +14,11 @@ if (Config::getInstance()->getAttribute('app', 'installed') != 1) {
     include_once '../app.php';
     exit(0);
 }
+if (Config::getInstance()->getAttribute('app', 'maintenance') != 0) {
+    $params['maintenance'] = 1;
+    include_once '../app.php';
+    exit(0);
+}
 session_start();
 
 $acceptLanguage = explode(',', (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '');

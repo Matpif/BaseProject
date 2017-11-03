@@ -69,8 +69,14 @@ class Index extends Controller
                     }
                     $session->setUser($user);
                     $this->redirect();
+                } else {
+                    App::getInstance()->getSession()->addMessage(['level' => Message::LEVEL_MESSAGE_ERROR, 'message' => 'Error connection']);
                 }
+            } else {
+                App::getInstance()->getSession()->addMessage(['level' => Message::LEVEL_MESSAGE_ERROR, 'message' => 'Error connection']);
             }
+        } else {
+            App::getInstance()->getSession()->addMessage(['level' => Message::LEVEL_MESSAGE_ERROR, 'message' => 'All fields are mandatory']);
         }
         /** @var Login $helperLogin */
         $helperLogin = Helper::getInstance('Login_Login');

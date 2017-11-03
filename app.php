@@ -1,7 +1,9 @@
 <?php
 
+use App\App;
 use App\Config;
 use App\libs\App\Helper;
+use BaseProject\Admin\Helper\Admin;
 use BaseProject\Admin\Helper\Cache;
 
 $mode_cli = (php_sapi_name() == 'cli');
@@ -18,6 +20,14 @@ if (!$mode_cli) {
             $query = file_get_contents(__DIR__.'/install/install-0.0.1.sql');
             $myStatement = $myPdo->query($query);
             $myPdo->exec($myStatement);
+
+            $filesUpgrade = scandir(__DIR__.'/install/');
+            foreach ($filesUpgrade as $file) {
+                if ($file == '.' || $file = '..' || $file == 'install-0.0.1.sql') continue;
+                $query = file_get_contents(__DIR__.'/install/'.$file);
+                $myStatement = $myPdo->query($query);
+                $myPdo->exec($myStatement);
+            }
 
             /** @var Cache $cacheHelper */
             $cacheHelper = Helper::getInstance('Admin_Cache');
@@ -184,11 +194,66 @@ if (!$mode_cli) {
             <?php
         }
     endif;
+
+    if (isset($params['maintenance'])):
+        ?>
+        Maintenance !!
+        <?php
+    endif;
 } else {
     // Command line
-    $params = getopt('i', ['install']);
+    include_once "vendor/autoload.php";
+    $GLOBALS['override'] = json_decode(file_get_contents(__DIR__ . '/app/etc/override.json'), true);
+    App::getInstance()->setPathRoot(__DIR__.'/app');
+    App::getInstance()->init();
 
-    if (isset($params['i'], $params['install'])) {
+    $params = getopt('u', ['upgrade', 'module:', 'state:', 'module-list', 'help', 'maintenance:', 'refresh-cache']);
 
+    if (isset($params['u'], $params['upgrade'])) {
+    } else if (isset($params['module-list'])) {
+        $modules = \App\libs\App\CollectionDb::getInstanceOf('Admin_Module')->loadAll(['module_name' => 'ASC']);
+
+        echo "\nList of modules :\n";
+        /** @var \BaseProject\Admin\Model\Module $module */
+        foreach ($modules as $module) {
+            echo $module->getAttribute('module_name') . " : ".(($module->getAttribute('enable'))?'is active':'is disabled')."\n";
+        }
+    } else if (isset($params['maintenance'])) {
+        $_currentConfig = Config::getInstance();
+        $config = $_currentConfig->getConfig();
+        $config['app']['maintenance'] = $params['maintenance'];
+        $_currentConfig->setConfig($config);
+
+        echo (($params['maintenance'])?'Maintenance is active':'Maintenance is disabled')."\n";
+    } else if(isset($params['module'], $params['state'])) {
+
+        $module = \App\libs\App\CollectionDb::getInstanceOf('Admin_Module')->load(['module_name' => $params['module']])->getFirstRow();
+        /** @var Admin $adminHelper */
+        $adminHelper = Helper::getInstance('Admin_Admin');
+        if ($module) {
+            if ($params['state'] == '1') {
+                $adminHelper->enableModule($module);
+                echo "Module enabled\n";
+            } else {
+                $adminHelper->disableModule($module);
+                echo "Module disabled\n";
+            }
+        } else {
+            echo "Module does't exist\n";
+        }
+    } else if(isset($params['refresh-cache'])) {
+        /** @var Cache $cacheHelper */
+        $cacheHelper = Helper::getInstance('Admin_Cache');
+        $cacheHelper->clearCache();
+
+        echo "Cache has refreshed\n";
+    } else if (isset($params['help'])) {
+        echo "app.php --help\n\n";
+        echo "    --upgrade         to start script upgrade version\n";
+        echo "    --module-list     list module name with state\n";
+        echo "    --module          module name\n";
+        echo "    --state           state to active (1) or disable (0) module (with --module)\n";
+        echo "    --maintenance     active (1) disable (0)\n";
+        echo "\n";
     }
 }
