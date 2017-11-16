@@ -22,7 +22,7 @@ TODO:  version php, composer, mysql, redis (cache)
 ```apacheconfig
 # Replace {domain} by your domain
 <VirtualHost *:80>
-        ServerName baseframework.com
+        ServerName {domain}
         DocumentRoot /var/www/{domain}/app/
         
         ErrorLog ${APACHE_LOG_DIR}/error-{domain}.log

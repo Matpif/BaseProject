@@ -33,7 +33,7 @@ class Ldap extends Adldap
                 'domain_controllers' => $domaineControllers,
                 'base_dn' => $ldapConfig->getBaseDn(),
                 'admin_username' => $ldapConfig->getAdminUsername(),
-                'admin_password' => $ldapConfig->getAdminPassword()
+                'admin_password' => $ldapConfig->decryptAdminPassword()
                 ]
             ];
             $this->_domain = $ldapConfig->getDomain();

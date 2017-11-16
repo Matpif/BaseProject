@@ -3,6 +3,7 @@
 namespace App;
 
 use App\libs\App\VarientObject;
+use Doctrine\Common\Cache\RedisCache;
 use Redis;
 
 class Cache extends VarientObject
@@ -12,7 +13,7 @@ class Cache extends VarientObject
     private static $_instance;
 
     /**
-     * @var \Doctrine\Common\Cache\RedisCache
+     * @var RedisCache
      */
     private $_cacheRedis;
 
@@ -25,7 +26,7 @@ class Cache extends VarientObject
             $redis = new Redis();
             $redis->connect(Config::getInstance()->getAttribute('redis', 'host'),
                 Config::getInstance()->getAttribute('redis', 'port'));
-            $this->_cacheRedis = new \Doctrine\Common\Cache\RedisCache();
+            $this->_cacheRedis = new RedisCache();
             $this->_cacheRedis->setRedis($redis);
         }
     }
@@ -53,7 +54,7 @@ class Cache extends VarientObject
     }
 
     /**
-     * @return \Doctrine\Common\Cache\RedisCache
+     * @return RedisCache
      */
     public function getCacheRedis()
     {

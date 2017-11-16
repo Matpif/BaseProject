@@ -9,6 +9,11 @@
       "role": "Developer"
     }
   ],
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/Matpif/BaseProject/issues",
+    "source": "https://github.com/Matpif/BaseProject"
+  },
   "repositories": [
     {
       "type": "vcs",
@@ -20,7 +25,9 @@
     "christian-riesen/otp": "1.*",
     "guzzlehttp/psr7": "^1.4",
     "http-interop/response-sender": "^1.0",
-    "adldap2/adldap2": "8.0.*"
+    "adldap2/adldap2": "8.0.*",
+    "defuse/php-encryption": "2.1.0",
+    "mtdowling/cron-expression": "^1.2"
   },
   "autoload": {
     "psr-4": {

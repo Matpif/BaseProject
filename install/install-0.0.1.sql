@@ -76,11 +76,11 @@ CREATE TABLE login_user
     PRIMARY KEY,
   username   VARCHAR(50)            NOT NULL,
   password   VARCHAR(50)            NULL,
-  first_name VARCHAR(50) NULL,
-  last_name VARCHAR(50) NULL,
-  email VARCHAR(150) NULL,
+  first_name VARCHAR(50)            NULL,
+  last_name  VARCHAR(50)            NULL,
+  email      VARCHAR(150)           NULL,
   group_id   INT                    NOT NULL,
-  use_ldap TINYINT(1) DEFAULT '0' NULL,
+  use_ldap   TINYINT(1) DEFAULT '0' NULL,
   totp_key   VARCHAR(255)           NULL,
   CONSTRAINT login_user_username_pk
   UNIQUE (username),
@@ -96,14 +96,14 @@ INSERT INTO login_group (id, name, roles) VALUES (2, 'Guest', 'Login_guest');
 INSERT INTO login_user (username, password, group_id, use_ldap)
 VALUES ('Admin', '4e7afebcfbae000b22c7c85e5560f89a2a0280b4', 1, 0);
 
-CREATE TABLE login_ldap_config(
-  id int AUTO_INCREMENT PRIMARY KEY,
-  is_active TINYINT DEFAULT 0,
+CREATE TABLE login_ldap_config (
+  id                 INT     AUTO_INCREMENT PRIMARY KEY,
+  is_active          TINYINT DEFAULT 0,
   domain_controllers NVARCHAR(250) NULL,
-  base_dn NVARCHAR(250) NULL,
-  admin_username NVARCHAR(250) NULL,
-  admin_password NVARCHAR(250) NULL,
-  domain NVARCHAR(50) NULL
+  base_dn            NVARCHAR(250) NULL,
+  admin_username     NVARCHAR(250) NULL,
+  admin_password     NVARCHAR(250) NULL,
+  domain             NVARCHAR(50)  NULL
 );
 
 /**
@@ -112,4 +112,24 @@ CREATE TABLE login_ldap_config(
 CREATE TABLE task_task (
   code      NVARCHAR(50) PRIMARY KEY,
   last_exec DATETIME NULL
+);
+CREATE TABLE task_scheduler (
+  id             INT PRIMARY KEY AUTO_INCREMENT,
+  description    NVARCHAR(250)     NULL,
+  cron           NVARCHAR(50)      NOT NULL,
+  task_code      NVARCHAR(50)      NOT NULL,
+  is_enabled     TINYINT DEFAULT 1 NOT NULL,
+  last_execution DATETIME          NULL
+);
+CREATE INDEX task_scheduler_task_task_code_fk
+  ON task_scheduler (task_code);
+CREATE INDEX task_scheduler_is_enabled_index
+  ON task_scheduler (is_enabled);
+
+CREATE TABLE task_error (
+  id           INT AUTO_INCREMENT PRIMARY KEY,
+  scheduler_id INT      NOT NULL,
+  code_error   INT      NOT NULL,
+  message      TEXT     NULL,
+  date         DATETIME NOT NULL
 );

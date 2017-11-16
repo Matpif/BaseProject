@@ -1,0 +1,42 @@
+<?php
+/** @var \BaseProject\Task\Controller\Error $this */
+
+$_errors = $this->getErrors();
+?>
+
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 col-sm-12">
+        <?php
+        if ($this->getSchedulerId()):
+        ?>
+            <a href="<?= \App\libs\App\Router::getUrlAction('Task', 'Scheduler', 'scheduler').'/id/'.$this->getSchedulerId() ?>"><i class="fa fa-angle-double-left" aria-hidden="true"></i>&nbsp;<?= $this->__('Return to scheduler'); ?></a>
+        <?php
+        endif;
+        ?>
+        <table class="table">
+            <thead>
+            <tr>
+                <th><?= $this->__('id'); ?></th>
+                <th><?= $this->__('Code error'); ?></th>
+                <th><?= $this->__('Message'); ?></th>
+                <th><?= $this->__('Date'); ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+            /** @var \BaseProject\Task\Model\Error $error */
+            foreach ($_errors as $error):
+                ?>
+                <tr>
+                    <td><?= $error->getId() ?></td>
+                    <td><?= $error->getCodeError() ?></td>
+                    <td><?= $error->getMessage() ?></td>
+                    <td><?= $error->getDate() ?></td>
+                </tr>
+                <?php
+            endforeach;
+            ?>
+            </tbody>
+        </table>
+    </div>
+</div>

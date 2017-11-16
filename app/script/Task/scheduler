@@ -1,0 +1,40 @@
+#!/usr/bin/php
+<?php
+include_once __DIR__.'/../../../vendor/autoload.php';
+
+use App\App;
+use App\libs\App\Helper;
+
+$GLOBALS['override'] = json_decode(file_get_contents(__DIR__ . '/../../etc/override.json'), true);
+App::getInstance()->setPathRoot(__DIR__ . '/../../');
+App::getInstance()->init();
+
+if (App::getInstance()->moduleIsEnabled('Task')) {
+    /** @var \BaseProject\Task\Collection\Scheduler $_schedulers */
+    $_schedulers = \App\libs\App\CollectionDb::getInstanceOf('Task_Scheduler')->load(['is_enabled' => 1]);
+
+    /** @var \BaseProject\Task\Model\Scheduler $scheduler */
+    foreach ($_schedulers as $scheduler) {
+        if ($scheduler->isDue()) {
+            $task = $scheduler->getTask();
+            try {
+                /** @var \BaseProject\Task\Helper\Task $taskHelper */
+                $taskHelper = Helper::getInstance('Task_Task');
+                $taskHelper->runTask($task->getCode(), true, $scheduler->getId());
+                $scheduler->setLastExecution((new DateTime())->format('Y-m-d H:i:s'));
+                $scheduler->save();
+            } catch (Exception $ex) {
+                /** @var \BaseProject\Task\Model\Error $error */
+                $error = \App\libs\App\Model::getModel('Task_Error');
+                $error->setCodeError($ex->getCode());
+                $error->setMessage($ex->getMessage());
+                $error->setDate((new DateTime())->format('Y-m-d H:i:s'));
+                $error->setSchedulerId($scheduler->getId());
+                $error->save();
+            }
+        }
+    }
+} else {
+    throw new \BaseProject\Task\Exception\Exception('Module Task is disabled',
+        \BaseProject\Task\Exception\Exception::MODULE_DISABLED);
+}

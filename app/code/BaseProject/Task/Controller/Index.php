@@ -38,9 +38,7 @@ class Index extends Controller
         $request = App::getRequestParams();
         if (isset($request['code'])) {
             $this->setTemplateHeader(null);
-            $params['c'] = $request['code'];
-            $params['v'] = '';
-            include App::PathRoot() . '/script/task.php';
+            $taskHelper = Helper::getInstance('Task_Task')->runTask($request['code']);
         } else {
             $this->redirect($this);
         }

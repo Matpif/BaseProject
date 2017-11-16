@@ -1,0 +1,82 @@
+<?php
+/** @var \BaseProject\Task\Controller\Scheduler $this */
+
+use App\libs\App\Block;
+use App\libs\App\Router;
+use BaseProject\Task\Block\PopIn;
+
+$_currentScheduler = $this->getCurrentScheduler();
+
+/** @var PopIn $_popin */
+$_popin = Block::getBlock('Task_PopIn');
+$_popin->setTitle($this->__('Delete'));
+$_popin->setBody($this->__('Are you sur ?'));
+$_popin->addButton($this->__('Yes'), PopIn::TYPE_DANGER, 'popinUser.yes()');
+$_popin->addButton($this->__('No'), PopIn::TYPE_DEFAULT, 'popinUser.no()');
+$_popin->setId('modalDelete');
+?>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3 col-sm-12">
+        <form action="<?= \App\libs\App\Router::getUrlAction('Task', 'Scheduler', 'saveScheduler') ?>" method="POST">
+            <?php
+            if ($_currentScheduler->getId()):
+                ?>
+                <input type="hidden" name="id" value="<?= $_currentScheduler->getId() ?>"/>
+                <?php
+            endif;
+            ?>
+            <div class="form-group">
+                <label for="description"><?= $this->__('Description') ?></label>
+                <input type="text" class="form-control" name="description" id="description"
+                       value="<?= $_currentScheduler->getDescription() ?>"/>
+            </div>
+            <div class="form-group">
+                <label for="cron"><?= $this->__('Cron') ?></label>
+                <input type="text" class="form-control" name="cron" id="cron"
+                       value="<?= $_currentScheduler->getCron() ?>"/>
+            </div>
+            <div class="form-group">
+                <label for="cron"><?= $this->__('Task') ?></label>
+                <select name="task_code" class="form-control">
+                    <option value=""></option>
+                    <?php
+                    /** @var \BaseProject\Task\Helper\Task $taskHelper */
+                    $taskHelper = \App\libs\App\Helper::getInstance('Task_Task');
+                    $tasks = $taskHelper->getAllTask();
+                    foreach ($tasks as $key => $task):
+                        ?>
+                        <option value="<?= $key ?>" <?= ($key == $_currentScheduler->getTaskCode()) ? 'selected' : '' ?>><?= $task['label'] ?></option>
+                        <?php
+                    endforeach;
+                    ?>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cron"><?= $this->__('Is Enabled') ?></label>
+                <select name="is_enabled" class="form-control">
+                    <option value="1" <?= ($_currentScheduler->getIsEnabled())?'selected':'' ?>><?= $this->__('Yes') ?></option>
+                    <option value="0" <?= ($_currentScheduler->getIsEnabled())?'':'selected' ?>><?= $this->__('No') ?></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn btn-primary"><?= $this->__('Save') ?></button>
+            <?php if ($_currentScheduler->getId()): ?>
+                <a class="btn btn-danger" data-toggle="modal" data-target="#modalDelete"><?= $this->__('Delete') ?></a>
+                <a class="btn" href="<?= Router::getUrlAction('Task', 'Error').'/schedulerId/'.$_currentScheduler->getId() ?>"><?= $this->__('Show errors') ?></a>
+            <?php endif; ?>
+        </form>
+    </div>
+</div>
+
+<script type="application/javascript">
+    var popinUser = {
+        yes: function () {
+            window.location.href = '<?= Router::getUrlAction('Task', 'Scheduler',
+                'removeScheduler') ?>/id/<?= $_currentScheduler->getId() ?>';
+        },
+
+        no: function () {
+            $('#modalDelete').modal('hide');
+        }
+    };
+</script>
+<?= $_popin->getHtml() ?>

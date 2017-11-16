@@ -5,12 +5,6 @@ namespace App;
 use PDO;
 use PDOStatement;
 
-/**
- * Created by PhpStorm.
- * User: matpif
- * Date: 28/08/16
- * Time: 12:00
- */
 class MyPdo extends PDO
 {
 

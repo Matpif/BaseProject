@@ -3,24 +3,38 @@
     "Login"
   ],
   "router": {
+    "rules": {
+    "REQUEST_METHOD": {
+      "/Task/Scheduler/saveScheduler": [
+        "POST"
+      ],
+      "/Task/Scheduler/removeScheduler": [
+        "GET"
+      ]
+    }
+  }
   },
   "roles": {
     "Task_show_tasks": "Show tasks",
-    "Task_exec_task": "Execute task"
+    "Task_exec_task": "Execute task",
+    "Task_schedule": "Schedule task"
   },
   "admin_menu": {
     "tree": {
       "Task_Index_index": [
-        "Task_Index_list"
+        "Task_Index_list",
+        "Task_Scheduler_Index"
       ]
     },
     "labels": {
       "Task_Index_index": "Task",
-      "Task_Index_list": "Show tasks"
+      "Task_Index_list": "Show tasks",
+      "Task_Scheduler_Index": "Scheduler"
     },
     "sort": {
       "Task_Index_index": 800,
-      "Task_Index_list": 1
+      "Task_Index_list": 1,
+      "Task_Scheduler_Index": 900
     }
   },
   "tables": [
@@ -29,6 +43,18 @@
       "collection": "BaseProject\\Task\\Collection\\Task",
       "table_name": "task_task",
       "key": "code"
+    },
+    {
+      "model": "BaseProject\\Task\\Model\\Scheduler",
+      "collection": "BaseProject\\Task\\Collection\\Scheduler",
+      "table_name": "task_scheduler",
+      "key": "id"
+    },
+    {
+      "model": "BaseProject\\Task\\Model\\Error",
+      "collection": "BaseProject\\Task\\Collection\\Error",
+      "table_name": "task_error",
+      "key": "id"
     }
   ],
   "Install": {

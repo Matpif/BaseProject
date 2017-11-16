@@ -2,12 +2,6 @@
 
 namespace App;
 
-/**
- * Created by PhpStorm.
- * User: CORPAS
- * Date: 26/10/2016
- * Time: 14:18
- */
 class StatusCodes
 {
 
@@ -115,32 +109,4 @@ class StatusCodes
         504 => '504 Gateway Timeout',
         505 => '505 HTTP Version Not Supported'
     );
-
-
-    public static function httpHeaderFor($code)
-    {
-        return 'HTTP/1.1 ' . self::$messages[$code];
-    }
-
-
-    public static function getMessageForCode($code)
-    {
-        return self::$messages[$code];
-    }
-
-    public static function isError($code)
-    {
-        return is_numeric($code) && $code >= self::HTTP_BAD_REQUEST;
-    }
-
-    public static function canHaveBody($code)
-    {
-        return
-            // True if not in 100s
-            ($code < self::HTTP_CONTINUE || $code >= self::HTTP_OK)
-            && // and not 204 NO CONTENT
-            $code != self::HTTP_NO_CONTENT
-            && // and not 304 NOT MODIFIED
-            $code != self::HTTP_NOT_MODIFIED;
-    }
 }
