@@ -1,6 +1,7 @@
 <?php
 /** @var \BaseProject\Login\Block\FormGroup $this */
 
+use App\App;
 use App\libs\App\Block;
 use App\libs\App\Router;
 
@@ -41,7 +42,7 @@ $_popin->setId('modalDelete');
             </div>
             <button type="submit" class="btn btn-primary"><?= $this->__('Save') ?></button>
             <?php if ($_currentGroup->getId()): ?>
-                <a class="btn btn-danger" data-toggle="modal" data-target="#modalDelete"><?= $this->__('Delete') ?></a>
+                <a class="btn btn-danger" <?= ($_currentGroup->getId() == App::getInstance()->getSession()->getUser()->getGroupId())?'disabled':'data-toggle="modal" data-target="#modalDelete"'; ?>><?= $this->__('Delete') ?></a>
             <?php endif; ?>
         </fieldset>
     </form>

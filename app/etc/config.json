@@ -1,1 +1,23 @@
-{"app":{"name":"Base Project","version":"0.0.1","defaultPage":"\/Admin","secure":"0","debug":"1","enabledCache":"0","installed":"1","maintenance":"0"},"mysql":{"dbname":"BaseProject","host":"localhost","user":"baseproject","pass":"baseproject","type":"mysql"},"redis":{"host":"127.0.0.1","port":"6379"}}
+{
+  "app": {
+    "name": "Base Project",
+    "version": "0.0.1",
+    "defaultPage": "\/Admin",
+    "secure": "0",
+    "debug": "1",
+    "enabledCache": "0",
+    "installed": "0",
+    "maintenance": "0"
+  },
+  "mysql": {
+    "dbname": "BaseProject",
+    "host": "localhost",
+    "user": "",
+    "pass": "",
+    "type": "mysql"
+  },
+  "redis": {
+    "host": "127.0.0.1",
+    "port": "6379"
+  }
+}

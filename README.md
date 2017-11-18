@@ -24,36 +24,42 @@ TODO:  version php, composer, mysql, redis (cache)
 <VirtualHost *:80>
         ServerName {domain}
         DocumentRoot /var/www/{domain}/app/
-        
-        ErrorLog ${APACHE_LOG_DIR}/error-{domain}.log
-        CustomLog ${APACHE_LOG_DIR}/access-{domain}.log combined
-        
+
+        ErrorLog ${APACHE_LOG_DIR}/error-matpifframwork.log
+        CustomLog ${APACHE_LOG_DIR}/access-matpifframwork.log combined
+
         <IfModule mod_rewrite.c>
                 RewriteEngine on
                 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_FILENAME} !-f
                 RewriteRule .* /index.php
         </IfModule>
-        
+
         <Directory />
-                Options +FollowSymLinks
-                Require all granted
-        </Directory>
-        
-        <Directory /var/www/{domain}>
-                DirectoryIndex index.php
-                Options -Indexes +FollowSymLinks
+                Options FollowSymLinks
                 AllowOverride None
                 Require all granted
-                allow from all
+                DirectoryIndex index.php
         </Directory>
-        
+
+        <DirectoryMatch ^/var/www/{domain}/app/skin>
+                Order deny,allow
+                Allow from all
+        </DirectoryMatch>
+
+        <DirectoryMatch ^/var/www/{domain}/app>
+                Order allow,deny
+                <Files index.php>
+                        Order deny,allow
+                </Files>
+        </DirectoryMatch>
+
         ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
         <Directory /usr/lib/cgi-bin>
                 AllowOverride None
                 Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
                 Require all denied
         </Directory>
-        
+
 </VirtualHost>
 ```
 ### 3. Création de la base de données
