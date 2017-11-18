@@ -183,3 +183,8 @@ TODO: Observer / Dispatcher
 TODO: création d'un nouveau module, fichier de configuration etc/config.json (toutes les possibilités)
 ### 10. Surcharge
 TODO: Comment créer la surcharge d'une classe 
+
+1 - Création du nouveau répertoire dans /app/code/{Nomprojet}
+1 - Création du nouveau répertoire dans /app/design/{nomprojet}
+2 - Ajout du projet dans le fichier /app/etc/override.json
+3 - Ajouter le nouveau namespace dans le fichier /composer.json (autoload)
