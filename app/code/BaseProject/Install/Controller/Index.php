@@ -133,8 +133,6 @@ class Index extends Controller
         $helperLogin = Helper::getInstance('Login_Login');
         if ($user) {
             return $helperLogin->hasRole($user, 'Install');
-        } else {
-            $this->redirect($helperLogin->getUrlLogin());
         }
 
         return false;

@@ -74,8 +74,6 @@ class Index extends Controller
                     return $helperLogin->hasRole($user, 'Task_exec_task');
                     break;
             }
-        } else {
-            $this->redirect($helperLogin->getUrlLogin());
         }
 
         return false;

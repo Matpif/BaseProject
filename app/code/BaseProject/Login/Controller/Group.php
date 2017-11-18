@@ -152,8 +152,6 @@ class Group extends Controller
                     return $helperLogin->hasRole($user, 'Login_delete_group');
                     break;
             }
-        } else {
-            $this->redirect($helperLogin->getUrlLogin());
         }
 
         return false;

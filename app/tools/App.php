@@ -5,9 +5,11 @@ namespace App;
 use App\libs\App\CollectionDb;
 use App\libs\App\Controller;
 use App\libs\App\Dispatcher;
+use App\libs\App\Helper;
 use App\libs\App\Router;
 use App\libs\App\Session;
 use BaseProject\Admin\Model\Module;
+use BaseProject\Login\Helper\Login;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -226,8 +228,11 @@ class App
                         $_controller = Controller::getController('Error_Error');
                         $_controller->error403Action();
                     } else {
+                        /** @var Login $loginHelper */
                         $_controller = Controller::getController('Login_Index');
-                        $_controller->redirect($_controller);
+                        $_controller->setUrlReferer($this->getRequest()->getServerParams()['SCRIPT_URL']);
+                        $loginHelper = Helper::getInstance('Login_Login');
+                        $_controller->redirect($loginHelper->getUrlLogin());
                     }
                 }
             }
@@ -260,9 +265,6 @@ class App
         $this->setLocale();
         ConfigModule::getInstance();
         $this->debug();
-//        if (isset($this->getRequest()->getServerParams()['HTTP_REFERER'])) {
-//            $this->_previousUri = $this->getRequest()->getServerParams()['HTTP_REFERER'];
-//        }
     }
 
     private function setLocale()

@@ -100,8 +100,6 @@ class Ldap extends Controller
                 default:
                     return true;
             }
-        } else {
-            $this->redirect($helperLogin->getUrlLogin());
         }
 
         return false;

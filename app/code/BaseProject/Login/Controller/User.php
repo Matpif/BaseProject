@@ -204,8 +204,6 @@ class User extends Controller
                 default:
                     return $helperLogin->hasRole($user, 'Login_show_users');
             }
-        } else {
-            $this->redirect($helperLogin->getUrlLogin());
         }
 
         return false;

@@ -68,6 +68,9 @@ class Index extends Controller
                         $this->redirect($this->getUrlAction('otp'));
                     }
                     $session->setUser($user);
+                    if ($request['url_referer']) {
+                        $this->redirect($request['url_referer']);
+                    }
                     $this->redirect();
                 } else {
                     App::getInstance()->getSession()->addMessage(['level' => Message::LEVEL_MESSAGE_ERROR, 'message' => 'Error connection']);

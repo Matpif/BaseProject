@@ -63,8 +63,6 @@ class Index extends Controller
                 case 'remover':
                     return $helperLogin->hasRole($user, 'Api_remover');
             }
-        } else {
-            $this->redirect($helperLogin->getUrlLogin());
         }
 
         return false;

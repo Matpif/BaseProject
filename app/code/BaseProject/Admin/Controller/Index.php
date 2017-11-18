@@ -185,8 +185,6 @@ class Index extends Controller
                 default:
                     return $helperLogin->hasRole($user, 'Admin_admin');
             }
-        } else {
-            $this->redirect($helperLogin->getUrlLogin());
         }
 
         return false;

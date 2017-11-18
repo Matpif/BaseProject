@@ -70,8 +70,6 @@ class Error extends Controller
         $helperLogin = Helper::getInstance('Login_Login');
         if ($user) {
             return $helperLogin->hasRole($user, 'Task_schedule');
-        } else {
-            $this->redirect($helperLogin->getUrlLogin());
         }
     }
 }

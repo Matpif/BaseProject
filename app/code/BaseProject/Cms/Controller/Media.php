@@ -99,8 +99,6 @@ class Media extends Controller
         $helperLogin = Helper::getInstance('Login_Login');
         if ($user) {
             return $helperLogin->hasRole($user, 'cms_media');
-        } else {
-            $this->redirect($helperLogin->getUrlLogin());
         }
 
         return false;

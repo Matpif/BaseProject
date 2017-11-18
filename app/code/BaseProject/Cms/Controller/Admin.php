@@ -97,8 +97,6 @@ class Admin extends Controller
         $helperLogin = Helper::getInstance('Login_Login');
         if ($user) {
             return $helperLogin->hasRole($user, 'cms_admin');
-        } else {
-            $this->redirect($helperLogin->getUrlLogin());
         }
 
         return false;

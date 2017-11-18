@@ -1,5 +1,5 @@
 <?php
-/** @var \BaseProject\Login\Block\FormGroup $this */
+/** @var \BaseProject\Login\Block\Form $this */
 
 use App\App;
 use App\libs\App\Router;
@@ -20,6 +20,7 @@ use App\libs\App\Router;
              class="col-lg-3 col-md-5 col-md-offset-1 col-lg-offset-3 align-right padding-bottom">
             <h3><?= $this->__('Connection'); ?></h3>
             <form class="" action="<?= Router::getUrlAction('Login', 'Index', 'signIn') ?>" method="POST">
+                <input type="hidden" name="url_referer" value="<?= $this->getUrlReferer(); ?>" />
                 <div class="form-group">
                     <label for="username"><?= $this->__('Username') ?></label>
                     <input name="username" id="username" class="form-control" placeholder="<?= $this->__('Username') ?>"

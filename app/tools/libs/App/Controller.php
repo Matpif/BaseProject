@@ -81,6 +81,10 @@ class Controller extends VarientObject
      * @var bool
      */
     private $_useCache;
+    /**
+     * @var string
+     */
+    private $_urlReferer;
 
     function __construct()
     {
@@ -102,7 +106,10 @@ class Controller extends VarientObject
         } else {
             $this->_moduleName = '';
         }
-        $this->setKey([App::getInstance()->getRequest()->getServerParams()['REQUEST_URI'], App::getInstance()->getLanguageCode()]);
+        $this->setKey([
+            App::getInstance()->getRequest()->getServerParams()['REQUEST_URI'],
+            App::getInstance()->getLanguageCode()
+        ]);
         $this->_useCache = false;
     }
 
@@ -198,6 +205,22 @@ class Controller extends VarientObject
         }
 
         return self::$_instance[$controller];
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrlReferer()
+    {
+        return $this->_urlReferer;
+    }
+
+    /**
+     * @param string $urlReferer
+     */
+    public function setUrlReferer($urlReferer)
+    {
+        $this->_urlReferer = $urlReferer;
     }
 
     public function indexAction()
@@ -348,6 +371,10 @@ class Controller extends VarientObject
             } else {
                 $location = $url;
             }
+        }
+
+        if ($this->getUrlReferer()) {
+            $location .= ((strpos($location, '?') !== false)?'&':'?').'url_referer='.urlencode($this->getUrlReferer());
         }
 
         $response = (new Response())
