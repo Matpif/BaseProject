@@ -104,7 +104,7 @@ class Router
             $this->_controller = 'Index';
         }
         if (!$this->_action) {
-            $this->_action = 'Index';
+            $this->_action = 'index';
         }
 
         return [

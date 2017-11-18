@@ -12,10 +12,12 @@ $modules = CollectionDb::getInstanceOf('Admin_Module')->loadAll();
     <table class="table table-hover">
         <colgroup>
             <col/>
+            <col/>
             <col width="100px"/>
         </colgroup>
         <thead>
         <tr>
+            <th><?= $this->__('Project') ?></th>
             <th><?= $this->__('Module name') ?></th>
             <th><?= $this->__('Enabled') ?></th>
         </tr>
@@ -26,6 +28,7 @@ $modules = CollectionDb::getInstanceOf('Admin_Module')->loadAll();
         foreach ($modules as $module):
             ?>
             <tr>
+                <td><?= $module->getProject() ?></td>
                 <td><?= $module->getAttribute('module_name') ?></td>
                 <td><input type="checkbox"
                            data-module-name="<?= $module->getAttribute('module_name') ?>" <?= ($module->getAttribute('module_name') == App::getInstance()->getRouter()->getModule()) ? 'disabled' : '' ?>

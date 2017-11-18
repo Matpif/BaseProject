@@ -58,7 +58,7 @@ CREATE TABLE install_file
   CONSTRAINT install_file_module_id_file_name_uindex
   UNIQUE (module_id, file_name),
   CONSTRAINT install_file_install_module_id_fk
-  FOREIGN KEY (module_id) REFERENCES BaseProject.install_module (id)
+  FOREIGN KEY (module_id) REFERENCES install_module (id)
 );
 
 /**

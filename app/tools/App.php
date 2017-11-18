@@ -312,13 +312,14 @@ class App
         if (!$this->_router) {
             $router = new Router();
             $module = $router->getModule();
+            /** @var Module $_module */
             $_module = CollectionDb::getInstanceOf('Admin_Module')->load(['module_name' => $module])->getFirstRow();
             if ($_module && $_module->getEnable()) {
                 $configModule = ConfigModule::getInstance()->getConfig($module);
                 if (isset($configModule['override']['router'][$module])) {
                     $classRouter = $configModule['override']['router'][$module];
                 } else {
-                    $classRouter = 'BaseProject\\' . $module . '\\Router\\Router';
+                    $classRouter = $_module->getProject().'\\' . $module . '\\Router\\Router';
                 }
                 if (class_exists($classRouter)) {
                     $this->_router = new $classRouter;

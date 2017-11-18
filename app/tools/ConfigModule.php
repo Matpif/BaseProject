@@ -37,7 +37,7 @@ class ConfigModule
     {
         Dispatcher::getInstance()->dispatch('before_refresh_cache', $this);
         if (!file_exists(App::PathRoot() . self::PATH_CACHE)) {
-            mkdir(App::PathRoot() . self::PATH_CACHE);
+            mkdir(App::PathRoot() . self::PATH_CACHE, 0777, true);
         }
         $modules = $this->getModules();
         $config = [];
