@@ -6,7 +6,10 @@ use App\App;
 use App\libs\App\CollectionDb;
 use App\libs\App\Controller;
 use App\libs\App\Helper;
+use App\libs\App\QueryFactory;
+use BaseProject\Admin\Block\ListAdmin;
 use BaseProject\Admin\Block\Message;
+use BaseProject\Cms\Block\Block;
 use BaseProject\Login\Helper\Login;
 
 class User extends Controller
@@ -16,6 +19,10 @@ class User extends Controller
      * @var \BaseProject\Login\Model\User
      */
     private $_currentUser;
+    /**
+     * @var ListAdmin
+     */
+    private $_listBlock;
 
     /**
      * Login_UserController constructor.
@@ -27,8 +34,39 @@ class User extends Controller
         $this->setTemplateHeader('/admin/header/menu.phtml');
     }
 
+    /**
+     * @return ListAdmin
+     */
+    public function getListBlock()
+    {
+        return $this->_listBlock;
+    }
+
     public function indexAction()
     {
+        /** @var ListAdmin $listBlock */
+        $this->_listBlock = Block::getBlock('Admin_ListAdmin');
+
+        /** @var \BaseProject\Login\Collection\User $users */
+        $userCollection = CollectionDb::getInstanceOf('Login_User');
+        $groupCollection = CollectionDb::getInstanceOf('Login_Group');
+
+        $select = (new QueryFactory())->newSelect();
+        $select->cols(['u.id', 'u.username', 'g.name'])
+                ->from($userCollection->getTable(). ' as u')
+                ->join('INNER'
+                    , $groupCollection->getTable().' as g'
+                    , 'g.id = u.group_id')
+                ->orderBy(['id']);
+
+        $userCollection->loadByQuery($select->getStatement());
+
+        $this->_listBlock->setHeaderLabel(['Id', 'Username', 'Group']);
+        $this->_listBlock->setLines($userCollection->getRows());
+        $this->_listBlock->setColsWidth(['20px']);
+        $this->_listBlock->setUrlToClick($this->getUrlAction('user').'/id/{id}');
+        $this->_listBlock->setUrlParams(['id']);
+
         $this->setTemplate('/login/user/index.phtml');
     }
 

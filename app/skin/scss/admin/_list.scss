@@ -1,0 +1,14 @@
+
+.list-admin {
+
+  tr {
+
+    &[data-url] {
+      cursor: pointer;
+    }
+
+    &[data-url=""] {
+      cursor: inherit;
+    }
+  }
+}

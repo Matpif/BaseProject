@@ -6,13 +6,22 @@ use App\App;
 use App\libs\App\CollectionDb;
 use App\libs\App\Controller;
 use App\libs\App\Helper;
+use App\libs\App\QueryFactory;
+use BaseProject\Admin\Block\ListAdmin;
 use BaseProject\Cms\Model\Block;
 use BaseProject\Login\Helper\Login;
 
 class Admin extends Controller
 {
 
+    /**
+     * @var \BaseProject\Cms\Model\Block
+     */
     private $_currentBlock;
+    /**
+     * @var ListAdmin
+     */
+    private $_listBlock;
 
     /**
      * Default_Admin_IndexController constructor.
@@ -27,6 +36,24 @@ class Admin extends Controller
 
     public function indexAction()
     {
+        /** @var ListAdmin $listBlock */
+        $this->_listBlock = \App\libs\App\Block::getBlock('Admin_ListAdmin');
+
+        /** @var \BaseProject\Login\Collection\User $users */
+        $blockCollection = CollectionDb::getInstanceOf('Cms_Block');
+
+        $select = (new QueryFactory())->newSelect();
+        $select->cols(['id', 'name', 'language_code', 'title', "CASE WHEN is_enabled = 1 THEN 'Yes' ELSE 'No' END as is_enabled"])
+            ->from($blockCollection->getTable())
+            ->orderBy(['id']);
+
+        $blockCollection->loadByQuery($select->getStatement());
+
+        $this->_listBlock->setHeaderLabel(['Id', 'Name', 'Language', 'Title', 'Enabled']);
+        $this->_listBlock->setLines($blockCollection->getRows());
+        $this->_listBlock->setColsWidth(['20px', '10%', '30%', '', '10px']);
+        $this->_listBlock->setUrlToClick($this->getUrlAction('block') . '/id/{id}');
+        $this->_listBlock->setUrlParams(['id']);
         $this->setTemplate('/cms/admin/index.phtml');
     }
 
@@ -76,7 +103,7 @@ class Admin extends Controller
 
     public function getBlocks()
     {
-        $blocks = CollectionDb::getInstanceOf('Cms_Block')->loadAll(['name' => 'ASC']);
+        $blocks = CollectionDb::getInstanceOf('Cms_Block')->loadAll(['name ASC']);
 
         return $blocks;
     }
@@ -87,6 +114,14 @@ class Admin extends Controller
     public function getCurrentBlock()
     {
         return $this->_currentBlock;
+    }
+
+    /**
+     * @return ListAdmin
+     */
+    public function getListBlock()
+    {
+        return $this->_listBlock;
     }
 
     public function isAllowed($action = null)

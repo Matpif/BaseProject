@@ -8,6 +8,8 @@ use App\libs\App\Block;
 use App\libs\App\CollectionDb;
 use App\libs\App\Controller;
 use App\libs\App\Helper;
+use App\libs\App\QueryFactory;
+use BaseProject\Admin\Block\ListAdmin;
 use BaseProject\Admin\Block\Message;
 use BaseProject\Login\Block\FormGroup;
 use BaseProject\Login\Helper\Login;
@@ -15,7 +17,14 @@ use BaseProject\Login\Helper\Login;
 class Group extends Controller
 {
 
+    /**
+     * @var \BaseProject\Login\Model\Group
+     */
     private $_currentGroup;
+    /**
+     * @var ListAdmin
+     */
+    private $_listBlock;
 
     /**
      * Login_GroupController constructor.
@@ -30,6 +39,24 @@ class Group extends Controller
 
     public function indexAction()
     {
+        /** @var ListAdmin $listBlock */
+        $this->_listBlock = Block::getBlock('Admin_ListAdmin');
+
+        /** @var \BaseProject\Login\Collection\User $users */
+        $groupCollection = CollectionDb::getInstanceOf('Login_Group');
+
+        $select = (new QueryFactory())->newSelect();
+        $select->cols(['id', 'name', 'roles'])
+            ->from($groupCollection->getTable())
+            ->orderBy(['id']);
+
+        $groupCollection->loadByQuery($select->getStatement());
+
+        $this->_listBlock->setHeaderLabel(['Id', 'Name', 'Roles']);
+        $this->_listBlock->setLines($groupCollection->getRows());
+        $this->_listBlock->setColsWidth(['20px']);
+        $this->_listBlock->setUrlToClick($this->getUrlAction('group') . '/id/{id}');
+        $this->_listBlock->setUrlParams(['id']);
     }
 
     public function groupAction()
@@ -131,6 +158,14 @@ class Group extends Controller
         $loginHelper = Helper::getInstance('Login_Login');
 
         return $loginHelper->getAllRoles();
+    }
+
+    /**
+     * @return ListAdmin
+     */
+    public function getListBlock()
+    {
+        return $this->_listBlock;
     }
 
     public function isAllowed($action = null)

@@ -8,39 +8,5 @@ $_blocks = $this->getBlocks();
 <div class="show-block">
     <a href="<?= Router::getUrlAction('Cms', 'Admin', 'block') ?>"
        class="btn btn-default"><?= $this->__('New block') ?></a>
-    <table class="table table-hover">
-        <colgroup>
-            <col width="25px"/>
-            <col width="10%"/>
-            <col width="30%"/>
-            <col/>
-            <col width="10px"/>
-        </colgroup>
-        <thead>
-        <tr>
-            <th><?= $this->__('Id') ?></th>
-            <th><?= $this->__('Name') ?></th>
-            <th><?= $this->__('Language') ?></th>
-            <th><?= $this->__('Title') ?></th>
-            <th><?= $this->__('Enabled') ?></th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
-        foreach ($_blocks as $block):
-            ?>
-            <tr>
-                <td><a href="<?= Router::getUrlAction('Cms', 'Admin',
-                        'block') ?>/id/<?= $block->getId() ?>"><?= $block->getId() ?></a></td>
-                <td><a href="<?= Router::getUrlAction('Cms', 'Admin',
-                        'block') ?>/id/<?= $block->getId() ?>"><?= $block->getName() ?></a></td>
-                <td><?= $block->getLanguageCode() ?></td>
-                <td><?= $block->getTitle() ?></td>
-                <td><?= ($block->getIsEnabled()) ? $this->__('Yes') : $this->__('No') ?></td>
-            </tr>
-            <?php
-        endforeach;
-        ?>
-        </tbody>
-    </table>
+    <?= $this->getListBlock()->getHtml(); ?>
 </div>

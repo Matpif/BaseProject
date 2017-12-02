@@ -1,0 +1,65 @@
+<?php
+/** @var \BaseProject\Admin\Block\ListAdmin $this */
+$colsWidth = $this->getColsWidth();
+$headersLabel = $this->getHeaderLabel();
+$lines = $this->getLines();
+
+$uuid = uniqid();
+?>
+<table id="<?= $uuid ?>" class="table table-hover list-admin">
+    <colgroup>
+        <?php
+        foreach ($colsWidth as $colWidth) :
+            ?>
+            <col <?= ($colsWidth) ? "width=\"{$colWidth}\"" : "" ?>/>
+        <?php
+        endforeach;
+        ?>
+    </colgroup>
+    <thead>
+    <tr>
+        <?php
+        foreach ($headersLabel as $headerLabel) :
+            ?>
+            <th><?= $this->__($headerLabel) ?></th>
+        <?php
+        endforeach;
+        ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php ;
+    foreach ($lines as $line):
+
+        if ($line instanceof \App\libs\App\ModelDb) {
+            $l = $line->getData();
+        } else {
+            $l = $line;
+        }
+        ?>
+        <tr data-url="<?= $this->buildUrl($l) ?>">
+            <?php
+            foreach ($l as $col):
+                ?>
+                <td><?= $col ?></td>
+            <?php
+            endforeach;
+            ?>
+        </tr>
+    <?php
+    endforeach;
+    ?>
+    </tbody>
+</table>
+<script type="application/javascript">
+    jQuery(function($) {
+
+        $('#<?= $uuid ?> tr').on('click', function(e) {
+
+            if ($(this).data('url') !== '') {
+                e.preventDefault();
+                window.location.href = $(this).data('url');
+            }
+        });
+    });
+</script>

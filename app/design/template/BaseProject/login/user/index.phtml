@@ -10,39 +10,6 @@ use BaseProject\Login\Helper\Login;
 <div class="show-user">
     <a href="<?= Router::getUrlAction('Login', 'User', 'user') ?>"
        class="btn btn-default"><?= $this->__('New user') ?></a>
-    <table class="table table-hover">
-        <colgroup>
-            <col/>
-        </colgroup>
-        <thead>
-        <tr>
-            <th><?= $this->__('Username') ?></th>
-            <th><?= $this->__('Group') ?></th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php
-        $users = CollectionDb::getInstanceOf('Login_User')->loadAll();
-        /** @var Login $helperLogin */
-        $helperLogin = Helper::getInstance('Login_Login');
-        foreach ($users as $user):
-            ?>
-            <tr>
-                <td><a href="<?= Router::getUrlAction('Login', 'User',
-                        'user') ?>/id/<?= $user->getId() ?>"><?= $user->getUsername() ?></a></td>
-                <td>
-                    <?php
-                    $group = $helperLogin->getGroup($user);
-                    if ($group) {
-                        echo $group->getName();
-                    }
-                    ?>
-                </td>
-            </tr>
-            <?php
-        endforeach;
-        ?>
-        </tbody>
-    </table>
+    <?= $this->getListBlock()->getHtml(); ?>
 </div>
 
