@@ -221,7 +221,7 @@ if (!$mode_cli) {
     if (isset($params['u'], $params['upgrade'])) {
     } else {
         if (isset($params['module-list'])) {
-            $modules = \App\libs\App\CollectionDb::getInstanceOf('Admin_Module')->loadAll(['module_name' => 'ASC']);
+            $modules = \App\libs\App\CollectionDb::getInstanceOf('Admin_Module')->loadAll(['module_name ASC']);
 
             echo "\nList of modules :\n";
             /** @var \BaseProject\Admin\Model\Module $module */

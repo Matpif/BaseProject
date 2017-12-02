@@ -37,7 +37,7 @@ class Error extends Controller
             $this->_schedulerId = $params['schedulerId'];
             $this->_errors = CollectionDb::getInstanceOf('Task_Error')->load(['scheduler_id' => $params['schedulerId']]);
         } else {
-            $this->_errors = CollectionDb::getInstanceOf('Task_Error')->loadAll(['date' => 'DESC']);
+            $this->_errors = CollectionDb::getInstanceOf('Task_Error')->loadAll(['date DESC']);
         }
     }
 
