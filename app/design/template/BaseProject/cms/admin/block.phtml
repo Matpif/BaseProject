@@ -58,7 +58,7 @@ $_popin->setId('modalDelete');
             <div class="form-group">
                 <label for="content"><?= $this->__('Content') ?></label>
                 <textarea id="content" class="form-control"
-                          name="content"><?= $_currentBlock->getContent() ?></textarea>
+                          name="content"><?= $_currentBlock->getContent(false) ?></textarea>
             </div>
 
             <button type="submit" class="btn btn-primary"><?= $this->__('Save') ?></button>
@@ -81,7 +81,7 @@ $_popin->setId('modalDelete');
         };
         tinymce.init({
             selector: '#content',
-            plugins: 'advlist autolink link image lists charmap print preview table',
+            plugins: 'advlist autolink link image visualblocks lists charmap print preview table code textcolor colorpicker imagetools'
         });
     </script>
 <?= $_popin->getHtml() ?>

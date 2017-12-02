@@ -8,7 +8,6 @@ use App\libs\App\CollectionDb;
 
 class Block extends \App\libs\App\Block
 {
-
     public function getHtml()
     {
         $returned = '';
@@ -27,7 +26,7 @@ class Block extends \App\libs\App\Block
                 'language_code' => App::getInstance()->getLanguageCode()
             ])->getFirstRow();
             if ($blockCms) {
-                $returned = $blockCms->getContent();
+                $returned = $blockCms->getContent(true);
                 if (App::getInstance()->cacheIsEnabled() && $this->_useCache) {
                     Cache::getInstance()->getCacheRedis()->save($this->_key, $returned);
                 }

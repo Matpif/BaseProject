@@ -5,11 +5,6 @@
   "router": {
     "rewrite_uri": [
       {
-        "controller": "Media",
-        "action": "index",
-        "url": "/media"
-      },
-      {
         "controller": "Index",
         "action": "index",
         "url": "/cms"
@@ -27,13 +22,11 @@
   "admin_menu": {
     "tree": {
       "Cms_Admin": [
-        "Cms_Admin_index",
-        "Cms_Media_index"
+        "Cms_Admin_index"
       ]
     },
     "labels": {
       "Cms_Admin_index": "Block",
-      "Cms_Media_index": "Media",
       "Cms_Admin": "Cms"
     },
     "sort": {
@@ -43,8 +36,7 @@
     }
   },
   "roles": {
-    "cms_admin": "Cms Admin",
-    "cms_media": "Cms Media"
+    "cms_admin": "Cms Admin"
   },
   "Install": {
     "path": "sql"
