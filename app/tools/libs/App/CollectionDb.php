@@ -66,24 +66,24 @@ abstract class CollectionDb extends Collection
      */
     public function load($attributes, $sort = null, $page = null)
     {
-
         $dataParamList = $this->_db->dataParamList($attributes, $this->_key, ' AND ', true);
-        $query = "SELECT {$this->getSelectedFieldsToString()} FROM {$this->_table} WHERE " . $dataParamList;
+
+        $select = (new QueryFactory())->newSelect()
+            ->cols($this->_selectedFields)
+            ->from($this->_table)
+            ->where($dataParamList)
+            ->bindValues($attributes);
 
         if (is_array($sort)) {
-            foreach ($sort as $key => $value) {
-                $query .= " ORDER BY " . $key . ' ' . $value . ',';
-            }
-            $query = substr($query, 0, -1);
+            $select->orderBy($sort);
         }
 
         if ($page) {
-            $firstRow = $this->_nbByPage * $page - $this->_nbByPage;
-            $query .= " LIMIT " . $firstRow . ',' . $this->_nbByPage;
+            $select->page($page);
         }
 
-        $stmt = $this->_db->prepareQuery($query, $attributes);
-        $stmt->execute();
+        $stmt = $this->_db->prepare($select->getStatement());
+        $stmt->execute($select->getBindValues());
 
         unset($this->_rows);
         $this->_rows = [];
@@ -100,17 +100,6 @@ abstract class CollectionDb extends Collection
         return $this;
     }
 
-    protected function getSelectedFieldsToString()
-    {
-        $selectedFields = '';
-        foreach ($this->_selectedFields as $selectedField) {
-            $selectedFields .= $selectedField . ', ';
-        }
-        $selectedFields = substr($selectedFields, 0, strlen($selectedFields) - 2);
-
-        return $selectedFields;
-    }
-
     /**
      * Select all attributes
      * @param $id
@@ -118,10 +107,14 @@ abstract class CollectionDb extends Collection
      */
     public function loadById($id)
     {
+        $select = (new QueryFactory())->newSelect()
+            ->cols($this->_selectedFields)
+            ->from($this->_table)
+            ->where("{$this->_key}=:{$this->_key}")
+            ->bindValues([$this->_key => $id]);
 
-        $query = "SELECT {$this->getSelectedFieldsToString()} FROM {$this->_table} WHERE {$this->_key} = :{$this->_key}";
-        $stmt = $this->_db->prepareQuery($query, [$this->_key => $id]);
-        $stmt->execute();
+        $stmt = $this->_db->prepare($select->getStatement());
+        $stmt->execute($select->getBindValues());
         $result = $stmt->fetch(MyPdo::FETCH_ASSOC);
 
         $model = null;
@@ -143,21 +136,19 @@ abstract class CollectionDb extends Collection
      */
     public function loadAll($sort = null, $page = null)
     {
-        $query = "SELECT {$this->getSelectedFieldsToString()} FROM {$this->_table}";
+        $select = (new QueryFactory())->newSelect()
+            ->cols($this->_selectedFields)
+            ->from($this->_table);
 
         if (is_array($sort)) {
-            foreach ($sort as $key => $value) {
-                $query .= " ORDER BY " . $key . ' ' . $value . ',';
-            }
-            $query = substr($query, 0, -1);
+            $select->orderBy($sort);
         }
 
         if ($page) {
-            $firstRow = $this->_nbByPage * $page - $this->_nbByPage;
-            $query .= " LIMIT " . $firstRow . ',' . $this->_nbByPage;
+            $select->page($page);
         }
 
-        $stmt = $this->_db->prepareQuery($query);
+        $stmt = $this->_db->prepare($select->getStatement());
         $stmt->execute();
 
         unset($this->_rows);
@@ -182,7 +173,6 @@ abstract class CollectionDb extends Collection
      */
     public function loadByQuery($query, $attributes = null)
     {
-
         $stmt = $this->_db->prepareQuery($query, $attributes);
         $stmt->execute();
 
@@ -207,16 +197,18 @@ abstract class CollectionDb extends Collection
      */
     public function countElements($attributes = null)
     {
-
-        $query = "SELECT count(*) as nb FROM {$this->_table}";
+        $select = (new QueryFactory())->newSelect()
+            ->cols(['count(*) as nb'])
+            ->from($this->_table);
 
         if (is_array($attributes)) {
             $dataParamList = $this->_db->dataParamList($attributes, $this->_key, ' AND ', true);
-            $query .= " WHERE " . $dataParamList;
+            $select->where($dataParamList)
+                ->bindValues($attributes);
         }
 
-        $stmt = $this->_db->prepareQuery($query, $attributes);
-        $stmt->execute();
+        $stmt = $this->_db->prepare($select->getStatement());
+        $stmt->execute($select->getBindValues());
 
         $result = $stmt->fetch(MyPdo::FETCH_ASSOC);
         $nb = $result['nb'];
@@ -233,5 +225,13 @@ abstract class CollectionDb extends Collection
         $this->_selectedFields = $selectedFields;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTable()
+    {
+        return $this->_table;
     }
 }

@@ -21,6 +21,10 @@ abstract class VarientObject implements \JsonSerializable
         $this->_data = $data;
     }
 
+    public function getData() {
+        return $this->_data;
+    }
+
     /**
      * Set several values in data
      * @param $data

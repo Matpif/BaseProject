@@ -77,11 +77,18 @@ abstract class ModelDb extends VarientObject implements ModelInterface
      */
     protected function update()
     {
-        $dataParamList = $this->_db->dataParamList($this->_data, $this->_key);
-        $query = "UPDATE {$this->_table} SET $dataParamList WHERE {$this->_key}=:{$this->_key}";
-        $stmt = $this->_db->prepareQuery($query, $this->_data);
+        $colsToUpdate = array_keys($this->_data);
+        if (isset($colsToUpdate[$this->_key])) unset($colsToUpdate[$this->_key]);
 
-        return ($stmt->execute() !== false);
+        $update = (new QueryFactory())->newUpdate()
+            ->table($this->_table)
+            ->cols($colsToUpdate)
+            ->where("{$this->_key}=:{$this->_key}")
+            ->bindValues($this->_data);
+
+        $stmt = $this->_db->prepare($update->getStatement());
+
+        return ($stmt->execute($update->getBindValues()) !== false);
     }
 
     /**
@@ -92,13 +99,13 @@ abstract class ModelDb extends VarientObject implements ModelInterface
     protected function insert()
     {
         $columns = array_keys($this->_data);
-        $fieldList = implode(',', $columns);
-        $paramList = ':' . implode(", :", $columns);
+        $insert = (new QueryFactory())->newInsert()
+            ->into($this->_table)
+            ->cols($columns)
+            ->bindValues($this->_data);
 
-        $query = "INSERT INTO {$this->_table} ($fieldList) VALUES ($paramList)";
-
-        $stmt = $this->_db->prepareQuery($query, $this->_data);
-        if ($stmt->execute() !== false) {
+        $stmt = $this->_db->prepare($insert->getStatement());
+        if ($stmt->execute($insert->getBindValues()) !== false) {
             $this->_data[$this->_key] = $this->_db->lastInsertId();
 
             return true;
@@ -115,9 +122,14 @@ abstract class ModelDb extends VarientObject implements ModelInterface
     public function remove()
     {
         Dispatcher::getInstance()->dispatch('before_remove_model', $this);
-        $query = "DELETE FROM {$this->_table} WHERE {$this->_key}=:{$this->_key}";
-        $stmt = $this->_db->prepareQuery($query, [$this->_key => $this->getAttribute($this->_key)]);
-        $returned = $stmt->execute() !== false;
+
+        $delete = (new QueryFactory())->newDelete()
+            ->from($this->_table)
+            ->where("{$this->_key}=:{$this->_key}")
+            ->bindValues([$this->_key => $this->getAttribute($this->_key)]);
+
+        $stmt = $this->_db->prepare($delete->getStatement());
+        $returned = $stmt->execute($delete->getBindValues()) !== false;
         Dispatcher::getInstance()->dispatch('after_remove_model', $this);
 
         return $returned;
