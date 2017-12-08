@@ -11,7 +11,7 @@ $menu = $this->getMenu();
 $labelsMenu = $this->getLabelsMenu();
 ?>
 
-<nav class="navbar navbar-inverse admin">
+<nav class="navbar navbar-custom admin">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
@@ -24,84 +24,26 @@ $labelsMenu = $this->getLabelsMenu();
             <a class="navbar-brand"
                href="<?= Router::getUrlAction('Admin', 'Index', 'index') ?>"><?= $this->__('Administration'); ?></a>
         </div>
-
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <?php foreach ($menu as $code => $child): ?>
-                    <?php
-                    $hasChild = is_array($child);
-                    ?>
-                    <li <?= ($hasChild) ? 'class="dropdown"' : '' ?>>
-                        <a <? if (!$hasChild): ?>href="<?= $this->getUrl($code) ?>" <? endif; ?> <?= ($hasChild) ? 'class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"' : '' ?>><?= $this->__(($hasChild) ? $labelsMenu[$code] : $labelsMenu[$child]) ?><? if ($hasChild): ?>
-                                <span class="caret"></span><? endif; ?></a>
-                        <?php
-                        if ($hasChild) :?>
-                            <ul class="dropdown-menu level2">
-                                <?php
-                                foreach ($child as $code2 => $child2): ?>
-                                    <?php
-                                    $hasChild2 = is_array($child2);
-                                    ?>
-                                    <li <?= ($hasChild2) ? 'class="dropdown"' : '' ?>>
-                                        <a <? if (!$hasChild2): ?>href="<?= $this->getUrl($child2) ?>" <? endif; ?> <?= ($hasChild2) ? 'class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"' : '' ?>><?= $this->__(($hasChild2) ? $labelsMenu[$code2] : $labelsMenu[$child2]) ?><? if ($hasChild2): ?>
-                                                <span class="caret"></span><? endif; ?></a>
-                                        <?php
-                                        if ($hasChild2): ?>
-                                            <ul class="dropdown-menu level3">
-                                                <?php
-                                                foreach ($child2 as $code3 => $child3):
-                                                    ?>
-                                                    <li>
-                                                        <a href="<?= $this->getUrl($child3) ?>"><?= $this->__($labelsMenu[$child3]) ?></a>
-                                                    </li>
-                                                    <?php
-                                                endforeach;
-                                                ?>
-                                            </ul>
-                                            <?php
-                                        endif;
-                                        ?>
-                                    </li>
-                                    <?php
-                                endforeach;
-                                ?>
-                            </ul>
-                        <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <?php
-                    $user = App::getInstance()->getSession()->getUser()
-                    ?>
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <span class="fa fa-user fa-1-5x"></span><span class="caret"></span>
-                    </a>
-                    <?php
-                    if ($user):
-                        ?>
-                        <ul class="dropdown-menu">
-                            <li style="padding-left: 20px; color: grey;"><?= $this->__('Welcome') ?>&nbsp;<?= $user->getUsername() ?></li>
-                            <li><a href="<?= Router::getUrlAction('Login', 'Index',
-                                    'disconnect') ?>"><?= $this->__('Disconnect') ?></a></li>
-                        </ul>
-                        <?php
-                    else:
-                        /** @var Login $helper */
-                        $helper = Helper::getInstance('Login_Login');
-                        ?>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="<?= $helper->getUrlLogin() ?>"><?= $this->__('Connect') ?></a>
-                            </li>
-                        </ul>
-                    <?php endif; ?>
-                </li>
-            </ul>
-        </div>
     </div>
 </nav>
+<div class="col-sm-3 col-lg-2 sidebar collapse in">
+    <div class="profile">
+        <img src="https://d30y9cdsu7xlg0.cloudfront.net/png/16627-200.png" />
+        <div class="user-title">
+            PIFFETEAU Matthieu<br/>
+            <a href="#">Disconnect</a>
+        </div>
+    </div>
+    <ul class="menu">
+        <li><a>Test</a></li>
+        <li><a>Test</a></li>
+        <li>Test
+            <ul>
+                <li><a>Test 1</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
 
 <script type="application/javascript">
     jQuery(function ($) {
