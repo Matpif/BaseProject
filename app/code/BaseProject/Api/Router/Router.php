@@ -5,10 +5,18 @@ namespace BaseProject\Api\Router;
 class Router extends \App\libs\App\Router
 {
 
+
+    /**
+     * Router constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->getRoute();
+    }
+
     public function getRoute()
     {
-        $route = parent::getRoute();
-
         $splitUri = explode('/', $this->_currentUri);
 
         $name = '';
@@ -26,6 +34,10 @@ class Router extends \App\libs\App\Router
             }
         }
 
-        return $route;
+        return [
+            'module' => $this->_module,
+            'controller' => $this->_controller,
+            'action' => $this->_action,
+        ];
     }
 }

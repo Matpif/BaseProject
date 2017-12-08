@@ -41,7 +41,6 @@ class Router
         $this->_currentUri = App::getInstance()->getRequest()->getServerParams()['REQUEST_URI'];
         $this->_rootUrl = App::getInstance()->getRequest()->getServerParams()['SERVER_NAME'];
         $this->_secure = Config::getInstance()->getAttribute('app', 'secure');
-        $this->getRoute();
     }
 
     /**
@@ -341,5 +340,14 @@ class Router
         }
 
         return $returned;
+    }
+
+    /**
+     * @param Router $router
+     */
+    public function setRouter($router) {
+        $this->_action = $router->getAction();
+        $this->_controller = $router->getController();
+        $this->_module = $router->getModule();
     }
 }

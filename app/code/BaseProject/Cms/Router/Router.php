@@ -6,10 +6,17 @@ use App\libs\App\CollectionDb;
 
 class Router extends \App\libs\App\Router
 {
+    /**
+     * Router constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->getRoute();
+    }
 
     public function getRoute()
     {
-        parent::getRoute();
         if (0 === strpos($this->_currentUri, '/cms')) {
             $splitUri = explode('/', $this->_currentUri);
             foreach ($splitUri as $key => $item) {

@@ -313,6 +313,7 @@ class App
     {
         if (!$this->_router) {
             $router = new Router();
+            $router->getRoute();
             $module = $router->getModule();
             /** @var Module $_module */
             $_module = CollectionDb::getInstanceOf('Admin_Module')->load(['module_name' => $module])->getFirstRow();
@@ -331,6 +332,7 @@ class App
             } else {
                 $this->_router = new \BaseProject\Error\Router\Router(StatusCodes::HTTP_NOT_FOUND);
             }
+            $this->_router->setRouter($router);
         }
 
         return $this->_router;
