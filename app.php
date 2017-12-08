@@ -219,60 +219,51 @@ if (!$mode_cli) {
     $params = getopt('u', ['upgrade', 'module:', 'state:', 'module-list', 'help', 'maintenance:', 'refresh-cache']);
 
     if (isset($params['u'], $params['upgrade'])) {
-    } else {
-        if (isset($params['module-list'])) {
-            $modules = \App\libs\App\CollectionDb::getInstanceOf('Admin_Module')->loadAll(['module_name ASC']);
+    } else if (isset($params['module-list'])) {
+        $modules = \App\libs\App\CollectionDb::getInstanceOf('Admin_Module')->loadAll(['module_name ASC']);
 
-            echo "\nList of modules :\n";
-            /** @var \BaseProject\Admin\Model\Module $module */
-            foreach ($modules as $module) {
-                echo $module->getAttribute('module_name') . " : " . (($module->getAttribute('enable')) ? 'is active' : 'is disabled') . "\n";
+        echo "\nList of modules :\n";
+        /** @var \BaseProject\Admin\Model\Module $module */
+        foreach ($modules as $module) {
+            echo $module->getAttribute('module_name') . " : " . (($module->getAttribute('enable')) ? 'is active' : 'is disabled') . "\n";
+        }
+    } else if (isset($params['maintenance'])) {
+        $_currentConfig = Config::getInstance();
+        $config = $_currentConfig->getConfig();
+        $config['app']['maintenance'] = $params['maintenance'];
+        $_currentConfig->setConfig($config);
+
+        echo (($params['maintenance']) ? 'Maintenance is active' : 'Maintenance is disabled') . "\n";
+    } else if (isset($params['module'], $params['state'])) {
+
+        $module = \App\libs\App\CollectionDb::getInstanceOf('Admin_Module')->load(['module_name' => $params['module']])->getFirstRow();
+        /** @var Admin $adminHelper */
+        $adminHelper = Helper::getInstance('Admin_Admin');
+        if ($module) {
+            if ($params['state'] == '1') {
+                $adminHelper->enableModule($module);
+                echo "Module enabled\n";
+            } else {
+                $adminHelper->disableModule($module);
+                echo "Module disabled\n";
             }
         } else {
-            if (isset($params['maintenance'])) {
-                $_currentConfig = Config::getInstance();
-                $config = $_currentConfig->getConfig();
-                $config['app']['maintenance'] = $params['maintenance'];
-                $_currentConfig->setConfig($config);
-
-                echo (($params['maintenance']) ? 'Maintenance is active' : 'Maintenance is disabled') . "\n";
-            } else {
-                if (isset($params['module'], $params['state'])) {
-
-                    $module = \App\libs\App\CollectionDb::getInstanceOf('Admin_Module')->load(['module_name' => $params['module']])->getFirstRow();
-                    /** @var Admin $adminHelper */
-                    $adminHelper = Helper::getInstance('Admin_Admin');
-                    if ($module) {
-                        if ($params['state'] == '1') {
-                            $adminHelper->enableModule($module);
-                            echo "Module enabled\n";
-                        } else {
-                            $adminHelper->disableModule($module);
-                            echo "Module disabled\n";
-                        }
-                    } else {
-                        echo "Module does't exist\n";
-                    }
-                } else {
-                    if (isset($params['refresh-cache'])) {
-                        /** @var Cache $cacheHelper */
-                        $cacheHelper = Helper::getInstance('Admin_Cache');
-                        $cacheHelper->clearCache();
-
-                        echo "Cache has refreshed\n";
-                    } else {
-                        if (isset($params['help'])) {
-                            echo "app.php --help\n\n";
-                            echo "    --upgrade         to start script upgrade version\n";
-                            echo "    --module-list     list module name with state\n";
-                            echo "    --module          module name\n";
-                            echo "    --state           state to active (1) or disable (0) module (with --module)\n";
-                            echo "    --maintenance     active (1) disable (0)\n";
-                            echo "\n";
-                        }
-                    }
-                }
-            }
+            echo "Module does't exist\n";
         }
+    } else if (isset($params['refresh-cache'])) {
+        /** @var Cache $cacheHelper */
+        $cacheHelper = Helper::getInstance('Admin_Cache');
+        $cacheHelper->clearCache();
+
+        echo "Cache has refreshed\n";
+    } else if (isset($params['help'])) {
+        echo "app.php --help\n\n";
+        echo "    --upgrade         to start script upgrade version\n";
+        echo "    --module-list     list module name with state\n";
+        echo "    --module          module name\n";
+        echo "    --state           state to active (1) or disable (0) module (with --module)\n";
+        echo "    --maintenance     active (1) disable (0)\n";
+        echo "    --refresh-cache   refresh cache\n";
+        echo "\n";
     }
 }
