@@ -1,7 +1,8 @@
 /app/var
 /.idea
-/app/skin/scss/.sass-cache
+.sass-cache
 /vendor
 /composer.lock
 /composer.phar
 /app/skin/scss/cms/.sass-cache
+/helper
