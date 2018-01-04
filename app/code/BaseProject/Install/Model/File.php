@@ -16,6 +16,11 @@ use DateTime;
  * @method setFileName(String $fileName)
  * @method setLastExec(DateTime $lastExec)
  *
+ * @dbField id INT AUTO_INCREMENT PRIMARY KEY
+ * @dbField module_id INT NOT NULL
+ * @dbField file_name VARCHAR(50) NOT NULL
+ * @dbField last_exec DATETIME NULL
+ *
  * class DefaultInstall_FileModel
  */
 class File extends ModelDb

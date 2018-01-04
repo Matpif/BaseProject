@@ -9,10 +9,11 @@ use DateTime;
  *
  * @method int getId()
  * @method String getModuleName()
- * @method DateTime getLastExec()
  * @method setId(int $id)
  * @method setModuleName(String $moduleName)
- * @method setLastExec(DateTime $lastExec)
+ *
+ * @dbField id INT AUTO_INCREMENT PRIMARY KEY
+ * @dbField module_name VARCHAR(50) NOT NULL
  *
  * class DefaultInstall_ModuleModel
  */

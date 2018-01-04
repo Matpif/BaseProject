@@ -13,15 +13,12 @@ $_controller = $this->getController();
     <meta http-equiv="Content-Language" content="<?= App::getInstance()->getLanguageCode() ?>"/>
     <link rel="icon" type="image/png" href="<?= $_controller->getUrlImage('/logo.png') ?>"/>
     <title><?php echo $_controller->getTitle(); ?></title>
-    <link rel="stylesheet" href="<?php echo $_controller->getUrlFile('/skin/libs/bootstrap/css/bootstrap.min.css'); ?>">
-    <link rel="stylesheet"
-          href="<?php echo $_controller->getUrlFile('/skin/libs/bootstrap/css/bootstrap-theme.min.css'); ?>">
     <link rel="stylesheet" href="<?php echo $_controller->getUrlFile('/skin/css/style.css'); ?>">
     <?php foreach ($_controller->getCssFile() as $cssFile): ?>
         <link rel="stylesheet" href="<?php echo $_controller->getUrlFile($cssFile); ?>">
     <?php endforeach; ?>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="<?php echo $_controller->getUrlFile('/skin/libs/bootstrap/js/bootstrap.min.js'); ?>"></script>
+    <script src="<?php echo $_controller->getUrlFile('/skin/libs/bootstrap/javascripts/bootstrap.min.js'); ?>"></script>
     <?php foreach ($_controller->getJsFile() as $jsFile): ?>
         <script src="<?php echo $_controller->getUrlFile($jsFile); ?>"></script>
     <?php endforeach; ?>

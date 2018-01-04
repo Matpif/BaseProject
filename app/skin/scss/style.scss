@@ -1,6 +1,11 @@
 /* Font-awesome */
 @import "../libs/font-awesome-4.7.0/scss/font-awesome";
 
+/* Bootstrap */
+@import "bootstrap-compass";
+@import "../libs/bootstrap/sass/bootstrap-variables";
+@import "bootstrap";
+
 /* Vars */
 @import "var";
 
@@ -30,5 +35,5 @@
 @import "error/error";
 
 body {
-    background-color: #f8f8f8;
+    background-color: $color-light-grey;
 }

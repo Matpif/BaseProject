@@ -19,6 +19,14 @@ use App\libs\App\ModelDb;
  * @method setActivePageFormat(Boolean $activePageFormat)
  * @method setIsEnabled(Boolean $isEnabled)
  *
+ * @dbField id INT PRIMARY KEY AUTO_INCREMENT
+ * @dbField name NVARCHAR(25) NOT NULL
+ * @dbField language_code NVARCHAR(5) NULL
+ * @dbField title NVARCHAR(50) NULL
+ * @dbField content TEXT NULL
+ * @dbField active_page_format BOOLEAN DEFAULT 0
+ * @dbField is_enabled BOOLEAN DEFAULT 1
+ *
  * class DefaultCms_BlockModel
  */
 class Block extends ModelDb

@@ -11,6 +11,9 @@ use DateTime;
  * @method setCode(String $code)
  * @method setLastExec(DateTime $lastExec)
  *
+ * @dbField code NVARCHAR(50) PRIMARY KEY
+ * @dbField last_exec DATETIME NULL
+ *
  * class DefaultTask_TaskModel
  */
 class Task extends ModelDb

@@ -17,20 +17,9 @@ if (!$mode_cli) {
                 ['mysql' => $_POST['mysql']], ['redis' => $_POST['redis']]);
             $config['app']['installed'] = 1;
             $_currentConfig->setConfig($config);
-            $myPdo = \App\MyPdo::getInstance(\App\MyPdo::TYPE_MYSQL);
-            $query = file_get_contents(__DIR__ . '/install/install-0.0.1.sql');
-            $myStatement = $myPdo->query($query);
-            $myPdo->exec($myStatement);
 
-            $filesUpgrade = scandir(__DIR__ . '/install/');
-            foreach ($filesUpgrade as $file) {
-                if ($file == '.' || $file = '..' || $file == 'install-0.0.1.sql') {
-                    continue;
-                }
-                $query = file_get_contents(__DIR__ . '/install/' . $file);
-                $myStatement = $myPdo->query($query);
-                $myPdo->exec($myStatement);
-            }
+            $db = new \App\Db();
+            $db->upgradeDb();
 
             /** @var Cache $cacheHelper */
             $cacheHelper = Helper::getInstance('Admin_Cache');
@@ -216,9 +205,24 @@ if (!$mode_cli) {
     App::getInstance()->setPathRoot(__DIR__ . '/app');
     App::getInstance()->init();
 
-    $params = getopt('u', ['upgrade', 'module:', 'state:', 'module-list', 'help', 'maintenance:', 'refresh-cache']);
+    $params = getopt('u', ['upgrade', 'generate-db', 'module:', 'state:', 'module-list', 'help', 'maintenance:', 'refresh-cache']);
 
     if (isset($params['u'], $params['upgrade'])) {
+        $db = new \App\Db();
+        echo "\nStart upgrade Db\n";
+        $db->upgradeDb();
+        echo "End upgrade Db\n";
+    } else if (isset($params['generate-db'])) {
+
+        $db = new \App\Db();
+        echo "\nStart generate upgrade Db\n";
+        try {
+            $db->generateSqlDbModification();
+        } catch (Exception $ex) {
+            echo $ex->getMessage()."\n";
+        }
+        echo "End generate upgrade Db\n";
+
     } else if (isset($params['module-list'])) {
         $modules = \App\libs\App\CollectionDb::getInstanceOf('Admin_Module')->loadAll(['module_name ASC']);
 
@@ -258,7 +262,8 @@ if (!$mode_cli) {
         echo "Cache has refreshed\n";
     } else if (isset($params['help'])) {
         echo "app.php --help\n\n";
-        echo "    --upgrade         to start script upgrade version\n";
+        echo "    --upgrade         to start script upgrade db version\n";
+        echo "    --generate-db     generate Sql modification\n";
         echo "    --module-list     list module name with state\n";
         echo "    --module          module name\n";
         echo "    --state           state to active (1) or disable (0) module (with --module)\n";

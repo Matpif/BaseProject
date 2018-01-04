@@ -13,6 +13,11 @@ use App\libs\App\ModelDb;
  * @method setEnable(Boolean $enable)
  * @method setProject(string $project)
  *
+ * @dbField id INT AUTO_INCREMENT PRIMARY KEY
+ * @dbField project nvarchar(50) DEFAULT 'BaseProject' NOT NULL
+ * @dbField enable tinyint(1) DEFAULT '1' NULL
+ * @dbField module_name nvarchar(50) NOT NULL
+ *
  * class Module
  */
 class Module extends ModelDb

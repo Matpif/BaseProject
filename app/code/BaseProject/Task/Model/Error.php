@@ -18,6 +18,12 @@ use DateTime;
  * @method setMessage(string $message)
  * @method setDate(String $date)
  *
+ * @dbField id INT AUTO_INCREMENT PRIMARY KEY
+ * @dbField scheduler_id INT NOT NULL
+ * @dbField code_error INT NOT NULL
+ * @dbField message TEXT NULL
+ * @dbField date DATETIME NOT NULL
+ *
  * Class Error
  * @package BaseProject\Task\Model
  */

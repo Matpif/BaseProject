@@ -188,7 +188,7 @@ class App
 
     public function run()
     {
-        $this->_pathRoot = $_SERVER['DOCUMENT_ROOT'];
+        $this->_pathRoot = preg_replace('/\/public$/', '/app', $_SERVER['DOCUMENT_ROOT']);
         $this->install();
         $this->maintenance();
         $this->setRequest(ServerRequest::fromGlobals());
@@ -260,6 +260,14 @@ class App
         }
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     */
+    private function setRequest($request)
+    {
+        $this->_request = $request;
+    }
+
     public function init()
     {
         $this->setLocale();
@@ -299,14 +307,6 @@ class App
     }
 
     /**
-     * @param ServerRequestInterface $request
-     */
-    private function setRequest($request)
-    {
-        $this->_request = $request;
-    }
-
-    /**
      * @return Router
      */
     public function getRouter()
@@ -322,7 +322,7 @@ class App
                 if (isset($configModule['override']['router'][$module])) {
                     $classRouter = $configModule['override']['router'][$module];
                 } else {
-                    $classRouter = $_module->getProject().'\\' . $module . '\\Router\\Router';
+                    $classRouter = $_module->getProject() . '\\' . $module . '\\Router\\Router';
                 }
                 if (class_exists($classRouter)) {
                     $this->_router = new $classRouter;

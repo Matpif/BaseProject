@@ -27,6 +27,14 @@ use Defuse\Crypto\Key;
  * @method setAdminUsername(string $string)
  * @method setDomain(string $string)
  *
+ * @dbField id INT AUTO_INCREMENT PRIMARY KEY
+ * @dbField is_active TINYINT DEFAULT 0
+ * @dbField domain_controllers NVARCHAR(250) NULL
+ * @dbField base_dn NVARCHAR(250) NULL
+ * @dbField admin_username NVARCHAR(250) NULL
+ * @dbField admin_password NVARCHAR(250) NULL
+ * @dbField domain NVARCHAR(50) NULL
+ *
  * @package BaseProject\Login\Model
  */
 class LdapConfig extends ModelDb

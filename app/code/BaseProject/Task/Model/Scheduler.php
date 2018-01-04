@@ -20,6 +20,13 @@ use Cron\CronExpression;
  * @method setIsEnabled(boolean $isEnabled)
  * @method setLastExecution(String $lastExecution)
  *
+ * @dbField id INT PRIMARY KEY AUTO_INCREMENT
+ * @dbField description NVARCHAR(250) NULL
+ * @dbField cron NVARCHAR(50) NOT NULL
+ * @dbField task_code NVARCHAR(50) NOT NULL
+ * @dbField is_enabled TINYINT DEFAULT 1 NOT NULL
+ * @dbField last_execution DATETIME NULL
+ *
  * Class Scheduler
  * @package BaseProject\Task\Model
  */
