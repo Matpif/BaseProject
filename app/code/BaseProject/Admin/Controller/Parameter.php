@@ -5,6 +5,7 @@ namespace BaseProject\Admin\Controller;
 use App\libs\App\Controller;
 use App\libs\App\Helper;
 use App\App;
+use BaseProject\Login\Helper\Login;
 
 class Parameter extends Controller
 {
@@ -36,5 +37,18 @@ class Parameter extends Controller
         }
 
         $this->redirect($this->getUrlAction('index'));
+    }
+
+    public function isAllowed($action = null)
+    {
+        $session = App::getInstance()->getSession();
+        $user = $session->getUser();
+        /** @var Login $helperLogin */
+        $helperLogin = Helper::getInstance('Login_Login');
+        if ($user) {
+            return $helperLogin->hasRole($user, 'Admin_admin');
+        }
+
+        return false;
     }
 }

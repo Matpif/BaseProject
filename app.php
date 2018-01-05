@@ -35,10 +35,9 @@ if (!$mode_cli) {
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
-                <link rel="stylesheet" href="/skin/libs/bootstrap/css/bootstrap.min.css"/>
-                <link rel="stylesheet" href="/skin/libs/bootstrap/css/bootstrap-theme.min.css"/>
+                <link rel="stylesheet" href="/skin/css/style.css"/>
                 <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-                <script type="application/javascript" src="/skin/libs/bootstrap/js/bootstrap.min.js"></script>
+                <script type="application/javascript" src="/skin/libs/bootstrap/javascripts/bootstrap.min.js"></script>
                 <style type="text/css">
                     body {
                         background-color: #f8f8f8;
@@ -71,19 +70,6 @@ if (!$mode_cli) {
                             <input type="hidden" name="save" value="1"/>
                             <fieldset>
                                 <legend>General</legend>
-
-                                <div class="form-group">
-                                    <label for="app_name">App Name</label>
-                                    <input id="app_name" type="text" name="app[name]"
-                                           value="<?= $_currentConfig->getAttribute('app', 'name'); ?>"
-                                           class="form-control"/>
-                                </div>
-                                <div class="form-group">
-                                    <label for="app_defaultPage">Default page</label>
-                                    <input id="app_defaultPage" type="text" name="app[defaultPage]"
-                                           value="<?= $_currentConfig->getAttribute('app', 'defaultPage'); ?>"
-                                           class="form-control"/>
-                                </div>
                                 <div class="form-group">
                                     <label for="app_debug">Debugger</label>
                                     <select id="app_debug" name="app[debug]" class="form-control">
