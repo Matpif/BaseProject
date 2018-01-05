@@ -12629,6 +12629,55 @@ nav.admin .level3 {
   cursor: inherit;
 }
 
+/* line 3, ../scss/admin/_parameter.scss */
+.Admin .parameter .menu-group {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+/* line 8, ../scss/admin/_parameter.scss */
+.Admin .parameter .menu-group ul {
+  padding-left: 0;
+}
+/* line 11, ../scss/admin/_parameter.scss */
+.Admin .parameter .menu-group ul li {
+  list-style: none;
+  height: 47px;
+  line-height: 47px;
+  padding-left: 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #7c7c7c;
+}
+/* line 19, ../scss/admin/_parameter.scss */
+.Admin .parameter .menu-group ul li:hover {
+  background-color: #ddd;
+}
+/* line 23, ../scss/admin/_parameter.scss */
+.Admin .parameter .menu-group ul li.active {
+  background-color: #e7e7e7;
+}
+/* line 29, ../scss/admin/_parameter.scss */
+.Admin .parameter .menu-group .title {
+  font-size: 21px;
+  border-bottom: 1px solid #7c7c7c;
+  width: 53%;
+  margin-bottom: 17px;
+  padding-left: 4px;
+}
+/* line 38, ../scss/admin/_parameter.scss */
+.Admin .parameter .parameter-message {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 24px;
+}
+/* line 44, ../scss/admin/_parameter.scss */
+.Admin .parameter .sections {
+  display: none;
+}
+/* line 48, ../scss/admin/_parameter.scss */
+.Admin .parameter .sections .section > label {
+  font-size: 25px;
+}
+
 /* Module Install */
 /* line 2, ../scss/install/_startScript.scss */
 .Install .startScript {
@@ -12844,7 +12893,7 @@ nav.admin .level3 {
   text-align: center;
 }
 
-/* line 37, ../scss/style.scss */
+/* line 38, ../scss/style.scss */
 body {
   background-color: #f8f8f8;
 }

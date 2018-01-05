@@ -1,8 +1,6 @@
 {
   "app": {
-    "name": "Base Project",
-    "version": "0.0.2",
-    "defaultPage": "\/Admin",
+    "version": "0.0.5",
     "secure": "0",
     "debug": "1",
     "enabledCache": "0",

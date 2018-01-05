@@ -205,9 +205,9 @@ if (!$mode_cli) {
     App::getInstance()->setPathRoot(__DIR__ . '/app');
     App::getInstance()->init();
 
-    $params = getopt('u', ['upgrade', 'generate-db', 'module:', 'state:', 'module-list', 'help', 'maintenance:', 'refresh-cache']);
+    $params = getopt('', ['upgrade', 'generate-db', 'module:', 'state:', 'module-list', 'help', 'maintenance:', 'refresh-cache']);
 
-    if (isset($params['u'], $params['upgrade'])) {
+    if (isset($params['upgrade'])) {
         $db = new \App\Db();
         echo "\nStart upgrade Db\n";
         $db->upgradeDb();

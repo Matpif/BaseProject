@@ -118,7 +118,7 @@ class Db
 
             preg_match_all($re, $file, $matches, PREG_SET_ORDER, 0);
             if (isset($matches[0][1])) {
-                if ($matches[0][1] > $config['db_version']) {
+                if ($matches[0][1] > $config['app']['db_version']) {
                     $query = file_get_contents($pathSql . $file);
                     $myStatement = $myPdo->query($query);
                     $myPdo->exec($myStatement);

@@ -8,6 +8,7 @@ use App\libs\App\Dispatcher;
 use App\libs\App\Helper;
 use App\libs\App\Router;
 use App\libs\App\Session;
+use BaseProject\Admin\Helper\Parameter;
 use BaseProject\Admin\Model\Module;
 use BaseProject\Login\Helper\Login;
 use GuzzleHttp\Psr7\ServerRequest;
@@ -48,6 +49,10 @@ class App
      * @var  string
      */
     private $_previousUri;
+    /**
+     * @var string
+     */
+    private $_appName;
 
     /**
      * App constructor.
@@ -170,7 +175,12 @@ class App
 
     public function getAppName()
     {
-        return Config::getInstance()->getAttribute('app', 'name');
+        if (!$this->_appName) {
+            /** @var Parameter $parameterHelper */
+            $parameterHelper = Helper::getInstance('Admin_Parameter');
+            $this->_appName = $parameterHelper->getParameter('general/general/appName')->getValue();
+        }
+        return $this->_appName;
     }
 
     public function getAppVersion()

@@ -1,0 +1,54 @@
+.Admin {
+  .parameter {
+    .menu-group {
+
+      margin-left: -15px;
+      margin-right: -15px;
+
+      ul {
+        padding-left: 0;
+
+        li {
+          list-style: none;
+          height: 47px;
+          line-height: 47px;
+          padding-left: 15px;
+          cursor: pointer;
+          border-bottom: 1px solid #7c7c7c;
+
+          &:hover {
+            background-color: #ddd;
+          }
+
+          &.active {
+            background-color: #e7e7e7;
+          }
+        }
+      }
+
+      .title {
+        font-size: 21px;
+        border-bottom: 1px solid #7c7c7c;
+        width: 53%;
+        margin-bottom: 17px;
+        padding-left: 4px;
+      }
+    }
+
+    .parameter-message {
+      text-align: center;
+      margin-top: 50px;
+      font-size: 24px;
+    }
+
+    .sections {
+      display: none;
+
+      .section {
+        >label {
+          font-size: 25px;
+        }
+      }
+    }
+  }
+}

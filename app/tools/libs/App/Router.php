@@ -5,6 +5,7 @@ namespace App\libs\App;
 use App\App;
 use App\Config;
 use App\ConfigModule;
+use BaseProject\Admin\Helper\Parameter;
 
 class Router
 {
@@ -50,7 +51,14 @@ class Router
     {
         $splitUri = explode('/', $this->_currentUri);
         if ($this->_currentUri == '/') {
-            $splitUri = explode('/', Config::getInstance()->getAttribute('app', 'defaultPage'));
+            /** @var Parameter $parameterHelper */
+            $parameterHelper = Helper::getInstance('Admin_Parameter');
+            try {
+                $defaultPage = $parameterHelper->getParameter('general/general/defaultPage')->getValue();
+            } catch (\Exception $ex) {
+                $defaultPage = '/';
+            }
+            $splitUri = explode('/', $defaultPage);
         }
 
         $rewriteUriModule = ConfigModule::getInstance()->getConfigAllModules('router/rewrite_uri');

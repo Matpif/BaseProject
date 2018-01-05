@@ -1,0 +1,33 @@
+<?php
+/** @var \BaseProject\Admin\Block\Parameter $this */
+?>
+
+<div class="form-group">
+    <label for="<?= $this->getName() ?>"><?= $this->__($this->getLabel()) ?></label>
+    <?php
+    switch ($this->getType()) {
+        case \BaseProject\Admin\Model\Parameter::TYPE_TEXT:
+            ?>
+            <textarea id="<?= $this->getName() ?>" name="<?= $this->getName() ?>" class="form-control <?= $this->getClass() ?>"><?= $this->getValue() ?></textarea>
+            <?php
+            break;
+        case \BaseProject\Admin\Model\Parameter::TYPE_DATE:
+        case \BaseProject\Admin\Model\Parameter::TYPE_DATETIME:
+            $value = DateTime::createFromFormat('Y-m-d H:i:s', $this->getValue());
+            ?>
+            <input id="<?= $this->getName() ?>" type="date" name="<?= $this->getName() ?>" class="form-control <?= $this->getClass() ?>" value="<?= ($value)?$value->format('Y-m-d'):''; ?>" />
+            <?php
+            break;
+        case \BaseProject\Admin\Model\Parameter::TYPE_STRING:
+            ?>
+            <input id="<?= $this->getName() ?>" type="text" name="<?= $this->getName() ?>" class="form-control <?= $this->getClass() ?>" value="<?= $this->getValue() ?>" />
+            <?php
+            break;
+        case \BaseProject\Admin\Model\Parameter::TYPE_INT:
+            ?>
+            <input id="<?= $this->getName() ?>" type="number" name="<?= $this->getName() ?>" class="form-control <?= $this->getClass() ?>" value="<?= $this->getValue() ?>" />
+            <?php
+            break;
+    }
+    ?>
+</div>

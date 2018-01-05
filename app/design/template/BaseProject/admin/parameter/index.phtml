@@ -1,0 +1,51 @@
+<?php
+/** @var \BaseProject\Admin\Controller\Parameter $this */
+
+/** @var \BaseProject\Admin\Helper\Parameter $helper */
+$helper = \App\libs\App\Helper::getInstance("Admin_Parameter");
+$paramsConfig = $helper->getParametersConfig();
+?>
+<div class="row parameter">
+    <div class="col-md-2">
+        <div class="menu-group">
+            <div class="title"><?= $this->__('Parameters') ?></div>
+            <ul>
+                <?php
+                foreach ($paramsConfig['groups'] as $groupName => $group):
+                    ?>
+                    <li data-group="<?= $groupName ?>"><?= $this->__($group['label']) ?></li>
+                <?php
+                endforeach;
+                ?>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-10 parameter-message">
+        <?= $this->__('Welcome to parameters, choose category !') ?>
+    </div>
+    <div class="col-md-10 sections">
+        <form action="<?= $this->getUrlAction("save") ?>" method="post">
+            <?php
+            foreach ($paramsConfig['groups'] as $groupName => $group):
+                foreach ($group['sections'] as $sectionName => $section):
+                    ?>
+                    <div class="section" id="<?= $groupName ?>">
+                        <label><?= $this->__($section['label']) ?></label>
+                        <?php
+                        foreach ($section['parameters'] as $parameterName => $parameter):
+                            ?>
+                            <?= $helper->getHtmlParameter("{$groupName}/{$sectionName}/{$parameterName}"); ?>
+                        <?php
+                        endforeach;
+                        ?>
+                    </div>
+                <?php
+                endforeach;
+            endforeach;
+            ?>
+            <button type="submit" class="btn btn-success btn-lg"><?= $this->__('Save') ?></button>
+        </form>
+    </div>
+</div>
+
+

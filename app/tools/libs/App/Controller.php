@@ -6,6 +6,7 @@ use App\App;
 use App\Cache;
 use App\Config;
 use App\ConfigModule;
+use BaseProject\Admin\Helper\Parameter;
 use GuzzleHttp\Psr7\Response;
 
 class Controller extends VarientObject
@@ -88,7 +89,9 @@ class Controller extends VarientObject
 
     function __construct()
     {
-        $this->_appname = Config::getInstance()->getAttribute('general', 'appname');
+        /** @var Parameter $parameterHelper */
+        $parameterHelper = Helper::getInstance('Admin_Parameter');
+        $this->_appname = $parameterHelper->getParameter('general/general/appName')->getValue();
         $this->_imageUrl = Config::getInstance()->getAttribute('general', 'image_url');
         $this->setTemplate('/default.phtml');
         $this->setTemplateHeader('/header.phtml');

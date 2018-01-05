@@ -27,6 +27,12 @@
       "collection": "BaseProject\\Admin\\Collection\\Module",
       "table_name": "admin_module",
       "key": "id"
+    },
+    {
+      "model": "BaseProject\\Admin\\Model\\Parameter",
+      "collection": "BaseProject\\Admin\\Collection\\Parameter",
+      "table_name": "admin_parameter",
+      "key": "name"
     }
   ],
   "admin_menu": {
@@ -36,7 +42,8 @@
         "Admin_Index_clearCache",
         "Admin_Index_clearCacheTranslate",
         "Admin_Index_module",
-        "Admin_Index_phpInfo"
+        "Admin_Index_phpInfo",
+        "Admin_Parameter_index"
       ]
     },
     "labels": {
@@ -45,15 +52,17 @@
       "Admin_Index_clearCache": "Clear cache",
       "Admin_Index_clearCacheTranslate": "Clear translate",
       "Admin_Index_module": "Modules",
-      "Admin_Index_phpInfo": "Php Info"
+      "Admin_Index_phpInfo": "Php Info",
+      "Admin_Parameter_index": "Parameters"
     },
     "sort": {
+      "Admin_Index_phpInfo": 10000,
       "Admin_System": 1000,
       "Admin_Index_showConfig": 1000,
-      "Admin_Index_clearCache": 900,
       "Admin_Index_clearCacheTranslate": 950,
-      "Admin_Index_module": 800,
-      "Admin_Index_phpInfo": 10000
+      "Admin_Index_clearCache": 900,
+      "Admin_Parameter_index": 975,
+      "Admin_Index_module": 800
     }
   },
   "roles": {
@@ -77,6 +86,30 @@
       "controller": "Index",
       "action": "showConfig",
       "block": "BaseProject\\Admin\\Block\\Message"
+    }
+  },
+  "parameter": {
+    "groups": {
+      "general": {
+        "label": "General",
+        "sections": {
+          "general": {
+            "label": "General",
+            "parameters": {
+              "appName": {
+                "label": "Application name",
+                "type": "string",
+                "defaultValue": "Base Project"
+              },
+              "defaultPage": {
+                "label": "Default page",
+                "type": "string",
+                "defaultValue": "/Admin"
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
