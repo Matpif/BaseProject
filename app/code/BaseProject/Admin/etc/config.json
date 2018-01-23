@@ -109,6 +109,61 @@
             }
           }
         }
+      },
+      "configEmail": {
+        "label": "Configuration email",
+        "sections" : {
+          "connection": {
+            "label": "Connexion serveur",
+            "parameters": {
+              "hosts": {
+                "label": "Hosts",
+                "type": "string",
+                "defaultValue": ""
+              },
+              "port": {
+                "label": "Port",
+                "type": "int",
+                "defaultValue": "587"
+              },
+              "username": {
+                "label": "Nom utilisateur",
+                "type": "string",
+                "defaultValue": ""
+              },
+              "password": {
+                "label": "Mot de passe",
+                "type": "string",
+                "defaultValue": ""
+              },
+              "smtpSecure": {
+                "label": "SMTP Secure",
+                "type": "string",
+                "defaultValue": "tls"
+              }
+            }
+          },
+          "body": {
+            "label": "Corps du mail",
+            "parameters": {
+              "from": {
+                "label": "Email d'envoie",
+                "type": "string",
+                "defaultValue": ""
+              },
+              "replyTo": {
+                "label": "Répondre à",
+                "type": "string",
+                "defaultValue": ""
+              },
+              "displayName": {
+                "label": "Nom affiché",
+                "type": "string",
+                "defaultValue": ""
+              }
+            }
+          }
+        }
       }
     }
   }
