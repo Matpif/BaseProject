@@ -10,6 +10,6 @@ jQuery(function($) {
         }
 
         $('.section').hide();
-        $('#' + group).show();
+        $('.group-' + group).show();
     });
 });

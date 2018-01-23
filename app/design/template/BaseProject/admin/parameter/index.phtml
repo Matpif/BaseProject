@@ -29,7 +29,7 @@ $paramsConfig = $helper->getParametersConfig();
             foreach ($paramsConfig['groups'] as $groupName => $group):
                 foreach ($group['sections'] as $sectionName => $section):
                     ?>
-                    <div class="section" id="<?= $groupName ?>">
+                    <div class="section group-<?= $groupName ?>">
                         <label><?= $this->__($section['label']) ?></label>
                         <?php
                         foreach ($section['parameters'] as $parameterName => $parameter):
