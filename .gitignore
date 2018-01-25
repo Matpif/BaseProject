@@ -5,4 +5,5 @@
 /composer.lock
 /composer.phar
 /app/skin/scss/cms/.sass-cache
+/app/skin/components
 /helper

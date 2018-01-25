@@ -1,10 +1,6 @@
 /* Font-awesome */
-@import "../libs/font-awesome-4.7.0/scss/font-awesome";
-
-/* Bootstrap */
-@import "bootstrap-compass";
-@import "../libs/bootstrap/sass/bootstrap-variables";
-@import "bootstrap";
+$fa-font-path: '../components/font-awesome/fonts';
+@import "../components/font-awesome/scss/font-awesome";
 
 /* Vars */
 @import "var";

@@ -1,4 +1,3 @@
-require 'bootstrap-sass'
 require 'compass/import-once/activate'
 
 http_path = "/skin/"
