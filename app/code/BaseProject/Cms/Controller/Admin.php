@@ -66,7 +66,7 @@ class Admin extends Controller
             $this->_currentBlock = new Block();
         }
         $this->setTemplate('/cms/admin/block.phtml');
-        $this->addJs('/skin/components/tinymce/tinymce.min.js');
+        $this->addJs('/assets/components/tinymce/tinymce.min.js');
     }
 
     public function saveBlockAction()

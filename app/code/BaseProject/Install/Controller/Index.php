@@ -33,7 +33,7 @@ class Index extends Controller
     public function startScriptAction()
     {
         $this->setTemplate('/install/startScript.phtml');
-        $this->addJS('/skin/js/install/install.js');
+        $this->addJS('/assets/js/install/install.js');
         $this->setTitle('Start script');
         $request = App::getRequestParams();
         if (isset($request['message'])) {
