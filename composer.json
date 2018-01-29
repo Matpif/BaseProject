@@ -29,7 +29,8 @@
     "defuse/php-encryption": "2.1.0",
     "mtdowling/cron-expression": "^1.2",
     "aura/sqlquery": "^2.7",
-    "phpmailer/phpmailer": "^6.0"
+    "phpmailer/phpmailer": "^6.0",
+    "zf1s/zend-translate": "^1.12"
   },
   "autoload": {
     "psr-4": {

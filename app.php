@@ -35,9 +35,9 @@ if (!$mode_cli) {
                 <meta charset="utf-8">
                 <meta http-equiv="X-UA-Compatible" content="IE=edge">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
-                <link rel="stylesheet" href="/skin/css/style.css"/>
-                <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-                <script type="application/javascript" src="/skin/libs/bootstrap/javascripts/bootstrap.min.js"></script>
+                <link rel="stylesheet" href="/assets/css/style.css"/>
+                <script src="/assets/components/jquery/dist/jquery.min.js"></script>
+                <script type="application/javascript" src="/assets/components/bootstrap/dist/js/bootstrap.min.js"></script>
                 <style type="text/css">
                     body {
                         background-color: #f8f8f8;
