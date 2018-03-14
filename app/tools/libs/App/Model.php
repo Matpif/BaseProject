@@ -38,4 +38,24 @@ class Model extends VarientObject
 
         return null;
     }
+
+    public static function getModelByClass($class) {
+        $name = explode('\\', $class);
+        $module = $name[1];
+        $model = $module;
+
+        foreach ($name as $key => $n) {
+            if($key < 2 || $n == 'Model') continue;
+
+            $model .= '_'.$n;
+        }
+
+        $className = $class;
+        $configModule = ConfigModule::getInstance()->getConfig($module);
+        if (isset($configModule['override']['models'][$model])) {
+            $className = $configModule['override']['models'][$model];
+        }
+
+        return new $className;
+    }
 }

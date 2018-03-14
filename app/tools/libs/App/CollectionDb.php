@@ -92,7 +92,7 @@ abstract class CollectionDb extends Collection
             /**
              * @var $model ModelDb
              */
-            $model = new $this->_model;
+            $model = Model::getModelByClass($this->_model);
             $model->setData($result);
             $this->_rows[] = $model;
         }
@@ -122,7 +122,7 @@ abstract class CollectionDb extends Collection
             /**
              * @var $model ModelDb
              */
-            $model = new $this->_model;
+            $model = Model::getModelByClass($this->_model);
             $model->setData($result);
         }
 
@@ -158,7 +158,7 @@ abstract class CollectionDb extends Collection
             /**
              * @var $model ModelDb
              */
-            $model = new $this->_model;
+            $model = Model::getModelByClass($this->_model);
             $model->setData($result);
             $this->_rows[] = $model;
         }
@@ -183,7 +183,7 @@ abstract class CollectionDb extends Collection
             /**
              * @var $model ModelDb
              */
-            $model = new $this->_model;
+            $model = Model::getModelByClass($this->_model);
             $model->setData($result);
             $this->_rows[] = $model;
         }

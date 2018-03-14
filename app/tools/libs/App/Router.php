@@ -135,7 +135,14 @@ class Router
         if (isset($configModule['override']['router'][$module])) {
             $routerClass = $configModule['override']['router'][$module];
         } else {
-            $routerClass = 'BaseProject\\' . $module . '\\Router\\Router';
+            $override = $GLOBALS['override'];
+            $routerClass = '';
+            foreach ($override as $o) {
+                $routerClass = "{$o}\\{$module}\\Router\\Router";
+                if (class_exists($routerClass)) {
+                    break;
+                }
+            }
         }
 
         /** @var Router $router */
