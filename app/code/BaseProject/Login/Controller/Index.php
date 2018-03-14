@@ -120,38 +120,48 @@ class Index extends Controller
     }
 
     public function registerAction() {
-        $params = App::getInstance()->getRequest()->getParsedBody();
+        /** @var \BaseProject\Admin\Helper\Parameter $helper */
+        $helper = Helper::getInstance('Admin_Parameter');
+        if ($helper->getParameter('login/general/register')->getValue() === '1') {
+            $params = App::getInstance()->getRequest()->getParsedBody();
 
-        if (isset($params['username'], $params['password'], $params['password-confirm'])
-            && !empty($params['username']) && !empty($params['password']) && !empty($params['password-confirm']) && !empty($params['first_name']) && !empty($params['last_name'])) {
+            if (isset($params['username'], $params['password'], $params['password-confirm'])
+                && !empty($params['username']) && !empty($params['password']) && !empty($params['password-confirm']) && !empty($params['first_name']) && !empty($params['last_name'])) {
 
-            if ($params['password'] == $params['password-confirm']) {
-                /** @var \BaseProject\Login\Model\User $user */
-                $user = Model::getModel('Login_User');
-                $user->setUsername($params['username']);
-                $user->setPassword($params['password']);
-                $user->setFirstName($params['first_name']);
-                $user->setLastName($params['last_name']);
-                $user->setEmail($params['email']);
-                $user->setGroupId(2);
-                $user->save();
-                App::getInstance()->getSession()->addMessage([
-                    'level' => Message::LEVEL_MESSAGE_SUCCESS,
-                    'message' => "You are registered"
-                ]);
-                $this->redirect($this);
+                if ($params['password'] == $params['password-confirm']) {
+                    /** @var \BaseProject\Login\Model\User $user */
+                    $user = Model::getModel('Login_User');
+                    $user->setUsername($params['username']);
+                    $user->setPassword($params['password']);
+                    $user->setFirstName($params['first_name']);
+                    $user->setLastName($params['last_name']);
+                    $user->setEmail($params['email']);
+                    $user->setGroupId(2);
+                    $user->save();
+                    App::getInstance()->getSession()->addMessage([
+                        'level' => Message::LEVEL_MESSAGE_SUCCESS,
+                        'message' => "You are registered"
+                    ]);
+                    $this->redirect($this);
+                } else {
+                    App::getInstance()->getSession()->addMessage([
+                        'level' => Message::LEVEL_MESSAGE_ERROR,
+                        'message' => "Is not a same password"
+                    ]);
+                    $this->redirect($this);
+                }
+
             } else {
                 App::getInstance()->getSession()->addMessage([
                     'level' => Message::LEVEL_MESSAGE_ERROR,
-                    'message' => "Is not a same password"
+                    'message' => "All params is mandatory"
                 ]);
                 $this->redirect($this);
             }
-
         } else {
             App::getInstance()->getSession()->addMessage([
                 'level' => Message::LEVEL_MESSAGE_ERROR,
-                'message' => "All params is mandatory"
+                'message' => "Registry as disabled !!"
             ]);
             $this->redirect($this);
         }

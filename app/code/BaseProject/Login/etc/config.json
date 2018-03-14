@@ -90,5 +90,28 @@
   },
   "Install": {
     "path": "sql"
+  },
+  "parameter": {
+    "groups": {
+      "login": {
+        "label": "Login",
+        "sections": {
+          "general": {
+            "label": "General",
+            "parameters": {
+              "register": {
+                "label": "Enable register",
+                "type": "select",
+                "values": {
+                  "1": "Yes",
+                  "0": "No"
+                },
+                "defaultValue": "1"
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
