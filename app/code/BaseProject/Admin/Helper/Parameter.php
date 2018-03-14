@@ -5,6 +5,7 @@ namespace BaseProject\Admin\Helper;
 use App\ConfigModule;
 use App\libs\App\Block;
 use App\libs\App\Collection;
+use App\libs\App\CollectionDb;
 use App\libs\App\Helper;
 use App\libs\App\Model;
 use \Exception;
@@ -66,6 +67,15 @@ class Parameter extends Helper
                 $block = Block::getBlock('Admin_Parameter');
                 $block->setValue($parameter->getValue());
                 $block->setType($parameter->getType());
+                if ($parameter->getType() === \BaseProject\Admin\Model\Parameter::TYPE_SELECT) {
+                    if (isset($parametersConfig['groups'][$aName[0]]['sections'][$aName[1]]['parameters'][$aName[2]]['values'])) {
+                        $block->setValues($parametersConfig['groups'][$aName[0]]['sections'][$aName[1]]['parameters'][$aName[2]]['values']);
+                    } else if (isset($parametersConfig['groups'][$aName[0]]['sections'][$aName[1]]['parameters'][$aName[2]]['collection'])) {
+                        $collection = CollectionDb::getInstanceOf($parametersConfig['groups'][$aName[0]]['sections'][$aName[1]]['parameters'][$aName[2]]['collection']);
+                        $values = call_user_func([$collection, $parametersConfig['groups'][$aName[0]]['sections'][$aName[1]]['parameters'][$aName[2]]['action']]);
+                        $block->setValues($values);
+                    }
+                }
                 $block->setName($name);
                 $block->setLabel($parametersConfig['groups'][$aName[0]]['sections'][$aName[1]]['parameters'][$aName[2]]['label']);
                 $renderer = $block->getHtml();

@@ -18,6 +18,8 @@ class Parameter extends Block
     private $_label;
     /** @var string */
     private $_type;
+    /** @var array */
+    private $_values;
 
     /**
      * Parameter constructor.
@@ -124,5 +126,19 @@ class Parameter extends Block
         $this->_type = $type;
     }
 
+    /**
+     * @return array
+     */
+    public function getValues()
+    {
+        return $this->_values;
+    }
 
+    /**
+     * @param array $values
+     */
+    public function setValues($values)
+    {
+        $this->_values = $values;
+    }
 }

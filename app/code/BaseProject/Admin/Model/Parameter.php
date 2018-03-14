@@ -13,7 +13,7 @@ use \Exception;
  * @method string getType()
  *
  * @dbField name nvarchar(150) PRIMARY KEY
- * @dbField type enum('string', 'int', 'datetime', 'date', 'text') NOT NULL default 'string'
+ * @dbField type enum('string', 'int', 'datetime', 'date', 'text', 'select') NOT NULL default 'string'
  * @dbField value_string nvarchar(250) NULL
  * @dbField value_int int NULL
  * @dbField value_datetime datetime NULL
@@ -29,6 +29,7 @@ class Parameter extends ModelDb
     const TYPE_DATETIME = 'datetime';
     const TYPE_DATE = 'date';
     const TYPE_TEXT = 'text';
+    const TYPE_SELECT = 'select';
 
     /** @var  bool */
     private $_insert;
@@ -53,6 +54,7 @@ class Parameter extends ModelDb
         }
         switch ($this->getType()) {
             case self::TYPE_STRING:
+            case self::TYPE_SELECT:
                 return $this->getAttribute('value_string');
                 break;
             case self::TYPE_INT:
@@ -81,6 +83,7 @@ class Parameter extends ModelDb
         }
         switch ($this->getType()) {
             case self::TYPE_STRING:
+            case self::TYPE_SELECT:
                 $this->setAttribute('value_string', $value);
                 break;
             case self::TYPE_INT:

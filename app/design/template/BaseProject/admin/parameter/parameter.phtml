@@ -28,6 +28,20 @@
             <input id="<?= $this->getName() ?>" type="number" name="<?= $this->getName() ?>" class="form-control <?= $this->getClass() ?>" value="<?= $this->getValue() ?>" />
             <?php
             break;
+        case \BaseProject\Admin\Model\Parameter::TYPE_SELECT:
+            $values = $this->getValues();
+            ?>
+            <select id="<?= $this->getName() ?>" name="<?= $this->getName() ?>" class="form-control">
+                <?php
+                foreach ($values as $value => $label):
+                    ?>
+                    <option <?= ($this->getValue() == $value)?'selected':'' ?> value="<?= $value ?>"><?= $this->__($label) ?></option>
+                <?php
+                endforeach;
+                ?>
+            </select>
+            <?php
+            break;
     }
     ?>
 </div>
