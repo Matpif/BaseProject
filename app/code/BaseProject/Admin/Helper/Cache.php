@@ -8,12 +8,24 @@ use App\libs\App\Helper;
 use File_Gettext;
 use Redis;
 
-class Cache extends Helper {
+class Cache extends Helper
+{
 
-    public function clearCache() {
+    public function clearCache()
+    {
         $filePath = App::PathRoot() . '/var/cache/config.json';
         if (file_exists($filePath)) {
             unlink($filePath);
+        }
+
+        $cssMin = App::PathRoot() . '/assets/css/min';
+        if (file_exists($cssMin)) {
+            $this->delete_directory($cssMin);
+        }
+
+        $jsMin = App::PathRoot() . '/assets/js/min';
+        if (file_exists($jsMin)) {
+            $this->delete_directory($jsMin);
         }
 
         if (App::getInstance()->cacheIsEnabled()) {
@@ -26,10 +38,29 @@ class Cache extends Helper {
         clearstatcache();
     }
 
+    private function delete_directory($dirname) {
+        if (is_dir($dirname))
+            $dir_handle = opendir($dirname);
+        if (!$dir_handle)
+            return false;
+        while($file = readdir($dir_handle)) {
+            if ($file != "." && $file != "..") {
+                if (!is_dir($dirname."/".$file))
+                    unlink($dirname."/".$file);
+                else
+                    delete_directory($dirname.'/'.$file);
+            }
+        }
+        closedir($dir_handle);
+        rmdir($dirname);
+        return true;
+    }
+
     /**
      *
      */
-    public function clearCacheTranslate() {
+    public function clearCacheTranslate()
+    {
         $languages = scandir(App::PathRoot() . '/locale/');
 
         if (file_exists(App::PathRoot() . '/var/translate')) {

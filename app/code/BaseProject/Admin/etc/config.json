@@ -105,6 +105,15 @@
                 "label": "Default page",
                 "type": "string",
                 "defaultValue": "/Admin"
+              },
+              "minify": {
+                "label": "Minify CSS and JS",
+                "type": "select",
+                "values": {
+                  "0": "No",
+                  "1": "Yes"
+                },
+                "defaultValue": "0"
               }
             }
           }

@@ -210,22 +210,6 @@ class Controller extends VarientObject
         return self::$_instance[$controller];
     }
 
-    /**
-     * @return string
-     */
-    public function getUrlReferer()
-    {
-        return $this->_urlReferer;
-    }
-
-    /**
-     * @param string $urlReferer
-     */
-    public function setUrlReferer($urlReferer)
-    {
-        $this->_urlReferer = $urlReferer;
-    }
-
     public function indexAction()
     {
     }
@@ -377,7 +361,8 @@ class Controller extends VarientObject
         }
 
         if ($this->getUrlReferer()) {
-            $location .= ((strpos($location, '?') !== false)?'&':'?').'url_referer='.urlencode($this->getUrlReferer());
+            $location .= ((strpos($location,
+                        '?') !== false) ? '&' : '?') . 'url_referer=' . urlencode($this->getUrlReferer());
         }
 
         $response = (new Response())
@@ -397,19 +382,45 @@ class Controller extends VarientObject
     }
 
     /**
-     * @param string $jsFile
+     * @return string
      */
-    public function addJS($jsFile)
+    public function getUrlReferer()
     {
-        $this->_jsFile[] = $jsFile;
+        return $this->_urlReferer;
+    }
+
+    /**
+     * @param string $urlReferer
+     */
+    public function setUrlReferer($urlReferer)
+    {
+        $this->_urlReferer = $urlReferer;
+    }
+
+    /**
+     * @param string $jsFile
+     * @param bool $beginningArray default false
+     */
+    public function addJS($jsFile, $beginningArray = false)
+    {
+        if ($beginningArray) {
+            array_unshift($this->_jsFile, $jsFile);
+        } else {
+            $this->_jsFile[] = $jsFile;
+        }
     }
 
     /**
      * @param string $cssFile
+     * @param bool $beginningArray default false
      */
-    public function addCSS($cssFile)
+    public function addCSS($cssFile, $beginningArray = false)
     {
-        $this->_cssFile[] = $cssFile;
+        if ($beginningArray) {
+            array_unshift($this->_cssFile, $cssFile);
+        } else {
+            $this->_cssFile[] = $cssFile;
+        }
     }
 
     /**
@@ -523,5 +534,15 @@ class Controller extends VarientObject
     public function isAllowed($action = null)
     {
         return true;
+    }
+
+    public function deleteJsFile()
+    {
+        $this->_jsFile = [];
+    }
+
+    public function deleteCssFile()
+    {
+        $this->_cssFile = [];
     }
 }

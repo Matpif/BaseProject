@@ -8,3 +8,5 @@
 /app/assets/.sass-cache
 /app/assets/components
 /helper
+app/assets/css/min/
+app/assets/js/min/
