@@ -96,30 +96,55 @@ class Page extends VarientObject
             $this->_controller->deleteJsFile();
             $this->_controller->deleteCssFile();
 
-            $minifierCSS = new Minify\CSS();
+
             foreach ($cssFiles as $cssFile) {
-                $hashCss .= $cssFile;
-                $minifierCSS->add(file_get_contents($root . $cssFile));
-            }
-
-            if (!empty($hashCss) && !file_exists($cssFileName . md5($hashCss) . '.min.css')) {
-                if (!file_exists($cssFileName)) {
-                    mkdir($cssFileName);
+                if (in_array($cssFile, $this->_controller->getCssFileUnMinify())) {
+                    $this->_controller->addCSS($cssFile);
+                } else {
+                    $hashCss .= $cssFile;
                 }
-                $minifierCSS->minify($cssFileName . md5($hashCss) . '.min.css');
             }
 
-            $minifierJS = new Minify\JS();
             foreach ($jsFiles as $jsFile) {
-                $hashJs .= $jsFile;
-                $minifierJS->add(file_get_contents($root . $jsFile));
+                if (in_array($jsFile, $this->_controller->getJsFileUnMinify())) {
+                    $this->_controller->addJS($jsFile);
+                } else {
+                    $hashJs .= $jsFile;
+                }
             }
 
-            if (!empty($hashJs) && !file_exists($jsFileName . md5($hashJs) . '.min.js')) {
-                if (!file_exists($jsFileName)) {
-                    mkdir($jsFileName);
+            if (!file_exists($cssFileName . md5($hashCss) . '.min.css')) {
+                $minifierCSS = new Minify\CSS();
+                foreach ($cssFiles as $cssFile) {
+                    if (!in_array($cssFile, $this->_controller->getCssFileUnMinify())) {
+                        $hashCss .= $cssFile;
+                        $minifierCSS->add(file_get_contents($root . $cssFile));
+                    }
                 }
-                $minifierJS->minify($jsFileName . md5($hashJs) . '.min.js');
+
+                if (!empty($hashCss)) {
+                    if (!file_exists($cssFileName)) {
+                        mkdir($cssFileName);
+                    }
+                    $minifierCSS->minify($cssFileName . md5($hashCss) . '.min.css');
+                }
+            }
+
+            if (!file_exists($jsFileName . md5($hashJs) . '.min.js')) {
+                $minifierJS = new Minify\JS();
+                foreach ($jsFiles as $jsFile) {
+                    if (!in_array($jsFile, $this->_controller->getJsFileUnMinify())) {
+                        $hashJs .= $jsFile;
+                        $minifierJS->add(file_get_contents($root . $jsFile));
+                    }
+                }
+
+                if (!empty($hashJs)) {
+                    if (!file_exists($jsFileName)) {
+                        mkdir($jsFileName);
+                    }
+                    $minifierJS->minify($jsFileName . md5($hashJs) . '.min.js');
+                }
             }
 
             if (!empty($hashCss)) {

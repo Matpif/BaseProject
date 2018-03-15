@@ -66,6 +66,15 @@ class Controller extends VarientObject
      * @var array
      */
     private $_cssFile;
+
+    /**
+     * @var array
+     */
+    private $_jsFileUnMinify;
+    /**
+     * @var array
+     */
+    private $_cssFileUnMinify;
     /**
      * @var array
      */
@@ -99,6 +108,8 @@ class Controller extends VarientObject
         $this->_title = 'DefaultController';
         $this->_jsFile = [];
         $this->_cssFile = [];
+        $this->_jsFileUnMinify = [];
+        $this->_cssFileUnMinify = [];
         $this->_beforeEndHead = [];
         $this->_beforeEndBody = [];
         $this->_afterStartBody = [];
@@ -400,26 +411,36 @@ class Controller extends VarientObject
     /**
      * @param string $jsFile
      * @param bool $beginningArray default false
+     * @param bool $minify default true
      */
-    public function addJS($jsFile, $beginningArray = false)
+    public function addJS($jsFile, $beginningArray = false, $minify = true)
     {
         if ($beginningArray) {
             array_unshift($this->_jsFile, $jsFile);
         } else {
             $this->_jsFile[] = $jsFile;
         }
+
+        if (!$minify) {
+            $this->_jsFileUnMinify[] = $jsFile;
+        }
     }
 
     /**
      * @param string $cssFile
      * @param bool $beginningArray default false
+     * @param bool $minify default true
      */
-    public function addCSS($cssFile, $beginningArray = false)
+    public function addCSS($cssFile, $beginningArray = false, $minify = true)
     {
         if ($beginningArray) {
             array_unshift($this->_cssFile, $cssFile);
         } else {
             $this->_cssFile[] = $cssFile;
+        }
+
+        if (!$minify) {
+            $this->_cssFileUnMinify[] = $cssFile;
         }
     }
 
@@ -544,5 +565,21 @@ class Controller extends VarientObject
     public function deleteCssFile()
     {
         $this->_cssFile = [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getJsFileUnMinify()
+    {
+        return $this->_jsFileUnMinify;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCssFileUnMinify()
+    {
+        return $this->_cssFileUnMinify;
     }
 }
