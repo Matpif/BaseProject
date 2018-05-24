@@ -6,6 +6,8 @@ use App\App;
 use App\Config;
 use App\ConfigModule;
 use BaseProject\Admin\Helper\Parameter;
+use BaseProject\Rewrite\Model\Rewrite;
+use GuzzleHttp\Psr7\Response;
 
 class Router
 {
@@ -40,6 +42,7 @@ class Router
     public function __construct()
     {
         $this->_currentUri = App::getInstance()->getRequest()->getServerParams()['REQUEST_URI'];
+        $this->checkRewrite();
         $this->_rootUrl = App::getInstance()->getRequest()->getServerParams()['SERVER_NAME'];
         $this->_secure = Config::getInstance()->getAttribute('app', 'secure');
     }
@@ -174,6 +177,32 @@ class Router
         }
 
         return $url;
+    }
+
+    private function checkRewrite() {
+        /** @var Rewrite $rewrite */
+        $rewrite = CollectionDb::getInstanceOf('Rewrite_Rewrite')->load(['basic_url' => $this->_currentUri])->getFirstRow();
+        if ($rewrite) {
+            $this->_currentUri = $rewrite->getRewriteUrl();
+            if ($rewrite->getRedirectVisible() == Rewrite::REDIRECT_VISIBLE_TEMPORARY) {
+                \Http\Response\send((new Response())
+                    ->withStatus(302)
+                    ->withHeader('Location', $this->_currentUri));
+                exit;
+            } else if ($rewrite->getRedirectVisible() == Rewrite::REDIRECT_VISIBLE_PERMANENTLY) {
+                \Http\Response\send((new Response())
+                    ->withStatus(301)
+                    ->withHeader('Location', $this->_currentUri));
+                exit;
+            } else if (strpos($this->_currentUri, 'http') === 0) {
+                $content = file_get_contents($this->_currentUri);
+                \Http\Response\send(new Response(
+                    200,
+                    [],
+                    $content));
+                exit;
+            }
+        }
     }
 
     /**
