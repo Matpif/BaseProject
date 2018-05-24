@@ -1,0 +1,31 @@
+{
+  "router": {
+    "rewriter_uri": []
+  },
+  "tables": [
+    {
+      "model": "BaseProject\\Rewrite\\Model\\Rewrite",
+      "collection": "BaseProject\\Rewrite\\Collection\\Rewrite",
+      "table_name": "rewrite_rewrite",
+      "key": "id"
+    }
+  ],
+  "roles": {
+    "Rewrite_read": "Show rewrite url",
+    "Rewrite_write": "Modify rewrite url",
+    "Rewrite_delete": "Remove rewrite url"
+  },
+  "admin_menu": {
+    "tree": {
+      "Admin_System": [
+        "Rewrite_Index_index"
+      ]
+    },
+    "labels": {
+      "Rewrite_Index_index": "Rewrite"
+    },
+    "sort": {
+      "Rewrite_Index_index": 1500
+    }
+  }
+}

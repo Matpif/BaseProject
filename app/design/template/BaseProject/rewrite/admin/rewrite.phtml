@@ -1,0 +1,62 @@
+<?php
+/** @var \BaseProject\Rewrite\Controller\Index $this */
+
+use App\App;
+use App\libs\App\Block;
+use App\libs\App\Router;
+
+$_currentRewrite = $this->getCurrentRewrite();
+/** @var \BaseProject\Login\Block\PopIn $_popin */
+$_popin = Block::getBlock('Rewrite_PopIn');
+$_popin->setTitle($this->__('Delete'));
+$_popin->setBody($this->__('Are you sur ?'));
+$_popin->addButton($this->__('Yes'), \BaseProject\Login\Block\PopIn::TYPE_DANGER, 'popin.yes()');
+$_popin->addButton($this->__('No'), \BaseProject\Login\Block\PopIn::TYPE_DEFAULT, 'popin.no()');
+$_popin->setId('modalDelete');
+?>
+<form class="rewrite" action="<?= Router::getUrlAction('Rewrite', 'Index', 'save') ?>" method="post">
+    <fieldset>
+        <legend><?= $this->__('Rewrite') ?></legend>
+        <input type="hidden" name="id" value="<?= $_currentRewrite->getId() ?>"/>
+        <div class="form-group">
+            <label for="name"><?= $this->__('Name') ?></label>
+            <input type="text" id="name" class="form-control" name="name"
+                   value="<?= $_currentRewrite->getName() ?>"/>
+        </div>
+        <div class="form-group">
+            <label for="basic_url"><?= $this->__('Basic Url') ?></label>
+            <input type="text" id="basic_url" class="form-control" name="basic_url"
+                   value="<?= $_currentRewrite->getBasicUrl() ?>"/>
+        </div>
+        <div class="form-group">
+            <label for="rewrite_url"><?= $this->__('Rewrite Url') ?></label>
+            <input type="text" id="rewrite_url" class="form-control" name="rewrite_url"
+                   value="<?= $_currentRewrite->getRewriteUrl() ?>"/>
+        </div>
+        <div class="form-group">
+            <label for="redirect_visible"><?= $this->__('Redirect') ?></label>
+            <select id="redirect_visible" class="form-control" name="redirect_visible">
+                <option value="0" <?= ($_currentRewrite->getRedirectVisible() == 0)?'selected':'' ?> ><?= $this->__('Not visible') ?></option>
+                <option value="1" <?= ($_currentRewrite->getRedirectVisible() == 1)?'selected':'' ?> ><?= $this->__('Visible permanently') ?></option>
+                <option value="2" <?= ($_currentRewrite->getRedirectVisible() == 2)?'selected':'' ?> ><?= $this->__('Visible temporary') ?></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary"><?= $this->__('Save') ?></button>
+        <?php if ($_currentRewrite->getId()): ?>
+            <a class="btn btn-danger" data-toggle="modal" data-target="#modalDelete"><?= $this->__('Delete') ?></a>
+        <?php endif; ?>
+    </fieldset>
+</form>
+<script type="application/javascript">
+    var popin = {
+        yes: function () {
+            window.location.href = '<?= Router::getUrlAction('Rewrite', 'Index',
+                'delete') ?>/id/<?= $_currentRewrite->getId() ?>';
+        },
+
+        no: function () {
+            $('#modalDelete').modal('hide');
+        }
+    };
+</script>
+<?= $_popin->getHtml() ?>

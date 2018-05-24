@@ -1,0 +1,11 @@
+<?php
+/** @var \BaseProject\Rewrite\Controller\Index $this */
+
+use App\libs\App\Router;
+
+?>
+<div class="show-rewrite">
+    <a href="<?= Router::getUrlAction('Rewrite', 'Index', 'rewrite') ?>"
+       class="btn btn-default"><?= $this->__('New url') ?></a>
+    <?= $this->getListBlock()->getHtml(); ?>
+</div>

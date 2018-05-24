@@ -30,6 +30,8 @@ $fa-font-path: '../components/font-awesome/fonts';
 @import "cms/block";
 /* Module Error */
 @import "error/error";
+/* Module Rewrite */
+@import "rewrite/index";
 
 body {
     background-color: $color-light-grey;

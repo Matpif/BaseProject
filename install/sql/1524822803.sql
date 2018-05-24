@@ -1,0 +1,2 @@
+CREATE TABLE rewrite_rewrite (id INT AUTO_INCREMENT PRIMARY KEY, name varchar(50) not null, basic_url varchar(500) not null, rewrite_url varchar(500) not null); 
+ALTER TABLE rewrite_rewrite ADD UNIQUE (basic_url);
