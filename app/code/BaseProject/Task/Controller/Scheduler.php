@@ -22,7 +22,7 @@ class Scheduler extends Controller
         $this->setTemplateHeader('/admin/header/menu.phtml');
         $this->setTemplateFooter(null);
 
-        $this->setTitle('Task Scheduler');
+        $this->setTitle($this->__('Task Scheduler'));
     }
 
     public function indexAction()

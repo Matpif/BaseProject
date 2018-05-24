@@ -23,7 +23,7 @@ class Index extends Controller
         parent::__construct();
         $this->setTemplateHeader(null);
         $this->setTemplateFooter(null);
-        $this->setTitle('Cms');
+        $this->setTitle($this->__('Cms'));
     }
 
     public function indexAction()

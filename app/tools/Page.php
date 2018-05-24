@@ -101,7 +101,7 @@ class Page extends VarientObject
                 if (in_array($cssFile, $this->_controller->getCssFileUnMinify())) {
                     $this->_controller->addCSS($cssFile);
                 } else {
-                    $hashCss .= $cssFile;
+                    $hashCss .= $cssFile.filemtime($root.$cssFile);
                 }
             }
 
@@ -109,7 +109,7 @@ class Page extends VarientObject
                 if (in_array($jsFile, $this->_controller->getJsFileUnMinify())) {
                     $this->_controller->addJS($jsFile);
                 } else {
-                    $hashJs .= $jsFile;
+                    $hashJs .= $jsFile.filemtime($root.$jsFile);
                 }
             }
 
@@ -117,7 +117,6 @@ class Page extends VarientObject
                 $minifierCSS = new Minify\CSS();
                 foreach ($cssFiles as $cssFile) {
                     if (!in_array($cssFile, $this->_controller->getCssFileUnMinify())) {
-                        $hashCss .= $cssFile;
                         $minifierCSS->add(file_get_contents($root . $cssFile));
                     }
                 }
@@ -134,7 +133,6 @@ class Page extends VarientObject
                 $minifierJS = new Minify\JS();
                 foreach ($jsFiles as $jsFile) {
                     if (!in_array($jsFile, $this->_controller->getJsFileUnMinify())) {
-                        $hashJs .= $jsFile;
                         $minifierJS->add(file_get_contents($root . $jsFile));
                     }
                 }

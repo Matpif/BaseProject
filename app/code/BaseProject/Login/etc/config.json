@@ -56,7 +56,7 @@
       "Login_Index_index": "Users",
       "Login_User_index": "Show users",
       "Login_Group_index": "Show groups",
-      "Login_Ldap_index" : "Ldap config"
+      "Login_Ldap_index": "Ldap config"
     },
     "sort": {
       "Login_Index_index": 900,
@@ -86,7 +86,8 @@
     }
   ],
   "Observer": {
-    "after_save_model": "BaseProject\\Login\\Observer\\User"
+    "after_save_model": "BaseProject\\Login\\Observer\\User",
+    "authenticated_user": "BaseProject\\Login\\Observer\\User"
   },
   "Install": {
     "path": "sql"

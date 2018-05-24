@@ -18,7 +18,7 @@ class Parameter extends Controller
         $this->setTemplate('/admin/parameter/index.phtml');
         $this->setTemplateHeader('/admin/header/menu.phtml');
         $this->setTemplateFooter(null);
-        $this->setTitle('Admin Parameter');
+        $this->setTitle($this->__('Admin Parameter'));
         $this->addJS('/assets/js/admin/parameter/parameter.js');
     }
 

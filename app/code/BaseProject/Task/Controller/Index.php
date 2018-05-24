@@ -23,7 +23,7 @@ class Index extends Controller
         $this->setTemplate('/task/index.phtml');
         $this->setTemplateHeader('/admin/header/menu.phtml');
         $this->setTemplateFooter(null);
-        $this->setTitle('Task');
+        $this->setTitle($this->__('Task'));
     }
 
     public function listAction()

@@ -28,7 +28,7 @@ class Index extends Controller
         $this->setTemplate('/admin/index.phtml');
         $this->setTemplateHeader('/admin/header/menu.phtml');
         $this->setTemplateFooter(null);
-        $this->setTitle('IndexController');
+        $this->setTitle($this->__('IndexController'));
     }
 
     public function indexAction()
@@ -39,7 +39,7 @@ class Index extends Controller
             App::getInstance()->getLanguageCode()
         ]);
         if (!$this->cacheExist()) {
-            $this->setTitle('Admin');
+            $this->setTitle($this->__('Admin'));
             $this->setTemplate('/admin/index.phtml');
         }
     }
@@ -53,7 +53,7 @@ class Index extends Controller
     public function showConfigAction()
     {
         $this->setTemplate('/admin/config.phtml');
-        $this->setTitle('Admin - Config application');
+        $this->setTitle($this->__('Admin - Config application'));
     }
 
     public function saveConfigAction()
@@ -76,7 +76,7 @@ class Index extends Controller
         $cacheHelper->clearCache();
         App::getInstance()->getSession()->addMessage([
             'level' => Message::LEVEL_MESSAGE_INFO,
-            'message' => 'Clear cache with success'
+            'message' => $this->__('Clear cache with success')
         ]);
 
         $this->redirect($this);
@@ -99,7 +99,7 @@ class Index extends Controller
     public function moduleAction()
     {
 
-        $this->setTitle('Admin Module');
+        $this->setTitle($this->__('Admin Module'));
         $this->setTemplate('/admin/module/index.phtml');
 
         $moduleFilePath = App::PathRoot() . '/tools/modules.json';

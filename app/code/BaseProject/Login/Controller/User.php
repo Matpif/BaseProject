@@ -6,6 +6,7 @@ use App\App;
 use App\libs\App\CollectionDb;
 use App\libs\App\Controller;
 use App\libs\App\Helper;
+use App\libs\App\Model;
 use App\libs\App\QueryFactory;
 use BaseProject\Admin\Block\ListAdmin;
 use BaseProject\Admin\Block\Message;
@@ -30,7 +31,7 @@ class User extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->setTitle('Show users');
+        $this->setTitle($this->__('Show users'));
         $this->setTemplateHeader('/admin/header/menu.phtml');
     }
 
@@ -78,7 +79,7 @@ class User extends Controller
         if (isset($request['id'])) {
             $this->_currentUser = CollectionDb::getInstanceOf('Login_User')->loadById($request['id']);
         } else {
-            $this->_currentUser = new \BaseProject\Login\Model\User();
+            $this->_currentUser = Model::getModel('Login_User');
         }
     }
 
@@ -89,7 +90,7 @@ class User extends Controller
         if (isset($request['id'], $request['username'], $request['group'])) {
             $user = CollectionDb::getInstanceOf('Login_User')->loadById($request['id']);
             if (!$user) {
-                $user = new \BaseProject\Login\Model\User();
+                $user = Model::getModel('Login_User');
             }
             $user->setAttribute('id', $request['id']);
             $user->setAttribute('username', $request['username']);

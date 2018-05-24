@@ -2,6 +2,7 @@
 
 namespace App\libs\App;
 
+use App\App;
 use Exception;
 
 abstract class VarientObject implements \JsonSerializable
@@ -110,8 +111,12 @@ abstract class VarientObject implements \JsonSerializable
         return $this->_data;
     }
 
-    public function __($text)
+    public function __($text, $moduleName = null)
     {
-        return ($text) ? gettext($text) : (dgettext('app', $text)) ? dgettext('app', $text) : $text;
+        if (App::getInstance()->getTranslate($moduleName)) {
+            return App::getInstance()->getTranslate($moduleName)->translate($text);
+        } else {
+            return $text;
+        }
     }
 }

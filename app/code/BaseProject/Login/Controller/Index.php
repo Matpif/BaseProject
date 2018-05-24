@@ -6,6 +6,7 @@ use App\App;
 use App\libs\App\Block;
 use App\libs\App\CollectionDb;
 use App\libs\App\Controller;
+use App\libs\App\Dispatcher;
 use App\libs\App\Helper;
 use App\libs\App\Model;
 use BaseProject\Admin\Block\Message;
@@ -23,7 +24,7 @@ class Index extends Controller
         parent::__construct();
         $this->setTemplateHeader(null);
         $this->setTemplateFooter(null);
-        $this->setTitle('Login');
+        $this->setTitle($this->__('Login'));
     }
 
     public function indexAction()
@@ -68,6 +69,7 @@ class Index extends Controller
                         $this->redirect($this->getUrlAction('otp'));
                     }
                     $session->setUser($user);
+                    Dispatcher::getInstance()->dispatch('authenticated_user', $user);
                     if ($request['url_referer']) {
                         $this->redirect($request['url_referer']);
                     }

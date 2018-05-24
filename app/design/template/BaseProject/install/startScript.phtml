@@ -7,7 +7,7 @@ use BaseProject\Install\Model\File;
 use BaseProject\Install\Model\Module;
 
 $collectionModule = CollectionDb::getInstanceOf('Install_Module');
-$collectionModule->loadAll(['module_name' => 'ASC']);
+$collectionModule->loadAll(['module_name ASC']);
 ?>
 <div class="startScript">
     <?php if ($this->getMessage()): ?>

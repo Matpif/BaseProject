@@ -32,7 +32,7 @@ class Group extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->setTitle('Groups Admin');
+        $this->setTitle($this->__('Groups Admin'));
         $this->setTemplate('/login/group/index.phtml');
         $this->setTemplateHeader('/admin/header/menu.phtml');
     }

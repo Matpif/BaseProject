@@ -22,7 +22,7 @@ $labelsMenu = $this->getLabelsMenu();
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand"
-               href="<?= Router::getUrlAction('Admin', 'Index', 'index') ?>"><?= $this->__('Administration'); ?></a>
+               href="<?= Router::getUrlAction('Admin', 'Index', 'index') ?>"><?= $this->__('Administration', 'Admin'); ?></a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -30,9 +30,10 @@ $labelsMenu = $this->getLabelsMenu();
                 <?php foreach ($menu as $code => $child): ?>
                     <?php
                     $hasChild = is_array($child);
+                    $moduleName = explode("_", (($hasChild)?$code:$child))[0];
                     ?>
                     <li <?= ($hasChild) ? 'class="dropdown"' : '' ?>>
-                        <a <? if (!$hasChild): ?>href="<?= $this->getUrl($code) ?>" <? endif; ?> <?= ($hasChild) ? 'class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"' : '' ?>><?= $this->__(($hasChild) ? $labelsMenu[$code] : $labelsMenu[$child]) ?><? if ($hasChild): ?>
+                        <a <? if (!$hasChild): ?>href="<?= $this->getUrl($code) ?>" <? endif; ?> <?= ($hasChild) ? 'class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"' : '' ?>><?= $this->__(($hasChild) ? $labelsMenu[$code] : $labelsMenu[$child], $moduleName) ?><? if ($hasChild): ?>
                                 <span class="caret"></span><? endif; ?></a>
                         <?php
                         if ($hasChild) :?>
@@ -41,18 +42,20 @@ $labelsMenu = $this->getLabelsMenu();
                                 foreach ($child as $code2 => $child2): ?>
                                     <?php
                                     $hasChild2 = is_array($child2);
+                                    $moduleName = explode("_", (($hasChild2)?$code2:$child2))[0];
                                     ?>
                                     <li <?= ($hasChild2) ? 'class="dropdown"' : '' ?>>
-                                        <a <? if (!$hasChild2): ?>href="<?= $this->getUrl($child2) ?>" <? endif; ?> <?= ($hasChild2) ? 'class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"' : '' ?>><?= $this->__(($hasChild2) ? $labelsMenu[$code2] : $labelsMenu[$child2]) ?><? if ($hasChild2): ?>
+                                        <a <? if (!$hasChild2): ?>href="<?= $this->getUrl($child2) ?>" <? endif; ?> <?= ($hasChild2) ? 'class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"' : '' ?>><?= $this->__(($hasChild2) ? $labelsMenu[$code2] : $labelsMenu[$child2], $moduleName) ?><? if ($hasChild2): ?>
                                                 <span class="caret"></span><? endif; ?></a>
                                         <?php
                                         if ($hasChild2): ?>
                                             <ul class="dropdown-menu level3">
                                                 <?php
                                                 foreach ($child2 as $code3 => $child3):
+                                                    $moduleName = explode("_", $child3)[0];
                                                     ?>
                                                     <li>
-                                                        <a href="<?= $this->getUrl($child3) ?>"><?= $this->__($labelsMenu[$child3]) ?></a>
+                                                        <a href="<?= $this->getUrl($child3) ?>"><?= $this->__($labelsMenu[$child3], $moduleName) ?></a>
                                                     </li>
                                                     <?php
                                                 endforeach;

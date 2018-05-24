@@ -34,7 +34,7 @@ class Ldap extends Controller
 
     public function indexAction() {
         $this->setTemplate('/login/ldap/index.phtml');
-        $this->setTitle('Configure LDAP');
+        $this->setTitle($this->__('Configure LDAP'));
         $this->_currentConfig = Collection::getInstanceOf('Login_LdapConfig')->loadById(1);
         if (!$this->_currentConfig) {
             $this->_currentConfig = Model::getModel('Login_LdapConfig');

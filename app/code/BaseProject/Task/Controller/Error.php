@@ -26,7 +26,7 @@ class Error extends Controller
         $this->setTemplateHeader('/admin/header/menu.phtml');
         $this->setTemplateFooter(null);
 
-        $this->setTitle('Task Scheduler error');
+        $this->setTitle($this->__('Task Scheduler error'));
     }
 
     public function indexAction()

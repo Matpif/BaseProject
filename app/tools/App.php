@@ -13,6 +13,8 @@ use BaseProject\Admin\Model\Module;
 use BaseProject\Login\Helper\Login;
 use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend_Cache;
+use Zend_Translate;
 
 class App
 {
@@ -53,6 +55,10 @@ class App
      * @var string
      */
     private $_appName;
+    /**
+     * @var array
+     */
+    private $_translates;
 
     /**
      * App constructor.
@@ -145,11 +151,6 @@ class App
         return $this->_request;
     }
 
-    public function getLanguageCode()
-    {
-        return $this->_languageCode;
-    }
-
     /**
      * @param string $moduleName
      * @return boolean
@@ -207,8 +208,7 @@ class App
 
         Dispatcher::getInstance()->initListener();
         $router = $this->getRouter();
-        $domain = $router->getModule();
-        $this->defineTextDomain($domain);
+        $this->initTranslate();
 
         if (!$router->routeExist()) {
             /** @var \BaseProject\Error\Controller\Error $_controller */
@@ -348,15 +348,29 @@ class App
         return $this->_router;
     }
 
-    /**
-     * @param string $domain
-     */
-    private function defineTextDomain($domain)
+    private function initTranslate()
     {
-        bindtextdomain($domain, $this->getPathRoot() . "/var/translate");
-        bindtextdomain('app', $this->getPathRoot() . "/var/translate");
-        bind_textdomain_codeset($domain, 'UTF-8');
-        textdomain($domain);
+        $_modules = CollectionDb::getInstanceOf('Admin_Module')->load(['enable' => 1]);
+        /** @var Module $module */
+        foreach ($_modules as $module) {
+//            $moduleName = $this->getRouter()->getModule();
+            $moduleName = $module->getAttribute("module_name");
+            $fileName = $this->getPathRoot() . '/locale/' . $this->getLanguageCode() . '/' . $moduleName . '.csv';
+//            $cache = Zend_Cache::factory('Core', 'File');
+//            Zend_Translate::setCache($cache);
+            if (file_exists($fileName)) {
+                $this->_translates[$moduleName] = new Zend_Translate(
+                    'Zend_Translate_Adapter_Csv',
+                    $fileName,
+                    $this->getLanguageCode()
+                    , array('delimiter' => ',', 'enclosure' => '"'));
+            }
+        }
+    }
+
+    public function getLanguageCode()
+    {
+        return $this->_languageCode;
     }
 
     /**
@@ -375,5 +389,20 @@ class App
     public function getSession()
     {
         return Session::getInstance();
+    }
+
+    /**
+     * @param $moduleName
+     * @return Zend_Translate|null
+     */
+    public function getTranslate($moduleName = null)
+    {
+        if (!$moduleName)
+            $moduleName = $this->getRouter()->getModule();
+
+        if (isset($this->_translates[$moduleName]))
+            return $this->_translates[$moduleName];
+        else
+            return null;
     }
 }

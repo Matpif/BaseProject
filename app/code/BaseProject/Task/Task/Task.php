@@ -2,24 +2,37 @@
 
 namespace BaseProject\Task\Task;
 
+use App\App;
 use App\libs\App\VarientObject;
 
 class Task extends VarientObject
 {
 
     private $_verbose;
+    private $_taskName;
+    private $_force;
 
     /**
      * Task constructor.
      * @param $_verbose
+     * @param $_force
      */
-    public function __construct($_verbose = false)
+    public function __construct($_verbose = false, $_force = false)
     {
         $this->_verbose = $_verbose;
+        $this->_force = $_force;
+        $this->_taskName = strtolower(str_replace('\\', '_', get_class($this)));
     }
 
+    /**
+     * @throws \BaseProject\Task\Exception\Exception
+     */
     public function _run()
     {
+        if (file_exists(App::PathRoot().'/var/task/locks/'.$this->_taskName.'.lock') && !$this->_force){
+            throw new \BaseProject\Task\Exception\Exception('Task locked', \BaseProject\Task\Exception\Exception::TASK_LOCKED);
+        }
+
         $this->__init();
         $this->__beforeExecute();
         $this->__run();
@@ -29,6 +42,10 @@ class Task extends VarientObject
     protected function __init()
     {
         $this->showMessage("Start init");
+        if (!file_exists(App::PathRoot().'/var/task/locks')) {
+            mkdir(App::PathRoot().'/var/task/locks', 0777, true);
+        }
+        touch(App::PathRoot().'/var/task/locks/'.$this->_taskName.'.lock');
     }
 
     public function showMessage($message)
@@ -57,5 +74,8 @@ class Task extends VarientObject
     protected function __afterExecute()
     {
         $this->showMessage("Start after execute");
+        if (file_exists(App::PathRoot().'/var/task/locks/'.$this->_taskName.'.lock')) {
+            unlink(App::PathRoot().'/var/task/locks/'.$this->_taskName.'.lock');
+        }
     }
 }

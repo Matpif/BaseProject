@@ -86,6 +86,7 @@ class MyPdo extends PDO
      * @param $data
      * @param $keyTable
      * @param string $delimiter
+     * @param bool $withId
      * @return string
      */
     public function dataParamList($data, $keyTable, $delimiter = ', ', $withId = false)

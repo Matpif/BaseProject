@@ -11,7 +11,7 @@ try {
         $GLOBALS['override'] = json_decode(file_get_contents(__DIR__ . '/../../etc/override.json'), true);
         App::getInstance()->setPathRoot(__DIR__ . '/../../');
         App::getInstance()->init();
-        $params = getopt('c::s::v', ['code::', 'help', 'list']);
+        $params = getopt('c::s::v', ['code::', 'help', 'list', 'force']);
     }
 
     if (!App::getInstance()->moduleIsEnabled('Task')) {
@@ -25,6 +25,7 @@ try {
         echo "task.php [options]\n";
         echo "  --help      show help\n";
         echo "  --list      show list of task\n";
+        echo "  --force     skip lock file\n";
         echo "  --code|-c   task code to execute\n\n";
         echo "  -s          Scheduler ID\n\n";
         echo "  -v          show message\n\n";
@@ -81,7 +82,7 @@ try {
             $t->save();
 
             /** @var \BaseProject\Task\Task\Task $task */
-            $task = new $className($v);
+            $task = new $className($v, (isset($params['force'])));
             $task->showMessage('Start ' . $label);
             $task->_run();
         } else {

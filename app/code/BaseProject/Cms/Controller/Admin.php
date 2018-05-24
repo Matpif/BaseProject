@@ -31,7 +31,7 @@ class Admin extends Controller
         parent::__construct();
         $this->setTemplateHeader('/admin/header/menu.phtml');
         $this->setTemplateFooter(null);
-        $this->setTitle('Cms Admin');
+        $this->setTitle($this->__('Cms Admin'));
     }
 
     public function indexAction()
