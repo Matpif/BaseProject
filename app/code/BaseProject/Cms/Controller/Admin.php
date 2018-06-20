@@ -6,6 +6,7 @@ use App\App;
 use App\libs\App\CollectionDb;
 use App\libs\App\Controller;
 use App\libs\App\Helper;
+use App\libs\App\Model;
 use App\libs\App\QueryFactory;
 use BaseProject\Admin\Block\ListAdmin;
 use BaseProject\Cms\Model\Block;
@@ -73,10 +74,13 @@ class Admin extends Controller
     {
         $request = App::getRequestParams();
 
-        if (isset($request['id'], $request['name'], $request['language_code'])) {
+        if (isset($request['name'], $request['language_code'])) {
 
-            $block = new Block();
-            $block->setAttribute('id', $request['id']);
+            /** @var Block $block */
+            $block = Model::getModel('Cms_Block');
+            if (isset($request['id']) && $request['id']) {
+                $block->setAttribute('id', $request['id']);
+            }
             $block->setAttribute('name', $request['name']);
             $block->setAttribute('language_code', $request['language_code']);
             $block->setAttribute('title', $request['title']);

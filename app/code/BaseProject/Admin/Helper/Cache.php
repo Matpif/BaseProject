@@ -53,7 +53,7 @@ class Cache extends Helper
                 if (!is_dir($dirname."/".$file))
                     unlink($dirname."/".$file);
                 else
-                    delete_directory($dirname.'/'.$file);
+                    $this->delete_directory($dirname.'/'.$file);
             }
         }
         closedir($dir_handle);
@@ -63,6 +63,8 @@ class Cache extends Helper
 
     public function clearCacheTranslate()
     {
-        App::getInstance()->getTranslate()->removeCache();
+        if (!App::getInstance()->developerModeIsEnabled()) {
+            \Zend_Translate::clearCache();
+        }
     }
 }

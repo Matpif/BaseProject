@@ -76,7 +76,7 @@ INSERT INTO admin_module (module_name, enable) VALUES ('Install', 0);
 INSERT INTO admin_module (module_name, enable) VALUES ('Task', 0);
 INSERT INTO admin_module (module_name, enable) VALUES ('Api', 0);
 INSERT INTO admin_module (module_name, enable) VALUES ('Cms', 0);
-INSERT INTO admin_module (module_name, enable) VALUES ('Ajaxifier', 0);
+INSERT INTO admin_module (module_name, enable) VALUES ('Rewrite', 0);
 
 CREATE UNIQUE INDEX cms_block_name_language_code_uindex
   ON cms_block (name, language_code);
@@ -93,3 +93,23 @@ CREATE INDEX task_scheduler_task_task_code_fk
   ON task_scheduler (task_code);
 CREATE INDEX task_scheduler_is_enabled_index
   ON task_scheduler (is_enabled);
+CREATE TABLE admin_parameter (
+  name           NVARCHAR(150) PRIMARY KEY,
+  type           ENUM ('string', 'int', 'datetime', 'date', 'text') NOT NULL DEFAULT 'string',
+  value_string   NVARCHAR(250)                                      NULL,
+  value_int      INT                                                NULL,
+  value_datetime DATETIME                                           NULL,
+  value_text     TEXT                                               NULL
+);
+ALTER TABLE admin_parameter
+  MODIFY COLUMN type ENUM ('string', 'int', 'datetime', 'date', 'text', 'select') NOT NULL DEFAULT 'string';
+CREATE TABLE rewrite_rewrite (
+  id          INT AUTO_INCREMENT PRIMARY KEY,
+  name        VARCHAR(50)  NOT NULL,
+  basic_url   VARCHAR(500) NOT NULL,
+  rewrite_url VARCHAR(500) NOT NULL
+);
+ALTER TABLE rewrite_rewrite
+  ADD UNIQUE (basic_url);
+ALTER TABLE rewrite_rewrite
+  ADD redirect_visible TINYINT(1) NOT NULL DEFAULT 0;

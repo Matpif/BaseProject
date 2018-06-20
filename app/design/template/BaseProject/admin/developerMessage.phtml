@@ -1,0 +1,9 @@
+<?php
+/** @var \BaseProject\Admin\Block\DeveloperMessage $this */
+if (\App\App::getInstance()->developerModeIsEnabled()):
+    ?>
+    <div class="developer_message">
+        <?= $this->__('Developer mode is enabled', 'Admin') ?>
+    </div>
+<?php
+endif;

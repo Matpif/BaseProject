@@ -114,5 +114,13 @@
         }
       }
     }
+  },
+  "ajaxifier": {
+    "message_block": {
+      "module": "Login",
+      "controller": "Index",
+      "action": "",
+      "block": "Admin_Message"
+    }
   }
 }

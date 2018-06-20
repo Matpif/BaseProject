@@ -4,6 +4,7 @@ namespace BaseProject\Admin\Controller;
 
 use App\App;
 use App\Config;
+use App\ConfigModule;
 use App\ContentTypes;
 use App\libs\App\Block;
 use App\libs\App\CollectionDb;
@@ -90,7 +91,7 @@ class Index extends Controller
 
         App::getInstance()->getSession()->addMessage([
             'level' => Message::LEVEL_MESSAGE_INFO,
-            'message' => 'Translated with success'
+            'message' => $this->__('Translated with success')
         ]);
 
         $this->redirect($this);

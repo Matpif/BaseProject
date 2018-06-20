@@ -56,7 +56,7 @@ $uuid = uniqid();
 
         $('#<?= $uuid ?> tr').on('click', function(e) {
 
-            if ($(this).data('url') !== '') {
+            if ($(this).data('url') && $(this).data('url') !== '') {
                 e.preventDefault();
                 window.location.href = $(this).data('url');
             }

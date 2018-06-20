@@ -7,11 +7,11 @@ use App\libs\App\Dispatcher;
 
 class ConfigModule
 {
-
     const PATH_FILE_MODULE = '/etc/modules.json';
     const PATH_CODE_MODULE = '/code';
     const PATH_CACHE = '/var/cache';
     const PATH_CACHE_CONFIG = '/var/cache/config.json';
+
     /** @var  ConfigModule */
     private static $_instance;
     /** @var  array */
@@ -30,6 +30,7 @@ class ConfigModule
         } else {
             $this->refreshCache();
             $this->removeModuleDisabled();
+            $this->refreshForeignKey();
         }
     }
 
@@ -70,6 +71,27 @@ class ConfigModule
         }
 
         return $this->_modules;
+    }
+
+    private function refreshForeignKey()
+    {
+        Dispatcher::getInstance()->dispatch('before_refresh_foreign_key', $this);
+        $db = MyPdo::getInstance(MyPdo::TYPE_MYSQL);
+        $stmt = $db->query("select table_name, column_name, referenced_table_name, referenced_column_name from information_schema.key_column_usage where referenced_table_name is not null;");
+        $db->exec($stmt);
+
+        $fk = [];
+        while ($result = $stmt->fetch(MyPdo::FETCH_ASSOC)) {
+            $fk[$result['table_name']][] = [
+                'column' => $result['referenced_column_name'],
+                'fk_table' => $result['referenced_table_name'],
+                'fk_column' => $result['column_name']
+            ];
+        }
+        $this->_config['fk'] = $fk;
+
+        file_put_contents(App::PathRoot() . self::PATH_CACHE_CONFIG, json_encode($this->_config));
+        Dispatcher::getInstance()->dispatch('after_refresh_foreign_key', $this);
     }
 
     private function removeModuleDisabled()

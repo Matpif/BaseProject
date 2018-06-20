@@ -59,6 +59,10 @@ class App
      * @var array
      */
     private $_translates;
+    /**
+     * @var bool
+     */
+    private $_developerModeIsEnabled;
 
     /**
      * App constructor.
@@ -194,7 +198,7 @@ class App
      */
     public function cacheIsEnabled()
     {
-        return $this->_cacheIsEnabled;
+        return ($this->_cacheIsEnabled && !$this->developerModeIsEnabled());
     }
 
     public function run()
@@ -303,16 +307,25 @@ class App
 
     private function debug()
     {
+        $parameterHelper = Helper::getInstance('Admin_Parameter');
+        $pathFileLog = $parameterHelper->getParameter('developer/developer/pathFileLog')->getValue();
+        $logErrors = $parameterHelper->getParameter('developer/developer/logErrors')->getValue();
+
         /** Debug mode (depuis le Config) */
-        if (Config::getInstance()->getAttribute('app', 'debug') == true) {
-            // DEBUG MODE ON
-            error_reporting(E_ALL);
+        if (Config::getInstance()->getAttribute('app', 'debug') == true || $this->developerModeIsEnabled()) {
             ini_set('display_errors', 'on');
-            // DEBUG MODE ON
+            ini_set('log_errors', $logErrors);
+            if ($pathFileLog && $logErrors) {
+                ini_set('log_errors', $pathFileLog);
+            }
+            error_reporting(E_ALL);
         } else {
-            // DEBUG MODE OFF
             ini_set('display_errors', 'off');
-            // DEBUG MODE OFF
+            ini_set('log_errors', $logErrors);
+            if ($pathFileLog) {
+                ini_set('log_errors', $pathFileLog);
+            }
+            error_reporting(E_ALL & ~E_DEPRECATED);
         }
     }
 
@@ -351,13 +364,33 @@ class App
     private function initTranslate()
     {
         $_modules = CollectionDb::getInstanceOf('Admin_Module')->load(['enable' => 1]);
+        if (!$this->developerModeIsEnabled()) {
+            $cache = Zend_Cache::factory(
+                'Core'
+                , 'File'
+                , array(
+                    'caching' => true
+                ,
+                    'lifetime' => 900
+                ,
+                    'automatic_serialization' => true
+                ,
+                    'automatic_cleaning_factor' => 20
+                ,
+                    'cache_id_prefix' => 'Translate'
+                )
+                , array(
+                    'hashed_directory_level' => 0
+                ,
+                    'cache_dir' => $this->getPathRoot() . '/var/cache'
+                )
+            );
+            Zend_Translate::setCache($cache);
+        }
         /** @var Module $module */
         foreach ($_modules as $module) {
-//            $moduleName = $this->getRouter()->getModule();
             $moduleName = $module->getAttribute("module_name");
             $fileName = $this->getPathRoot() . '/locale/' . $this->getLanguageCode() . '/' . $moduleName . '.csv';
-//            $cache = Zend_Cache::factory('Core', 'File');
-//            Zend_Translate::setCache($cache);
             if (file_exists($fileName)) {
                 $this->_translates[$moduleName] = new Zend_Translate(
                     'Zend_Translate_Adapter_Csv',
@@ -397,12 +430,34 @@ class App
      */
     public function getTranslate($moduleName = null)
     {
-        if (!$moduleName)
+        if (!$moduleName) {
             $moduleName = $this->getRouter()->getModule();
+        }
 
-        if (isset($this->_translates[$moduleName]))
+        if (isset($this->_translates[$moduleName])) {
             return $this->_translates[$moduleName];
-        else
+        } else {
             return null;
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getTranslates()
+    {
+        return $this->_translates;
+    }
+
+    /**
+     * @return bool
+     */
+    public function developerModeIsEnabled()
+    {
+        if (is_null($this->_developerModeIsEnabled)) {
+            $parameterHelper = Helper::getInstance('Admin_Parameter');
+            $this->_developerModeIsEnabled = $parameterHelper->getParameter('developer/developer/enable')->getValue() == 1;
+        }
+        return $this->_developerModeIsEnabled;
     }
 }

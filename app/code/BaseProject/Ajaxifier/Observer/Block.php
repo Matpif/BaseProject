@@ -17,6 +17,8 @@ class Block implements Observer
     {
         if ($block->getAjaxifier() !== true) {
             $name = get_class($block);
+            $ex = explode("\\", $name);
+            $name2 = $ex[1].'_'.$ex[count($ex) - 1];
             $idBlock = '';
             $config = ConfigModule::getInstance()->getConfigAllModules('ajaxifier');
 
@@ -30,7 +32,7 @@ class Block implements Observer
                     if (($blockAjaxifier['module'] == "" || $blockAjaxifier['module'] == $module)
                         && ($blockAjaxifier['controller'] == "" || $blockAjaxifier['controller'] == $controller)
                         && ($blockAjaxifier['action'] == "" || $blockAjaxifier['action'] == $action)
-                        && $blockAjaxifier['block'] == $name) {
+                        && ($blockAjaxifier['block'] == $name || $blockAjaxifier['block'] == $name2)) {
                         $blockIsAjaxifier = true;
                         $idBlock = $k;
                         break;

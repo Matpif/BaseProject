@@ -84,27 +84,23 @@ class MyPdo extends PDO
     /**
      * Créer le string "attribut1 = :attribut1, attribut2 = :attribut2, ..." pour l'update
      * @param $data
-     * @param $keyTable
      * @param string $delimiter
-     * @param bool $withId
      * @return string
      */
-    public function dataParamList($data, $keyTable, $delimiter = ', ', $withId = false)
+    public function dataParamList($data, $delimiter = ', ')
     {
         $string = "";
         foreach ($data as $key => $value) {
-            if ($keyTable != $key || $withId) {
-                if (is_array($value)) {
-                    $signe = $value[0];
+            if (is_array($value)) {
+                $signe = $value[0];
 
-                    if ($signe == 'between') {
-                        $string .= "{$key} {$signe} :{$key}0 AND :{$key}1{$delimiter}";
-                    } else {
-                        $string .= "{$key}{$signe}:{$key}{$delimiter}";
-                    }
+                if ($signe == 'between') {
+                    $string .= "{$key} {$signe} :{$key}0 AND :{$key}1{$delimiter}";
                 } else {
-                    $string .= "{$key}=:{$key}{$delimiter}";
+                    $string .= "{$key}{$signe}:{$key}{$delimiter}";
                 }
+            } else {
+                $string .= "{$key}=:{$key}{$delimiter}";
             }
         }
         $string = substr($string, 0, -strlen($delimiter));

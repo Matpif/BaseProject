@@ -92,7 +92,6 @@ class User extends Controller
             if (!$user) {
                 $user = Model::getModel('Login_User');
             }
-            $user->setAttribute('id', $request['id']);
             $user->setAttribute('username', $request['username']);
             $user->setAttribute('first_name', $request['first_name']);
             $user->setAttribute('last_name', $request['last_name']);

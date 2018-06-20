@@ -72,6 +72,9 @@
   "page": {
     "after_start_body": [
       "BaseProject\\Admin\\Block\\Message"
+    ],
+    "before_end_body": [
+      "BaseProject\\Admin\\Block\\DeveloperMessage"
     ]
   },
   "ajaxifier": {
@@ -79,13 +82,13 @@
       "module": "Admin",
       "controller": "Index",
       "action": "index",
-      "block": "BaseProject\\Admin\\Block\\Message"
+      "block": "Admin_Message"
     },
     "message_block_show_config": {
       "module": "Admin",
       "controller": "Index",
       "action": "showConfig",
-      "block": "BaseProject\\Admin\\Block\\Message"
+      "block": "Admin_Message"
     }
   },
   "parameter": {
@@ -169,6 +172,39 @@
                 "label": "Nom affiché",
                 "type": "string",
                 "defaultValue": ""
+              }
+            }
+          }
+        }
+      },
+      "developer": {
+        "label": "Developer",
+        "sections": {
+          "developer": {
+            "label": "Developer",
+            "parameters": {
+              "enable": {
+                "label": "Enable developer mode",
+                "type": "select",
+                "values": {
+                  "1": "Yes",
+                  "0": "No"
+                },
+                "defaultValue": "0"
+              },
+              "pathFileLog": {
+                "label": "Chemin fichier de log",
+                "type": "string",
+                "defaultValue": ""
+              },
+              "logErrors": {
+                "label": "Logger les erreurs",
+                "type": "select",
+                "values": {
+                  "1": "Yes",
+                  "0": "No"
+                },
+                "defaultValue": "0"
               }
             }
           }
