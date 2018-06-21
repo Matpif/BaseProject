@@ -8,6 +8,7 @@ use App\libs\App\Block;
 use App\libs\App\CollectionDb;
 use App\libs\App\Controller;
 use App\libs\App\Helper;
+use App\libs\App\Model;
 use App\libs\App\QueryFactory;
 use BaseProject\Admin\Block\ListAdmin;
 use BaseProject\Admin\Block\Message;
@@ -76,9 +77,11 @@ class Group extends Controller
         $request = App::getRequestParams();
 
         if (isset($request['id'], $request['name'], $request['roles'])) {
+            $group = CollectionDb::getInstanceOf('Login_Group')->loadById($request['id']);
+            if (!$group) {
+                $group = Model::getModel('Login_Group');
+            }
 
-            $group = new \BaseProject\Login\Model\Group();
-            $group->setAttribute('id', $request['id']);
             $group->setAttribute('name', $request['name']);
 
             $roles = [];
