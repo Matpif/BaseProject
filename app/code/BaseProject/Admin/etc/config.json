@@ -109,6 +109,11 @@
                 "type": "string",
                 "defaultValue": "/Admin"
               },
+              "pathImage": {
+                "label": "Image directory",
+                "type": "string",
+                "defaultValue": "/assets/images/"
+              },
               "minify": {
                 "label": "Minify CSS and JS",
                 "type": "select",
@@ -117,6 +122,16 @@
                   "1": "Yes"
                 },
                 "defaultValue": "0"
+              }
+            }
+          },
+          "session": {
+            "label": "Session",
+            "parameters": {
+              "time": {
+                "label": "Session time (in second)",
+                "type": "string",
+                "defaultValue": "3600"
               }
             }
           }

@@ -16,7 +16,6 @@ class Task extends Helper
         foreach ($config['Task'] as $tasks) {
             foreach ($tasks as $c => $cN) {
                 $allTasks[$c] = $cN;
-                break;
             }
         }
 

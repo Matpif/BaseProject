@@ -6,37 +6,57 @@ use BaseProject\Ajaxifier\Block\Script;
 
 ?>
 <script type="application/javascript">
-    jQuery(function ($) {
-        var ajaxifier = {
-            blocks: [],
-            init: function () {
-                var ajaxifier = $('.ajaxifier');
-                var that = this;
-                $.each(ajaxifier, function (key, value) {
+    var ajaxifier = {
+        options: {},
+        blocks: [],
+        init: function () {
+            var ajaxifier = $('.ajaxifier');
+            var that = this;
+            $.each(ajaxifier, function (key, value) {
+                if ($(value).data('block-autoload') == 1) {
                     that.blocks.push($(value).data('block-id'));
-                });
-            },
-            get: function () {
-                var that = this;
-                if (this.blocks.length > 0) {
-                    $.ajax({
-                        url: '<?= Router::getUrlAction('Ajaxifier', 'Index', "index") ?>',
-                        dataType: 'json',
-                        type: 'post',
-                        data: {'blocks': that.blocks},
-                        success: function (data) {
-                            that.apply(data);
-                        }
-                    });
+                    that.options[$(value).data('block-id')] = $(value).data();
                 }
-            },
-            apply: function (blocks) {
-                $.each(blocks, function (blockName, html) {
-                    $('.ajaxifier[data-block-id="' + blockName + '"]').html(html);
+            });
+        },
+        get: function (callback) {
+            var that = this;
+            if (this.blocks.length > 0) {
+                $.ajax({
+                    url: '<?= Router::getUrlAction('Ajaxifier', 'Index', "index") ?>',
+                    dataType: 'json',
+                    type: 'post',
+                    data: {'blocks': that.blocks, 'options': that.options},
+                    beforeSend: function() {
+                        $.each(that.blocks, function (k, blockName) {
+                            var block = $('.ajaxifier[data-block-id="' + blockName + '"]');
+                            if (block.data('block-loading') === 1) {
+                                var loader = $("<div class=\"loader\"><div class=\"load\"></div></div>");
+                                block.append(loader);
+                                loader.find(".load").css('position', 'absolute');
+                                loader.find(".load").css('left', (loader.width() / 2 - 15) + 'px');
+                                loader.find(".load").css('top', (loader.height() / 2 - 15) + 'px');
+                            }
+                        });
+                    },
+                    success: function (data) {
+                        that.apply(data);
+                        if (callback) {
+                            callback();
+                        }
+                    }
                 });
             }
-        };
+        },
+        apply: function (blocks) {
+            $.each(blocks, function (blockName, html) {
+                var block = $('.ajaxifier[data-block-id="' + blockName + '"]');
+                block.html(html);
+            });
+        }
+    };
 
+    jQuery(function ($) {
         ajaxifier.init();
         ajaxifier.get();
     });

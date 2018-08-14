@@ -6,5 +6,4 @@ $GLOBALS['override'] = json_decode(file_get_contents(__DIR__ . '/../app/etc/over
 
 include_once "../vendor/autoload.php";
 
-session_start();
 App::getInstance()->run();

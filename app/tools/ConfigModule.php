@@ -77,16 +77,17 @@ class ConfigModule
     {
         Dispatcher::getInstance()->dispatch('before_refresh_foreign_key', $this);
         $db = MyPdo::getInstance(MyPdo::TYPE_MYSQL);
-        $stmt = $db->query("select table_name, column_name, referenced_table_name, referenced_column_name from information_schema.key_column_usage where referenced_table_name is not null;");
+        $stmt = $db->query("select constraint_name, table_name, column_name, referenced_table_name, referenced_column_name from information_schema.key_column_usage where referenced_table_name is not null;");
         $db->exec($stmt);
 
         $fk = [];
         while ($result = $stmt->fetch(MyPdo::FETCH_ASSOC)) {
-            $fk[$result['table_name']][] = [
+            $fk[$result['table_name']][$result['constraint_name']]['link'][] = [
                 'column' => $result['referenced_column_name'],
-                'fk_table' => $result['referenced_table_name'],
                 'fk_column' => $result['column_name']
             ];
+
+            $fk[$result['table_name']][$result['constraint_name']]['fk_table'] = $result['referenced_table_name'];
         }
         $this->_config['fk'] = $fk;
 

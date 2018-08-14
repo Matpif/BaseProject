@@ -9,6 +9,7 @@ use App\libs\App\Controller;
 use App\libs\App\Helper;
 use App\libs\App\Model;
 use App\MyPdo;
+use BaseProject\Admin\Block\Message;
 use BaseProject\Admin\Model\Module;
 use BaseProject\Install\Model\File;
 use BaseProject\Login\Helper\Login;
@@ -60,19 +61,41 @@ class Index extends Controller
                     $path = App::PathRoot() . '/code/' . $override . '/' . $moduleName . '/' . $config[$moduleName] . '/' . $file->getFileName();
                     if (file_exists($path)) {
                         $contentScript = file_get_contents($path);
+                        $queries = explode(';', $contentScript);
                         $myPdo = MyPdo::getInstance(MyPdo::TYPE_MYSQL);
-                        $stmt = $myPdo->prepareQuery($contentScript);
-                        if ($stmt->execute()) {
-                            $file->setAttribute('last_exec', (new DateTime())->format('Y-m-d H:i:s'));
-                            $file->save();
-                            $this->redirect($this->getUrlAction('startScript') . '/message/Ok script executed with success: ' . $file->getFileName());
+                        $contentScriptOk = true;
+                        foreach ($queries as $query) {
+                            if (!empty(trim($query))) {
+                                $stmt = $myPdo->prepareQuery($query);
+                                if (!$stmt->execute()) {
+                                    $contentScriptOk = false;
+                                }
+                            }
                         }
-                        $this->redirect($this->getUrlAction('startScript') . '/message/Error when execute script: ' . $file->getFileName());
+                        if ($contentScriptOk) {
+                            $file->setAttribute('last_exec', (new DateTime())->format('Y-m-d H:i:s'));
+                            if ($file->save()) {
+                                App::getInstance()->getSession()->addMessage([
+                                    'level' => Message::LEVEL_MESSAGE_SUCCESS,
+                                    'message' => $this->__("Ok script executed with success: {$file->getFileName()}")
+                                ]);
+                            } else {
+                                App::getInstance()->getSession()->addMessage([
+                                    'level' => Message::LEVEL_MESSAGE_INFO,
+                                    'message' => $this->__("Ok script executed with success: {$file->getFileName()} / but impossible to update DB")
+                                ]);
+                            }
+                        } else {
+                            App::getInstance()->getSession()->addMessage([
+                                'level' => Message::LEVEL_MESSAGE_ERROR,
+                                'message' => $this->__("Impossible to exec script : {$file->getFileName()}")
+                            ]);
+                        }
                     }
                 }
             }
         }
-        $this->redirect($this->getUrlAction('startScript') . '/message/No request');
+        $this->redirect($this->getUrlAction('startScript'));
     }
 
     public function clearCacheAction()
@@ -84,7 +107,7 @@ class Index extends Controller
     private function clearCache()
     {
         $config = ConfigModule::getInstance()->getConfigAllModules('Install/path');
-        foreach ($config as $module => $path) {
+        foreach ($config as $module => $p) {
 
             $collectionModule = CollectionDb::getInstanceOf('Install_Module');
             $m = $collectionModule->load(['module_name' => $module])->getFirstRow();
@@ -95,7 +118,7 @@ class Index extends Controller
                 $m->save();
             }
             foreach ($GLOBALS['override'] as $override) {
-                $path = App::PathRoot() . "/code/{$override}/{$module}/{$path}";
+                $path = App::PathRoot() . "/code/{$override}/{$module}/{$p}";
                 if (file_exists($path)) {
                     $pathFiles = scandir($path);
                     foreach ($pathFiles as $pathFile) {

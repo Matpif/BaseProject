@@ -80,6 +80,7 @@ class Admin extends Controller
             $block = Model::getModel('Cms_Block');
             if (isset($request['id']) && $request['id']) {
                 $block->setAttribute('id', $request['id']);
+                $block->reload();
             }
             $block->setAttribute('name', $request['name']);
             $block->setAttribute('language_code', $request['language_code']);

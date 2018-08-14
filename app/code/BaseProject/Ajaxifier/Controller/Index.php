@@ -40,6 +40,13 @@ class Index extends Controller
             $blockName = $blockIsAjaxifier[$blockId];
             $block = Block::getBlock($blockName);
             $block->setAjaxifier(true);
+
+            if (isset($request['options']) && is_array($request['options']) && isset($request['options'][$blockId]) && is_array($request['options'][$blockId])) {
+                foreach ($request['options'][$blockId] as $key => $option) {
+                    $block->setAttribute($key, $option);
+                }
+            }
+
             $retour[$blockId] = $block->getHtml();
         }
 

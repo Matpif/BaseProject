@@ -101,7 +101,7 @@ class Controller extends VarientObject
         /** @var Parameter $parameterHelper */
         $parameterHelper = Helper::getInstance('Admin_Parameter');
         $this->_appname = $parameterHelper->getParameter('general/general/appName')->getValue();
-        $this->_imageUrl = Config::getInstance()->getAttribute('general', 'image_url');
+        $this->_imageUrl = $parameterHelper->getParameter('general/general/pathImage')->getValue();
         $this->setTemplate('/default.phtml');
         $this->setTemplateHeader('/header.phtml');
         $this->setTemplateFooter('/footer.phtml');

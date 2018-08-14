@@ -99,7 +99,7 @@ class Group extends Controller
             } else {
                 App::getInstance()->getSession()->addMessage([
                     'level' => Message::LEVEL_MESSAGE_ERROR,
-                    'message' => 'Saved with success !'
+                    'message' => 'Saved without success !'
                 ]);
             }
 

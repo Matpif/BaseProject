@@ -22,9 +22,20 @@ class Dispatcher
     public function initListener()
     {
         $config = ConfigModule::getInstance()->getConfigAllModules('Observer');
+        $override = ConfigModule::getInstance()->getConfigAllModules('override/observer');
+        $listOverride = [];
+
+        foreach ($override as $module => $events) {
+            foreach ($events as $c => $class) {
+                $listOverride[$c] = $class;
+            }
+        }
 
         foreach ($config as $module => $events) {
             foreach ($events as $event => $class) {
+                if (isset($listOverride[$class])) {
+                    $class = $listOverride[$class];
+                }
                 if (is_subclass_of($class, 'App\\libs\\App\\Observer')) {
                     $this->listen($event, [$class, 'notify']);
                 }

@@ -103,7 +103,7 @@ class Index extends Controller
         $this->setTitle($this->__('Admin Module'));
         $this->setTemplate('/admin/module/index.phtml');
 
-        $moduleFilePath = App::PathRoot() . '/tools/modules.json';
+        $moduleFilePath = App::PathRoot() . '/etc/modules.json';
 
         if (file_exists($moduleFilePath)) {
             $modules = json_decode(file_get_contents($moduleFilePath), true);

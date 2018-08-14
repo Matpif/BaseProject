@@ -111,12 +111,20 @@ abstract class VarientObject implements \JsonSerializable
         return $this->_data;
     }
 
-    public function __($text, $moduleName = null)
+    public function __($text, $moduleName = null, $args = null)
     {
         if (App::getInstance()->getTranslate($moduleName)) {
-            return App::getInstance()->getTranslate($moduleName)->translate($text);
+            if ($args) {
+                return call_user_func_array('sprintf', array_merge((array)App::getInstance()->getTranslate($moduleName)->translate($text), $args));
+            } else {
+                return App::getInstance()->getTranslate($moduleName)->translate($text);
+            }
         } else {
-            return $text;
+            if ($args) {
+                return call_user_func_array('sprintf', array_merge((array)$text, $args));
+            } else {
+                return $text;
+            }
         }
     }
 }

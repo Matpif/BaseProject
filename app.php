@@ -183,7 +183,7 @@ if (!$mode_cli) {
     if (isset($params['maintenance'])):
         ?>
         Maintenance !!
-        <?php
+    <?php
     endif;
 } else {
     // Command line
@@ -251,6 +251,7 @@ if (!$mode_cli) {
         echo "app.php --help\n\n";
         echo "    --upgrade         to start script upgrade db version\n";
         echo "    --generate-db     generate Sql modification\n";
+        echo "    --generate        generate Class\n";
         echo "    --module-list     list module name with state\n";
         echo "    --module          module name\n";
         echo "    --state           state to active (1) or disable (0) module (with --module)\n";
@@ -258,13 +259,54 @@ if (!$mode_cli) {
         echo "    --refresh-cache   refresh cache\n";
         echo "\n";
     } else if (isset($params['generate'])) {
-        $type = readline('Generate ? (module/block/model/collection/helper/controller) : ');
+        $type = readline('Generate ? (module/block/model/collection/helper/controller/comment) : ');
 
         $projectName = readline("Project name : ");
         $moduleName = readline("Module name : ");
         $path = App::PathRoot().'/code';
 
         switch ($type) {
+            case 'comment':
+                $tableName = readline("Table name : ");
+                $db = \App\MyPdo::getInstance(\App\MyPdo::TYPE_MYSQL);
+                $stmt = $db->prepareQuery("DESC {$tableName}");
+                $stmt->execute();
+
+                $comment = <<<EOF
+/**
+
+EOF;
+
+                while ($result = $stmt->fetch(\App\MyPdo::FETCH_ASSOC)) {
+                    $field = ucwords($result['Field'], "_");
+                    $field = str_replace('_', "", $field);
+
+                    $type = '';
+                    if (strpos($result['Type'], 'int') !== false || strpos($result['Type'], 'numeric') !== false) {
+                        $type = 'int';
+                    } else if (strpos($result['Type'], 'char') !== false || strpos($result['Type'], 'varchar') !== false || strpos($result['Type'], 'date') !== false || strpos($result['Type'], 'enum') !== false) {
+                        $type = 'string';
+                    } else if (strpos($result['Type'], 'decimal') !== false) {
+                        $type = 'float';
+                    }
+
+                    $comment .= <<<EOF
+ * @method ::type:: get::field::()
+ * @method set::field::($::fieldVar::)
+EOF;
+                    $comment .= "\n";
+                    $comment = str_replace("::field::", $field, $comment);
+                    $comment = str_replace("::type::", $type, $comment);
+                    $comment = str_replace("::fieldVar::", lcfirst($field), $comment);
+                }
+
+                $comment .= <<<EOF
+*/
+
+EOF;
+                echo $comment;
+
+                break;
             case 'module':
                 if (!file_exists($path."/".$projectName)) {
                     mkdir($path."/".$projectName);
@@ -371,12 +413,47 @@ namespace ::namespace::\Model;
 
 use App\libs\App\ModelDb;
 
+::comment::
 class ::name:: extends ModelDb
 {
     
 }
 EOF;
+                $db = \App\MyPdo::getInstance(\App\MyPdo::TYPE_MYSQL);
+                $stmt = $db->prepareQuery("DESC {$tableName}");
+                $stmt->execute();
+                $comment = <<<EOF
+/**
+
+EOF;
+                while ($result = $stmt->fetch(\App\MyPdo::FETCH_ASSOC)) {
+                    $field = ucwords($result['Field'], "_");
+                    $field = str_replace('_', "", $field);
+
+                    $type = '';
+                    if (strpos($result['Type'], 'int') !== false || strpos($result['Type'], 'numeric') !== false) {
+                        $type = 'int';
+                    } else if (strpos($result['Type'], 'char') !== false || strpos($result['Type'], 'varchar') !== false || strpos($result['Type'], 'date') !== false || strpos($result['Type'], 'enum') !== false) {
+                        $type = 'string';
+                    } else if (strpos($result['Type'], 'decimal') !== false) {
+                        $type = 'float';
+                    }
+
+                    $comment .= <<<EOF
+ * @method ::type:: get::field::()
+ * @method set::field::($::fieldVar::)
+EOF;
+                    $comment .= "\n";
+                    $comment = str_replace("::field::", $field, $comment);
+                    $comment = str_replace("::type::", $type, $comment);
+                    $comment = str_replace("::fieldVar::", lcfirst($field), $comment);
+                }
+
+                $comment .= <<<EOF
+*/
+EOF;
                 $content = str_replace("::namespace::", $projectName."\\".$moduleName, $content);
+                $content = str_replace("::comment::", $comment, $content);
                 $content = str_replace("::name::", $name, $content);
                 file_put_contents($path."/".$projectName."/".$moduleName."/Model/".$name.".php", $content);
 

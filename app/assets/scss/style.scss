@@ -33,6 +33,8 @@ $fa-font-path: '../components/font-awesome/fonts';
 @import "error/error";
 /* Module Rewrite */
 @import "rewrite/index";
+/** Module Ajaxifier */
+@import "ajaxifier/loader";
 
 body {
     background-color: $color-light-grey;

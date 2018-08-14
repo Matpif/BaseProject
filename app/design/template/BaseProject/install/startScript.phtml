@@ -10,11 +10,6 @@ $collectionModule = CollectionDb::getInstanceOf('Install_Module');
 $collectionModule->loadAll(['module_name ASC']);
 ?>
 <div class="startScript">
-    <?php if ($this->getMessage()): ?>
-        <div class="message">
-            <?= $this->getMessage() ?>
-        </div>
-    <?php endif; ?>
     <div>
         <a href="<?= Router::getUrlAction('Install', 'Index', 'clearCache') ?>"
            class="btn btn-default"><?= $this->__('Clear cache') ?></a>
@@ -57,7 +52,7 @@ $collectionModule->loadAll(['module_name ASC']);
                             'exec') ?>/id/<?= $file->getId() ?>"><?= $this->__('Exec') ?></a>
                     </td>
                 </tr>
-                <?php
+            <?php
             endforeach;
         endforeach;
         ?>

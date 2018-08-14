@@ -146,4 +146,24 @@ class MyPdo extends PDO
 
         return $stmt;
     }
+
+    /**
+     * @param $module
+     * @param $model
+     * @return string
+     */
+    public function getTableName($module, $model)
+    {
+        $config = ConfigModule::getInstance()->getConfig($module);
+        if (isset($config['tables'])) {
+            foreach ($config['tables'] as $table) {
+                $mn = explode('\\', $table['collection']);
+                $mn = $mn[1] . '_' . $mn[3];
+
+                if ($mn == $module . '_' . $model) {
+                    return $table['table_name'];
+                }
+            }
+        }
+    }
 }

@@ -69,8 +69,6 @@ class App
      */
     public function __construct()
     {
-        $session = Session::getInstance();
-        $session->addData(isset($_SESSION) ? $_SESSION : []);
         $this->_pathRoot = "";
         $this->_cacheIsEnabled = Config::getInstance()->getAttribute('app', 'enabledCache');
     }
@@ -193,6 +191,13 @@ class App
         return Config::getInstance()->getAttribute('app', 'version');
     }
 
+    public function getBuildVersion()
+    {
+        exec('git rev-list HEAD | wc -l',$buildNumber);
+        exec('git rev-parse --abbrev-ref HEAD',$branch);
+        return isset($buildNumber[0], $branch[0])?$branch[0].'-'.$buildNumber[0]:null;
+    }
+
     /**
      * @return bool
      */
@@ -284,6 +289,7 @@ class App
 
     public function init()
     {
+        Session::getInstance()->startSession();
         $this->setLocale();
         ConfigModule::getInstance();
         $this->debug();
@@ -294,6 +300,9 @@ class App
         $acceptLanguage = explode(',',
             (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '');
         $language = ((isset($acceptLanguage[0])) ? $acceptLanguage[0] : 'fr_FR');
+        if (strlen($language) == 2) {
+            $language = $language . '_' . strtoupper($language);
+        }
         $l = str_replace('-', '_', $language) . '.UTF-8';
         putenv("LANG=" . $l);
         setlocale(LC_MESSAGES, $l);
