@@ -12,6 +12,10 @@ use GuzzleHttp\Psr7\Response;
 class Router
 {
     /**
+     * @var Router[]
+     */
+    private static $_instance;
+    /**
      * @var string
      */
     protected $_currentUri;
@@ -45,6 +49,174 @@ class Router
         $this->checkRewrite();
         $this->_rootUrl = App::getInstance()->getRequest()->getServerParams()['SERVER_NAME'];
         $this->_secure = Config::getInstance()->getAttribute('app', 'secure');
+    }
+
+    private function checkRewrite()
+    {
+        /** @var Rewrite $rewrite */
+        $rewrite = CollectionDb::getInstanceOf('Rewrite_Rewrite')->load(['basic_url' => $this->_currentUri])->getFirstRow();
+        if ($rewrite) {
+            $this->_currentUri = $rewrite->getRewriteUrl();
+            if ($rewrite->getRedirectVisible() == Rewrite::REDIRECT_VISIBLE_TEMPORARY) {
+                \Http\Response\send((new Response())
+                    ->withStatus(302)
+                    ->withHeader('Location', $this->_currentUri));
+                exit;
+            } else {
+                if ($rewrite->getRedirectVisible() == Rewrite::REDIRECT_VISIBLE_PERMANENTLY) {
+                    \Http\Response\send((new Response())
+                        ->withStatus(301)
+                        ->withHeader('Location', $this->_currentUri));
+                    exit;
+                } else {
+                    if (strpos($this->_currentUri, 'http') === 0) {
+                        $content = file_get_contents($this->_currentUri);
+                        \Http\Response\send(new Response(
+                            200,
+                            [],
+                            $content));
+                        exit;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $module
+     * @param $controller
+     * @param $action
+     *
+     * @return string
+     */
+    public static function getUrlAction($module, $controller = 'Index', $action = 'index')
+    {
+
+        $configModule = ConfigModule::getInstance()->getConfig($module);
+        if (isset($configModule['override']['router'][$module])) {
+            $routerClass = $configModule['override']['router'][$module];
+        } else {
+            $override = $GLOBALS['override'];
+            $routerClass = '';
+            foreach ($override as $o) {
+                $routerClass = "{$o}\\{$module}\\Router\\Router";
+                if (class_exists($routerClass)) {
+                    break;
+                }
+            }
+        }
+
+        /** @var Router $router */
+        $router = Router::getInstance($routerClass);
+        $router->setModule($module);
+        $router->setController($controller);
+        $router->setAction($action);
+        $url = $router->getRootUrl();
+
+        $config = ConfigModule::getInstance()->getConfig($module);
+        if ($config && isset($config['router']) && isset($config['router']['rewrite_uri'])) {
+            foreach ($config['router']['rewrite_uri'] as $rewriteUri) {
+                if ($rewriteUri['controller'] == $controller && $rewriteUri['action'] == $action) {
+                    return $url . $rewriteUri['url'];
+                }
+            }
+        }
+
+        if ($router->getModule()) {
+            $url .= '/' . $router->getModule();
+        }
+
+        if ($router->getController()) {
+            $url .= '/' . $router->getController();
+        }
+
+        if ($router->getAction()) {
+            $url .= '/' . $router->getAction();
+        }
+
+        return $url;
+    }
+
+    /**
+     * Méthode d'instantiation du router
+     * @param $routerClassName
+     * @return Router
+     */
+    public static function getInstance($routerClassName)
+    {
+        return new $routerClassName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRootUrl()
+    {
+        return (($this->isSecure()) ? 'https://' : 'http://') . $this->_rootUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSecure()
+    {
+        return $this->_secure;
+    }
+
+    /**
+     * @param bool $secure
+     */
+    public function setSecure($secure)
+    {
+        $this->_secure = $secure;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModule()
+    {
+        return $this->_module;
+    }
+
+    /**
+     * @param string $module
+     */
+    public function setModule($module)
+    {
+        $this->_module = $module;
+    }
+
+    /**
+     * @return string
+     */
+    public function getController()
+    {
+        return $this->_controller;
+    }
+
+    /**
+     * @param string $controller
+     */
+    public function setController($controller)
+    {
+        $this->_controller = $controller;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->_action;
+    }
+
+    /**
+     * @param string $action
+     */
+    public function setAction($action)
+    {
+        $this->_action = $action;
     }
 
     /**
@@ -122,159 +294,6 @@ class Router
             'controller' => $this->_controller,
             'action' => $this->_action,
         ];
-    }
-
-    /**
-     * @param $module
-     * @param $controller
-     * @param $action
-     *
-     * @return string
-     */
-    public static function getUrlAction($module, $controller = 'Index', $action = 'index')
-    {
-
-        $configModule = ConfigModule::getInstance()->getConfig($module);
-        if (isset($configModule['override']['router'][$module])) {
-            $routerClass = $configModule['override']['router'][$module];
-        } else {
-            $override = $GLOBALS['override'];
-            $routerClass = '';
-            foreach ($override as $o) {
-                $routerClass = "{$o}\\{$module}\\Router\\Router";
-                if (class_exists($routerClass)) {
-                    break;
-                }
-            }
-        }
-
-        /** @var Router $router */
-        $router = new $routerClass;
-        $router->setModule($module);
-        $router->setController($controller);
-        $router->setAction($action);
-        $url = $router->getRootUrl();
-
-        $config = ConfigModule::getInstance()->getConfig($module);
-        if ($config && isset($config['router']) && isset($config['router']['rewrite_uri'])) {
-            foreach ($config['router']['rewrite_uri'] as $rewriteUri) {
-                if ($rewriteUri['controller'] == $controller && $rewriteUri['action'] == $action) {
-                    return $url . $rewriteUri['url'];
-                }
-            }
-        }
-
-        if ($router->getModule()) {
-            $url .= '/' . $router->getModule();
-        }
-
-        if ($router->getController()) {
-            $url .= '/' . $router->getController();
-        }
-
-        if ($router->getAction()) {
-            $url .= '/' . $router->getAction();
-        }
-
-        return $url;
-    }
-
-    private function checkRewrite() {
-        /** @var Rewrite $rewrite */
-        $rewrite = CollectionDb::getInstanceOf('Rewrite_Rewrite')->load(['basic_url' => $this->_currentUri])->getFirstRow();
-        if ($rewrite) {
-            $this->_currentUri = $rewrite->getRewriteUrl();
-            if ($rewrite->getRedirectVisible() == Rewrite::REDIRECT_VISIBLE_TEMPORARY) {
-                \Http\Response\send((new Response())
-                    ->withStatus(302)
-                    ->withHeader('Location', $this->_currentUri));
-                exit;
-            } else if ($rewrite->getRedirectVisible() == Rewrite::REDIRECT_VISIBLE_PERMANENTLY) {
-                \Http\Response\send((new Response())
-                    ->withStatus(301)
-                    ->withHeader('Location', $this->_currentUri));
-                exit;
-            } else if (strpos($this->_currentUri, 'http') === 0) {
-                $content = file_get_contents($this->_currentUri);
-                \Http\Response\send(new Response(
-                    200,
-                    [],
-                    $content));
-                exit;
-            }
-        }
-    }
-
-    /**
-     * @return string
-     */
-    public function getRootUrl()
-    {
-        return (($this->isSecure()) ? 'https://' : 'http://') . $this->_rootUrl;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSecure()
-    {
-        return $this->_secure;
-    }
-
-    /**
-     * @param bool $secure
-     */
-    public function setSecure($secure)
-    {
-        $this->_secure = $secure;
-    }
-
-    /**
-     * @return string
-     */
-    public function getModule()
-    {
-        return $this->_module;
-    }
-
-    /**
-     * @param string $module
-     */
-    public function setModule($module)
-    {
-        $this->_module = $module;
-    }
-
-    /**
-     * @return string
-     */
-    public function getController()
-    {
-        return $this->_controller;
-    }
-
-    /**
-     * @param string $controller
-     */
-    public function setController($controller)
-    {
-        $this->_controller = $controller;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->_action;
-    }
-
-    /**
-     * @param string $action
-     */
-    public function setAction($action)
-    {
-        $this->_action = $action;
     }
 
     /**
@@ -389,7 +408,8 @@ class Router
     /**
      * @param Router $router
      */
-    public function setRouter($router) {
+    public function setRouter($router)
+    {
         $this->_action = $router->getAction();
         $this->_controller = $router->getController();
         $this->_module = $router->getModule();

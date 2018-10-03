@@ -5,6 +5,7 @@ namespace App\libs\App;
 use App\App;
 use App\Cache;
 use App\ConfigModule;
+use BaseProject\Admin\Helper\Parameter;
 
 class Block extends VarientObject
 {
@@ -21,6 +22,10 @@ class Block extends VarientObject
      * @var string
      */
     protected $_html;
+    /**
+     * @var boolean
+     */
+    protected $_showPathTemplate;
     /**
      * @var string
      */
@@ -40,6 +45,9 @@ class Block extends VarientObject
         $this->setKey([get_class($this), App::getInstance()->getLanguageCode()]);
         $this->_useCache = false;
         $this->_html = null;
+        /** @var Parameter $parameter */
+        $parameter = Helper::getInstance('Admin_Parameter');
+        $this->_showPathTemplate = $parameter->getParameter('developer/developer/showPathTemplate')->getValue();
     }
 
     /**
@@ -124,6 +132,9 @@ class Block extends VarientObject
                 ob_start();
                 include($this->_template);
                 $this->_html = ob_get_contents();
+                if ($this->_showPathTemplate) {
+                    $this->_html = '<div class="dev"><div class="title-dev"><b>' . get_called_class() . '</b> - ' . $this->_template . '</div>' . $this->_html . "</div>";
+                }
                 if (App::getInstance()->cacheIsEnabled() && $this->_useCache) {
                     Cache::getInstance()->getCacheRedis()->save($this->_key, $this->_html);
                 }

@@ -4,7 +4,6 @@ namespace App\libs\App;
 
 use App\App;
 use App\Cache;
-use App\Config;
 use App\ConfigModule;
 use BaseProject\Admin\Helper\Parameter;
 use GuzzleHttp\Psr7\Response;
@@ -95,6 +94,10 @@ class Controller extends VarientObject
      * @var string
      */
     private $_urlReferer;
+    /**
+     * @var boolean
+     */
+    private $_showPathTemplate;
 
     function __construct()
     {
@@ -125,6 +128,9 @@ class Controller extends VarientObject
             App::getInstance()->getLanguageCode()
         ]);
         $this->_useCache = false;
+        /** @var Parameter $parameter */
+        $parameter = Helper::getInstance('Admin_Parameter');
+        $this->_showPathTemplate = $parameter->getParameter('developer/developer/showPathTemplate')->getValue();
     }
 
     /**
@@ -235,6 +241,9 @@ class Controller extends VarientObject
             ob_start();
             include($this->_template);
             $returned = ob_get_contents();
+            if ($this->_showPathTemplate) {
+                $returned = '<div class="dev"><div class="title-dev"><b>' . get_called_class() . '</b> - ' . $this->_template . '</div>' . $returned . "</div>";
+            }
             ob_end_clean();
         }
 
@@ -265,6 +274,9 @@ class Controller extends VarientObject
             ob_start();
             include($this->_header);
             $returned = ob_get_contents();
+            if ($this->_showPathTemplate) {
+                $returned = '<div class="dev"><div class="title-dev"><b>' . get_called_class() . '</b> - ' . $this->_header . '</div>' . $returned . "</div>";
+            }
             ob_end_clean();
         }
 
@@ -281,6 +293,9 @@ class Controller extends VarientObject
             ob_start();
             include($this->_footer);
             $returned = ob_get_contents();
+            if ($this->_showPathTemplate) {
+                $returned = '<div class="dev"><div class="title-dev"><b>' . get_called_class() . '</b> - ' . $this->_footer . '</div>' . $returned . "</div>";
+            }
             ob_end_clean();
         }
 

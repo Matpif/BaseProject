@@ -220,6 +220,30 @@
                   "0": "No"
                 },
                 "defaultValue": "0"
+              },
+              "showPathTemplate": {
+                "label": "Show path template",
+                "type": "select",
+                "values": {
+                  "1": "Yes",
+                  "0": "No"
+                },
+                "defaultValue": "0"
+              }
+            }
+          }
+        }
+      },
+      "maintenance": {
+        "label": "Maintenance",
+        "sections": {
+          "general": {
+            "label": "General",
+            "parameters": {
+              "ipAllowed": {
+                "label": "Ip Allowed",
+                "type": "string",
+                "defaultValue": ""
               }
             }
           }

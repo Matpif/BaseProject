@@ -27,6 +27,9 @@ class Block extends \App\libs\App\Block
             ])->getFirstRow();
             if ($blockCms) {
                 $returned = $blockCms->getContent(true);
+                if ($this->_showPathTemplate) {
+                    $returned = '<div class="dev"><div class="title-dev">CMS: ' . $this->getName() . '</div>' . $returned . "</div>";
+                }
                 if (App::getInstance()->cacheIsEnabled() && $this->_useCache) {
                     Cache::getInstance()->getCacheRedis()->save($this->_key, $returned);
                 }

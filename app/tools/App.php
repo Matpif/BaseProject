@@ -193,9 +193,9 @@ class App
 
     public function getBuildVersion()
     {
-        exec('git rev-list HEAD | wc -l',$buildNumber);
-        exec('git rev-parse --abbrev-ref HEAD',$branch);
-        return isset($buildNumber[0], $branch[0])?$branch[0].'-'.$buildNumber[0]:null;
+        exec('git rev-list HEAD | wc -l', $buildNumber);
+        exec('git rev-parse --abbrev-ref HEAD', $branch);
+        return isset($buildNumber[0], $branch[0]) ? $branch[0] . '-' . $buildNumber[0] : null;
     }
 
     /**
@@ -204,6 +204,18 @@ class App
     public function cacheIsEnabled()
     {
         return ($this->_cacheIsEnabled && !$this->developerModeIsEnabled());
+    }
+
+    /**
+     * @return bool
+     */
+    public function developerModeIsEnabled()
+    {
+        if (is_null($this->_developerModeIsEnabled)) {
+            $parameterHelper = Helper::getInstance('Admin_Parameter');
+            $this->_developerModeIsEnabled = $parameterHelper->getParameter('developer/developer/enable')->getValue() == 1;
+        }
+        return $this->_developerModeIsEnabled;
     }
 
     public function run()
@@ -216,8 +228,8 @@ class App
         $this->init();
 
         Dispatcher::getInstance()->initListener();
-        $router = $this->getRouter();
         $this->initTranslate();
+        $router = $this->getRouter();
 
         if (!$router->routeExist()) {
             /** @var \BaseProject\Error\Controller\Error $_controller */
@@ -273,9 +285,22 @@ class App
     private function maintenance()
     {
         if (Config::getInstance()->getAttribute('app', 'maintenance') != 0) {
-            $params['maintenance'] = 1;
-            include $this->getPathRoot() . '/../app.php';
-            exit(0);
+            $ipsAllowed = explode(',', Helper::getInstance('Admin_Parameter')->getParameter('maintenance/general/ipAllowed')->getValue());
+            $isAllowed = false;
+            $myIp = $_SERVER['REMOTE_ADDR'];
+            foreach ($ipsAllowed as $ip) {
+                if ($myIp == $ip) {
+                    $isAllowed = true;
+                    break;
+                }
+            }
+
+            if (!$isAllowed) {
+                $this->setLocale();
+                $params['maintenance'] = 1;
+                include $this->getPathRoot() . '/../app.php';
+                exit(0);
+            }
         }
     }
 
@@ -289,7 +314,9 @@ class App
 
     public function init()
     {
-        Session::getInstance()->startSession();
+        if (php_sapi_name() != 'cli') {
+            Session::getInstance()->startSession();
+        }
         $this->setLocale();
         ConfigModule::getInstance();
         $this->debug();
@@ -338,38 +365,6 @@ class App
         }
     }
 
-    /**
-     * @return Router
-     */
-    public function getRouter()
-    {
-        if (!$this->_router) {
-            $router = new Router();
-            $router->getRoute();
-            $module = $router->getModule();
-            /** @var Module $_module */
-            $_module = CollectionDb::getInstanceOf('Admin_Module')->load(['module_name' => $module])->getFirstRow();
-            if ($_module && $_module->getEnable()) {
-                $configModule = ConfigModule::getInstance()->getConfig($module);
-                if (isset($configModule['override']['router'][$module])) {
-                    $classRouter = $configModule['override']['router'][$module];
-                } else {
-                    $classRouter = $_module->getProject() . '\\' . $module . '\\Router\\Router';
-                }
-                if (class_exists($classRouter)) {
-                    $this->_router = new $classRouter;
-                } else {
-                    $this->_router = new \BaseProject\Error\Router\Router(StatusCodes::HTTP_NOT_FOUND);
-                }
-            } else {
-                $this->_router = new \BaseProject\Error\Router\Router(StatusCodes::HTTP_NOT_FOUND);
-            }
-            $this->_router->setRouter($router);
-        }
-
-        return $this->_router;
-    }
-
     private function initTranslate()
     {
         $_modules = CollectionDb::getInstanceOf('Admin_Module')->load(['enable' => 1]);
@@ -416,6 +411,38 @@ class App
     }
 
     /**
+     * @return Router
+     */
+    public function getRouter()
+    {
+        if (!$this->_router) {
+            $router = new Router();
+            $router->getRoute();
+            $module = $router->getModule();
+            /** @var Module $_module */
+            $_module = CollectionDb::getInstanceOf('Admin_Module')->load(['module_name' => $module])->getFirstRow();
+            if ($_module && $_module->getEnable()) {
+                $configModule = ConfigModule::getInstance()->getConfig($module);
+                if (isset($configModule['override']['router'][$module])) {
+                    $classRouter = $configModule['override']['router'][$module];
+                } else {
+                    $classRouter = $_module->getProject() . '\\' . $module . '\\Router\\Router';
+                }
+                if (class_exists($classRouter)) {
+                    $this->_router = Router::getInstance($classRouter);
+                } else {
+                    $this->_router = new \BaseProject\Error\Router\Router(StatusCodes::HTTP_NOT_FOUND);
+                }
+            } else {
+                $this->_router = new \BaseProject\Error\Router\Router(StatusCodes::HTTP_NOT_FOUND);
+            }
+            $this->_router->setRouter($router);
+        }
+
+        return $this->_router;
+    }
+
+    /**
      * @return bool
      */
     private function isAllowed()
@@ -456,17 +483,5 @@ class App
     public function getTranslates()
     {
         return $this->_translates;
-    }
-
-    /**
-     * @return bool
-     */
-    public function developerModeIsEnabled()
-    {
-        if (is_null($this->_developerModeIsEnabled)) {
-            $parameterHelper = Helper::getInstance('Admin_Parameter');
-            $this->_developerModeIsEnabled = $parameterHelper->getParameter('developer/developer/enable')->getValue() == 1;
-        }
-        return $this->_developerModeIsEnabled;
     }
 }

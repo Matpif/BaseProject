@@ -8,13 +8,13 @@ use App\libs\App\Block;
 class Message extends Block
 {
 
-    const LEVEL_MESSAGE_SUCCESS = 0;
-    const LEVEL_MESSAGE_INFO = 1;
-    const LEVEL_MESSAGE_WARNING = 2;
-    const LEVEL_MESSAGE_ERROR = 3;
+    CONST LEVEL_MESSAGE_SUCCESS = \App\libs\App\Message::LEVEL_SUCCESS;
+    CONST LEVEL_MESSAGE_INFO = \App\libs\App\Message::LEVEL_INFO;
+    CONST LEVEL_MESSAGE_WARNING = \App\libs\App\Message::LEVEL_WARNING;
+    CONST LEVEL_MESSAGE_ERROR = \App\libs\App\Message::LEVEL_ERROR;
 
     /** @var array */
-    private $_messages;
+    protected $_messages;
 
     /**
      * Default_Admin_MessageBlock constructor.
@@ -32,8 +32,16 @@ class Message extends Block
     public function getMessages()
     {
         if (App::getInstance()->getSession()->getMessages() && count($this->_messages) == 0) {
-            $this->_messages = App::getInstance()->getSession()->getMessages();
+            $messages = App::getInstance()->getSession()->getMessages();
             App::getInstance()->getSession()->unsetMessages();
+
+            foreach ($messages as $message) {
+                if ($message instanceof \App\libs\App\Message) {
+                    $this->_messages[] = $message;
+                } elseif (is_array($message) && isset($message['level'], $message['message'])) {
+                    $this->_messages[] = new \App\libs\App\Message($message['message'], $message['level']);
+                }
+            }
         }
 
         return $this->_messages;

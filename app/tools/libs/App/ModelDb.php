@@ -19,7 +19,7 @@ abstract class ModelDb extends VarientObject implements ModelInterface
 
     /**
      * ID of table
-     * @var string
+     * @var array | string
      */
     protected $_key;
 
@@ -192,6 +192,7 @@ abstract class ModelDb extends VarientObject implements ModelInterface
             $stmt = $this->_db->prepare($update->getStatement());
 
             if ($stmt->execute($update->getBindValues()) !== false) {
+                Dispatcher::getInstance()->dispatch('after_update_model', $this);
                 return true;
             } else {
                 $message = new Message($stmt->errorInfo()[2], Message::LEVEL_ERROR);
@@ -227,6 +228,7 @@ abstract class ModelDb extends VarientObject implements ModelInterface
                     $this->_data[$this->_key] = $insertId;
                 }
                 $this->_inserted = true;
+                Dispatcher::getInstance()->dispatch('after_insert_model', $this);
                 return true;
             } else {
                 $message = new Message($stmt->errorInfo()[2], Message::LEVEL_ERROR);
@@ -411,6 +413,14 @@ abstract class ModelDb extends VarientObject implements ModelInterface
             }
         }
         return null;
+    }
+
+    /**
+     * @return array | string
+     */
+    public function getKey()
+    {
+        return $this->_key;
     }
 
     /**

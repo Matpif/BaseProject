@@ -5,6 +5,7 @@ namespace App\libs\App;
 class Message extends VarientObject
 {
 
+    CONST LEVEL_SUCCESS = 0;
     CONST LEVEL_ERROR = 1;
     CONST LEVEL_INFO = 2;
     CONST LEVEL_WARNING = 3;
@@ -13,6 +14,8 @@ class Message extends VarientObject
     private $_message;
     /** @var  int */
     private $_level;
+    /** @var string */
+    private $_code;
 
     /**
      * Message constructor.
@@ -55,5 +58,21 @@ class Message extends VarientObject
     public function setLevel($level)
     {
         $this->_level = $level;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->_code;
+    }
+
+    /**
+     * @param string $code
+     */
+    public function setCode($code)
+    {
+        $this->_code = $code;
     }
 }

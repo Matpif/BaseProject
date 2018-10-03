@@ -11,7 +11,7 @@ class Block implements Observer
 
     /**
      * @param $eventName
-     * @param $block Block
+     * @param \App\libs\App\Block $block
      */
     public static function notify($eventName, $block)
     {
@@ -51,7 +51,17 @@ class Block implements Observer
             }
 
             if ($blockIsAjaxifier) {
-                $block->setHtml("<div class=\"ajaxifier\" data-block-id=\"{$idBlock}\" data-block-autoload=\"".(($autoload)?1:0)."\" data-block-loading=\"".(($loading)?1:0)."\"></div>");
+                $options = $block->getData();
+
+                $html = "<div class=\"ajaxifier\" data-block-id=\"{$idBlock}\" data-block-autoload=\"" . (($autoload) ? 1 : 0) . "\" data-block-loading=\"" . (($loading) ? 1 : 0) . "\"";
+                if ($options) {
+                    foreach ($options as $option => $value) {
+                        $html .= " data-" . $option . "=\"" . $value . "\"";
+                    }
+                }
+                $html .= "></div>";
+
+                $block->setHtml($html);
             }
         }
     }

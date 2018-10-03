@@ -2,6 +2,7 @@
 
 use App\App;
 use App\Config;
+use App\libs\App\Block;
 use App\libs\App\Helper;
 use BaseProject\Admin\Helper\Admin;
 use BaseProject\Admin\Helper\Cache;
@@ -182,7 +183,19 @@ if (!$mode_cli) {
 
     if (isset($params['maintenance'])):
         ?>
-        Maintenance !!
+        <!doctype html>
+        <html>
+        <head>
+            <title>Maintenance !!</title>
+        </head>
+        <body>
+        <?php
+        $blockTest = Block::getBlock('Cms_Block');
+        $blockTest->setName('maintenance');
+        echo $blockTest->getHtml();
+        ?>
+        </body>
+        </html>
     <?php
     endif;
 } else {
@@ -259,13 +272,88 @@ if (!$mode_cli) {
         echo "    --refresh-cache   refresh cache\n";
         echo "\n";
     } else if (isset($params['generate'])) {
-        $type = readline('Generate ? (module/block/model/collection/helper/controller/comment) : ');
+        $type = readline('Generate ? (module/block/model/collection/helper/controller/comment/form) : ');
 
         $projectName = readline("Project name : ");
         $moduleName = readline("Module name : ");
         $path = App::PathRoot().'/code';
 
         switch ($type) {
+            case 'form':
+                $tableName = readline("Table name : ");
+                $db = \App\MyPdo::getInstance(\App\MyPdo::TYPE_MYSQL);
+                $stmt = $db->prepareQuery("SHOW FULL COLUMNS FROM {$tableName}");
+                $stmt->execute();
+
+                $comment = "";
+
+                while ($result = $stmt->fetch(\App\MyPdo::FETCH_ASSOC)) {
+                    $field = ucwords($result['Field'], "_");
+                    $field = str_replace('_', "", $field);
+
+                    $type = '';
+                    $length = 0;
+                    $required = ($result['Null'] == 'NO')?'required':'';
+                    $comment .= <<<EOF
+<div class="form-group">
+    <label for="{$result['Field']}"><?= \$this->__("{$result['Comment']}") ?></label>
+
+EOF;
+
+                    if (strpos($result['Type'], 'int') !== false || strpos($result['Type'], 'numeric') !== false) {
+                        $type = 'int';
+                        $comment .= <<<EOF
+    <input type="text" class="form-control" id="{$result['Field']}" pattern="[0-9]{0,}" name="{$result['Field']}" value="<?= \$object->getAttribute('{$result['Field']}') ?>" {$required} <?= (\$this->isReadOnly('{$result['Field']}'))?'readonly':'' ?> >
+EOF;
+                    } else if (strpos($result['Type'], 'char') !== false || strpos($result['Type'], 'varchar') !== false) {
+                        $type = 'string';
+                        $re = '/\((.+)\)/m';
+                        preg_match_all($re, $result['Type'], $matches, PREG_SET_ORDER, 0);
+                        $length = $matches[0][1];
+                        $comment .= <<<EOF
+    <input type="text" class="form-control" id="{$result['Field']}" pattern=".{0,{$length}}" name="{$result['Field']}" value="<?= \$object->getAttribute('{$result['Field']}') ?>" {$required} <?= (\$this->isReadOnly('{$result['Field']}'))?'readonly':'' ?> >
+EOF;
+                    } else if (strpos($result['Type'], 'decimal') !== false) {
+                        $type = 'float';
+                        $re = '/\((.+)\)/m';
+                        preg_match_all($re, $result['Type'], $matches, PREG_SET_ORDER, 0);
+                        $length = explode(',', $matches[0][1]);
+                        $comment .= <<<EOF
+    <input type="text" class="form-control" id="{$result['Field']}" pattern="[0-9]{0,{$length[0]}}\.?[0-9]{0,{$length[1]}}" name="{$result['Field']}" value="<?= \$object->getAttribute('{$result['Field']}') ?>" {$required} <?= (\$this->isReadOnly('{$result['Field']}'))?'readonly':'' ?> >
+EOF;
+                    } else if (strpos($result['Type'], 'enum') !== false) {
+                        $type = 'enum';
+                        $re = '/\((.+)\)/m';
+                        preg_match_all($re, $result['Type'], $matches, PREG_SET_ORDER, 0);
+                        $opts = explode(',', $matches[0][1]);
+
+                        $options = "";
+                        if (!$required) {
+                            $options .= "<option value=\"\" ></option>\n";
+                        }
+                        foreach ($opts as $option) {
+                            $option = str_replace("'", "", $option);
+                            $options .= "<option value=\"{$option}\" <?= (\$object->getAttribute('{$result['Field']}') == \"{$option}\")?'selected':'' ?>>{$option}</option>\n";
+                        }
+
+                        $comment .= <<<EOF
+    <select class="form-control" name="{$result['Field']}" id="{$result['Field']}" <?= (\$this->isReadOnly('{$result['Field']}'))?'readonly':'' ?>>
+        {$options}
+    </select>
+EOF;
+                    } else if (strpos($result['Type'], 'date') !== false) {
+                        $comment .= <<<EOF
+    <input type="date" class="form-control" id="{$result['Field']}" name="{$result['Field']}" value="<?= \$object->getAttribute('{$result['Field']}') ?>" {$required} <?= (\$this->isReadOnly('{$result['Field']}'))?'readonly':'' ?>>
+EOF;
+                    }
+
+
+                    $comment .= "\n</div>\n";
+                }
+
+                echo $comment;
+
+                break;
             case 'comment':
                 $tableName = readline("Table name : ");
                 $db = \App\MyPdo::getInstance(\App\MyPdo::TYPE_MYSQL);
@@ -319,7 +407,7 @@ EOF;
                 mkdir($path."/".$projectName."/".$moduleName."/etc");
                 mkdir($path."/".$projectName."/".$moduleName."/Router");
 
-                $config = ["router" => ["rewriter_uri" => []]];
+                $config = ["router" => ["rewrite_uri" => []]];
                 file_put_contents($path."/".$projectName."/".$moduleName."/etc/config.json", json_encode($config));
 
                 $routerContent = <<<EOF
